@@ -12,6 +12,7 @@ use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -76,7 +77,8 @@ class AdminPanelProvider extends PanelProvider
                     hasAvatars: true, // Enables the avatar upload form component (default = false), switched to true
                     slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
                 )
-            );
+            )
+            ->plugin(FilamentShieldPlugin::make());
             
     }
 }
