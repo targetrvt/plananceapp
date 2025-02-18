@@ -18,12 +18,27 @@ class FinancialGoalResource extends Resource
     protected static ?string $model = FinancialGoal::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('target_amount')
+                    ->required()
+                    ->numeric()
+                    ->prefix('€'),
+                Forms\Components\TextInput::make('current_amount')
+                    ->numeric()
+                    ->prefix('€')
+                    ->default(0),
+                Forms\Components\DatePicker::make('target_date')
+                    ->required(),
+                Forms\Components\Textarea::make('notes')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -31,18 +46,29 @@ class FinancialGoalResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('target_amount')
+                    ->money()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('current_amount')
+                    ->money(),
+                    Tables\Columns\TextColumn::make('progress')
+                    ->getStateUsing(function ($record) {
+                        if ($record->target_amount == 0) {
+                            return '0%'; // Avoid division by zero
+                        }
+                        return round(($record->current_amount / $record->target_amount) * 100, 2) . '%';
+                    }),
+                Tables\Columns\TextColumn::make('target_date')
+                    ->date(),
             ])
             ->filters([
-                //
+                // Add filters if needed
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('financial_goals', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->decimal('target_amount', 10, 2);
+            $table->decimal('current_amount', 10, 2)->default(0);
+            $table->date('target_date');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
