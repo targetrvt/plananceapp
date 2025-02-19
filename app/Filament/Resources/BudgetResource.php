@@ -21,7 +21,7 @@ class BudgetResource extends Resource
     // Navigation icon (Heroicons v2)
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // Navigation group (optional)
+    // Navigation group(optional)
     protected static ?string $navigationGroup = 'Management';
 
     // Navigation label (optional)
