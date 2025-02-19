@@ -30,10 +30,10 @@ class FinancialGoalResource extends Resource
                 Forms\Components\TextInput::make('target_amount')
                     ->required()
                     ->numeric()
-                    ->prefix('€'),
+                    ->prefix('EUR'),
                 Forms\Components\TextInput::make('current_amount')
                     ->numeric()
-                    ->prefix('€')
+                    ->prefix('EUR')
                     ->default(0),
                 Forms\Components\DatePicker::make('target_date')
                     ->required(),
@@ -49,10 +49,10 @@ class FinancialGoalResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('target_amount')
-                    ->money()
+                    ->money('EUR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('current_amount')
-                    ->money(),
+                    ->money('EUR'),
                     Tables\Columns\TextColumn::make('progress')
                     ->getStateUsing(function ($record) {
                         if ($record->target_amount == 0) {
