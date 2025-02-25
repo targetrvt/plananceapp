@@ -19,11 +19,10 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-            $switch
-                ->locales(['lv','en','ru']); // also accepts a closure
-                
-        });
-    }
+{
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch->locales(['lv', 'en', 'ru']); // Also accepts a closure
+    });
+
+}
 }
