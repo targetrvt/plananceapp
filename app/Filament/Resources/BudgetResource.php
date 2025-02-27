@@ -15,26 +15,13 @@ use App\Filament\Resources\BudgetResource\RelationManagers;
 
 class BudgetResource extends Resource
 {
-    // Define the model associated with this resource
+
     protected static ?string $model = Budget::class;
 
-    // Navigation icon (Heroicons v2)
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // Navigation group(optional)
     protected static ?string $navigationGroup = 'Management';
-
-    // Navigation label (optional)
-    protected static ?string $navigationLabel = 'Budgets';
-
-    // Model label (singular)
-    protected static ?string $modelLabel = 'Budget';
-
-    // Model label (plural)
-    protected static ?string $pluralModelLabel = 'Budgets';
-
-    // Slug for the resource URL
-    protected static ?string $slug = 'budgets';
 
     public static function form(Form $form): Form
     {
@@ -48,6 +35,7 @@ class BudgetResource extends Resource
                 Forms\Components\TextInput::make('amount')
                     ->label('Amount')
                     ->numeric()
+                    ->prefix('EUR')
                     ->required(),
                 Forms\Components\DatePicker::make('start_date')
                     ->label('Start Date')
@@ -55,12 +43,16 @@ class BudgetResource extends Resource
                 Forms\Components\DatePicker::make('end_date')
                     ->label('End Date')
                     ->required(),
+                Forms\Components\Hidden::make('user_id')
+                    ->default(auth()->id())
+                    ->required() 
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->query(Budget::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 // Define your table columns here
                 Tables\Columns\TextColumn::make('name')
@@ -68,8 +60,9 @@ class BudgetResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
-                    ->label('Amount')
                     ->numeric()
+                    ->money('EUR')
+                    ->default(0)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Start Date')

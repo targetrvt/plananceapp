@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\FinancialGoalResource\Pages;
 
-use App\Filament\Resources\FinancialGoalResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\FinancialGoalResource;
 
 class CreateFinancialGoal extends CreateRecord
 {

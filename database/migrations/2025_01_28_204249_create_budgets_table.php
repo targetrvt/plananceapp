@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();  // Auto-incrementing primary key
-            $table->foreignId('users_id')->nullable()->constrained()->onDelete('cascade'); // Foreign key for user, with cascading delete
             $table->string('name'); // Budget name
-            $table->decimal('amount', 10, 2); // Budget amount, with 2 decimal places
+            $table->decimal('amount', 10, 2)->default(0);// Budget amount, with 2 decimal places
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('start_date'); // Start date
             $table->date('end_date'); // End date
             $table->timestamps(); // Timestamps (created_at and updated_at)

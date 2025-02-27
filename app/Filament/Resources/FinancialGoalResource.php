@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FinancialGoalResource extends Resource
 {
@@ -39,12 +37,16 @@ class FinancialGoalResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),
+                Forms\Components\Hidden::make('user_id')
+                    ->default(auth()->id())
+                    ->required() 
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->query(FinancialGoal::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -87,4 +89,5 @@ class FinancialGoalResource extends Resource
             'edit' => Pages\EditFinancialGoal::route('/{record}/edit'),
         ];
     }
+    
 }
