@@ -10,8 +10,8 @@ class RestrictAdminPanel
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->email !== 'admin@admin.com') {
-            abort(403, 'Unauthorized: Only ADMIN can access this panel.');
+        if (!auth()->check() || !auth()->user()->hasRole('super_admin')) {
+            abort(403, 'Unauthorized: Only admins can access this panel.');
         }
 
         return $next($request);
