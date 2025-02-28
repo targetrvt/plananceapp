@@ -49,9 +49,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
-                                        <x-chatgpt-agent::chatgpt-svg />
-                                    </div>
+                                    <div class="relative h-6 w-6 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
+                                        <x-heroicon-o-chat-bubble-oval-left-ellipsis class="h-4 w-4 text-white" />
+                                    </div>                                
                                 </div>
                             </div>
                         @else
