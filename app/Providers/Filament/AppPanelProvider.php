@@ -10,6 +10,7 @@ use Filament\Support\Colors\Color;
 use App\Filament\Widgets\BudgetPieChart;
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use App\Filament\Widgets\UserBalanceWidget;
 use App\Filament\Widgets\FinancialGoalPieChart;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -45,7 +46,6 @@ class AppPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
             ])
-            ->widgets([FinancialGoalProgressChart::class])
             ->font('Poppins')
             ->favicon(url('images/Planancelogomini.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
