@@ -12,6 +12,7 @@ class Transaction extends Model
         'amount',
         'date',
         'description',
+        'category',
         'user_id',
         'receipt_image'
     ];

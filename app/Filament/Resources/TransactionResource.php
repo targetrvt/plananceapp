@@ -67,6 +67,13 @@ class TransactionResource extends Resource
                                         if (isset($extractedData['description'])) {
                                             $set('description', $extractedData['description']);
                                         }
+                                        
+                                        if (isset($extractedData['category'])) {
+                                            $set('category', $extractedData['category']);
+                                        } else {
+                                            // Set default category based on type
+                                            $set('category', $extractedData['type'] === 'income' ? 'other_income' : 'other_expense');
+                                        }
                                     }
                                 } catch (\Exception $e) {
                                     // Log the error
@@ -90,6 +97,33 @@ class TransactionResource extends Resource
                         Forms\Components\DatePicker::make('date')
                             ->required()
                             ->default(now()),
+                        Forms\Components\Select::make('category')
+                            ->options([
+                            // Income categories
+                            'salary' => 'Salary',
+                            'investment' => 'Investment',
+                            'gift' => 'Gift',
+                            'refund' => 'Refund',
+                            'other_income' => 'Other Income',
+                            
+                            // Expense categories
+                            'food' => 'Food & Dining',
+                            'shopping' => 'Shopping',
+                            'entertainment' => 'Entertainment',
+                            'transportation' => 'Transportation',
+                            'housing' => 'Housing',
+                            'utilities' => 'Utilities',
+                            'health' => 'Health',
+                            'education' => 'Education',
+                            'travel' => 'Travel',
+                            
+                            // Bad expense category - for tracking unhealthy spending
+                            'unhealthy_habits' => 'Unhealthy Habits (Cigarettes, Alcohol, etc.)',
+                            
+                            'other_expense' => 'Other Expense',
+                        ])
+                            ->searchable()
+                            ->required(),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull(),
                     ]),
@@ -115,80 +149,83 @@ class TransactionResource extends Resource
     $imageData = base64_encode(file_get_contents($imagePath));
     
     // Use a more specific prompt with expected format
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . config('services.openai.api_key'),
-        'Content-Type' => 'application/json',
-    ])->post('https://api.openai.com/v1/chat/completions', [
-        'model' => 'gpt-4o-mini',
-        'messages' => [
-            [
-                'role' => 'user',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => 'You are a receipt data extraction expert. Extract exactly these fields from this receipt image:
-                        1. transaction_type: (must be either "income" or "expense" only)
-                        2. amount: (numeric value only, no currency symbols)
-                        3. date: (in YYYY-MM-DD format)
-                        4. description: (merchant name or brief transaction description)
-                        
-                        Return ONLY a valid JSON object with these exact keys: {"type": "", "amount": "", "date": "", "description": ""}'
-                    ],
-                    [
-                        'type' => 'image_url',
-                        'image_url' => [
-                            'url' => "data:image/jpeg;base64,{$imageData}"
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('services.openai.api_key'),
+            'Content-Type' => 'application/json',
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => [
+                        [
+                            'type' => 'text',
+                            'text' => 'You are a receipt data extraction expert. Extract exactly these fields from this receipt image:
+                            1. transaction_type: (must be either "income" or "expense" only)
+                            2. amount: (numeric value only, no currency symbols)
+                            3. date: (in YYYY-MM-DD format)
+                            4. description: (merchant name or brief transaction description)
+                            5. category: (categorize this transaction as one of: salary, investment, gift, refund, other_income, food, shopping, entertainment, transportation, housing, utilities, health, education, travel, unhealthy_habits, other_expense)
+                            
+                            IMPORTANT: If the receipt is for cigarettes, alcohol, tobacco, vaping products, or similar unhealthy items, categorize it as "unhealthy_habits".
+                            
+                            Return ONLY a valid JSON object with these exact keys: {"type": "", "amount": "", "date": "", "description": "", "category": ""}'
+                        ],
+                        [
+                            'type' => 'image_url',
+                            'image_url' => [
+                                'url' => "data:image/jpeg;base64,{$imageData}"
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ],
-        'max_tokens' => 300
-    ]);
+            ],
+            'max_tokens' => 300
+        ]);
     
-    if ($response->successful()) {
-        $content = $response->json('choices.0.message.content');
-        
-        // Better JSON extraction and validation
-        try {
-            // First attempt: direct JSON parsing
-            $data = json_decode($content, true);
+        if ($response->successful()) {
+            $content = $response->json('choices.0.message.content');
             
-            // If failed, try to extract JSON from text
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                preg_match('/\{.*\}/s', $content, $matches);
-                if (!empty($matches)) {
-                    $data = json_decode($matches[0], true);
-                }
-            }
-            
-            // Validate required fields
-            if (json_last_error() === JSON_ERROR_NONE && 
-                isset($data['type']) && isset($data['amount'])) {
+            // Better JSON extraction and validation
+            try {
+                // First attempt: direct JSON parsing
+                $data = json_decode($content, true);
                 
-                // Normalize the data
-                $data['type'] = strtolower($data['type']);
-                if (!in_array($data['type'], ['income', 'expense'])) {
-                    $data['type'] = 'expense'; // Default to expense for receipts
+                // If failed, try to extract JSON from text
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    preg_match('/\{.*\}/s', $content, $matches);
+                    if (!empty($matches)) {
+                        $data = json_decode($matches[0], true);
+                    }
                 }
                 
-                // Convert amount to numeric value
-                $data['amount'] = (float) preg_replace('/[^0-9.]/', '', $data['amount']);
-                
-                return $data;
+                // Validate required fields
+                if (json_last_error() === JSON_ERROR_NONE && 
+                    isset($data['type']) && isset($data['amount'])) {
+                    
+                    // Normalize the data
+                    $data['type'] = strtolower($data['type']);
+                    if (!in_array($data['type'], ['income', 'expense'])) {
+                        $data['type'] = 'expense'; // Default to expense for receipts
+                    }
+                    
+                    // Convert amount to numeric value
+                    $data['amount'] = (float) preg_replace('/[^0-9.]/', '', $data['amount']);
+                    
+                    return $data;
+                }
+            } catch (\Exception $e) {
+                \Log::error('JSON parsing error: ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            \Log::error('JSON parsing error: ' . $e->getMessage());
         }
+        
+            \Log::error('AI processing failed or returned invalid data', [
+                'response' => $response->json() ?? 'No JSON response',
+                'status' => $response->status()
+        ]);
+        
+        return [];
     }
-    
-    \Log::error('AI processing failed or returned invalid data', [
-        'response' => $response->json() ?? 'No JSON response',
-        'status' => $response->status()
-    ]);
-    
-    return [];
-}
 
     public static function table(Table $table): Table
     {
@@ -205,6 +242,17 @@ class TransactionResource extends Resource
                     ]),
                 Tables\Columns\TextColumn::make('amount')
                     ->money('EUR')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'salary', 'investment', 'gift', 'refund', 'other_income', 
+                        'food', 'transportation', 'housing', 'utilities', 
+                        'health', 'education', 'travel' => 'success',
+                        'unhealthy_habits' => 'danger',
+                        'shopping', 'entertainment', 'other_expense' => 'gray',
+                        default => 'gray',})
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(50),
