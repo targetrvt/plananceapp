@@ -33,21 +33,22 @@ class TransactionResource extends Resource
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('EUR'),
                 Forms\Components\DatePicker::make('date')
                     ->required()
                     ->default(now()),
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->required(),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
+                Forms\Components\Hidden::make('user_id')
+                    ->default(auth()->id())
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->query(Transaction::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 Tables\Columns\TextColumn::make('date')
                     ->date()
@@ -58,9 +59,8 @@ class TransactionResource extends Resource
                         'danger' => 'expense',
                     ]),
                 Tables\Columns\TextColumn::make('amount')
-                    ->money()
+                    ->money('EUR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category.name'),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(50),
             ])
@@ -72,8 +72,15 @@ class TransactionResource extends Resource
                     ]),
             ])
             ->actions([
+                // Define your actions here
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                // Define your bulk actions here
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

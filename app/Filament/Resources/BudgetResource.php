@@ -73,11 +73,11 @@ class BudgetResource extends Resource
                     ->date()
                     ->sortable(),
             ])
-            ->filters([
-                // Define your filters here
-                Tables\Filters\Filter::make('active')
-                    ->query(fn (Builder $query) => $query->where('active', true)),
-            ])
+            // ->filters([
+            //     // Define your filters here
+            //     Tables\Filters\Filter::make('active')
+            //         ->query(fn (Builder $query) => $query->where('active', true)),
+            // ])
             ->actions([
                 // Define your actions here
                 Tables\Actions\EditAction::make(),

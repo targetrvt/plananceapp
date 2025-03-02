@@ -15,7 +15,7 @@ class FinancialGoal extends Model
         'target_date',
         'user_id',
         'notes',
-        'progress'
+        'progress',
     ];
 
     // Add this relationship

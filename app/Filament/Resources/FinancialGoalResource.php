@@ -39,23 +39,24 @@ class FinancialGoalResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Hidden::make('user_id')
                     ->default(auth()->id())
-                    ->required() 
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->query(FinancialGoal::query()->where('user_id', auth()->id())) // Filter by user_id
+            ->query(FinancialGoal::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('target_amount')
+                Tables\Columns\TextColumn::make('current_amount')
                     ->money('EUR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('current_amount')
-                    ->money('EUR'),
-                    Tables\Columns\TextColumn::make('progress')
+                    Tables\Columns\TextColumn::make('target_amount')
+                    ->money('EUR')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('progress')
                     ->getStateUsing(function ($record) {
                         if ($record->target_amount == 0) {
                             return '0%'; // Avoid division by zero
@@ -63,14 +64,37 @@ class FinancialGoalResource extends Resource
                         return round(($record->current_amount / $record->target_amount) * 100, 2) . '%';
                     }),
                 Tables\Columns\TextColumn::make('target_date')
-                    ->date(),
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
-                // Add filters if needed
+                Tables\Filters\Filter::make('target_date')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')->label('From Date'),
+                        Forms\Components\DatePicker::make('until')->label('To Date'),
+                    ])
+                    ->query(function ($query, $data) {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn($query) => $query->whereDate('target_date', '>=', $data['from'])
+                            )
+                            ->when(
+                                $data['until'],
+                                fn($query) => $query->whereDate('target_date', '<=', $data['until'])
+                            );
+                    }),
             ])
             ->actions([
+                // Define your actions here
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                // Define your bulk actions here
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -89,5 +113,4 @@ class FinancialGoalResource extends Resource
             'edit' => Pages\EditFinancialGoal::route('/{record}/edit'),
         ];
     }
-    
 }
