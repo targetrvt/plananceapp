@@ -15,8 +15,9 @@ class UserBalanceResource extends Resource
     protected static ?string $model = UserBalance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationGroup = 'Management';
     protected static ?string $navigationLabel = 'My Balance';
-    protected static ?int $navigationSort = -1;
+    protected static ?int $navigationSort = -3;
     
     public static function getNavigationBadge(): ?string
     {

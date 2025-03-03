@@ -7,7 +7,6 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use App\Filament\Widgets\BudgetPieChart;
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use App\Filament\Widgets\UserBalanceWidget;
@@ -47,6 +46,10 @@ class AppPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
             ])
             ->font('Poppins')
+            ->navigationGroups([
+                'Overview',
+                'Management',
+            ])
             ->favicon(url('images/Planancelogomini.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
