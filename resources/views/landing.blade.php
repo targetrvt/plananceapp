@@ -3,514 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planance - Smart Financial Planning Simplified</title>
+    <title>Planance - Financial Planning</title>
+    <link rel="icon" href="favicon.ico" type="images/Planancelogomini.png"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #5046e5;
-            --primary-dark: #4238c2;
-            --secondary: #36b4ff;
-            --dark: #222639;
-            --light: #f5f7fa;
-            --success: #38c172;
-            --danger: #e3342f;
-            --warning: #ffad33;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--dark);
-            line-height: 1.6;
-            background-color: var(--light);
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .logo img {
-            height: 40px;
-            margin-right: 0.5rem;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-outline {
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            background: transparent;
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: 1px solid var(--primary);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 4rem 0;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        
-        .hero-content {
-            flex: 1;
-        }
-        
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #555;
-        }
-        
-        .highlight {
-            color: var(--primary);
-        }
-        
-        /* Features */
-        .features {
-            padding: 5rem 0;
-            background-color: white;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .section-title p {
-            font-size: 1.1rem;
-            color: #555;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            padding: 2rem;
-            background-color: var(--light);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .feature-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background-color: rgba(80, 70, 229, 0.1);
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .feature-icon svg {
-            width: 30px;
-            height: 30px;
-            color: var(--primary);
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-card p {
-            color: #555;
-        }
-        
-        /* Testimonials */
-        .testimonials {
-            padding: 5rem 0;
-            background-color: #f8fafc;
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .testimonial-card {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .testimonial-content {
-            font-style: italic;
-            margin-bottom: 1.5rem;
-        }
-        
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-        }
-        
-        .testimonial-author img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 1rem;
-        }
-        
-        .author-info h4 {
-            font-weight: 600;
-        }
-        
-        .author-info p {
-            font-size: 0.9rem;
-            color: #555;
-        }
-        
-        /* Pricing */
-        .pricing {
-            padding: 5rem 0;
-            background-color: white;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .pricing-card {
-            background-color: var(--light);
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .pricing-card.featured {
-            background-color: var(--primary);
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .pricing-card.featured .price {
-            color: white;
-        }
-        
-        .pricing-card.featured .btn {
-            background-color: white;
-            color: var(--primary);
-            border-color: white;
-        }
-        
-        .pricing-card.featured .btn:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-5px);
-        }
-        
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .price {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .price span {
-            font-size: 1rem;
-            font-weight: 400;
-        }
-        
-        .pricing-features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-        
-        .pricing-features li {
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .pricing-card.featured .pricing-features li {
-            border-bottom-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* CTA */
-        .cta {
-            padding: 5rem 0;
-            background-color: var(--primary);
-            color: white;
-            text-align: center;
-        }
-        
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .cta p {
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            font-size: 1.1rem;
-        }
-        
-        .cta .btn {
-            background-color: white;
-            color: var(--primary);
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-        }
-        
-        .cta .btn:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .footer-logo {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-        }
-        
-        .footer-about p {
-            margin-bottom: 1.5rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: var(--primary);
-        }
-        
-        .social-links svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
-        
-        .footer-links h4 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-links ul {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-        
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .nav-links {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .pricing-card.featured {
-                transform: none;
-            }
-            
-            .pricing-card.featured:hover {
-                transform: translateY(-5px);
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{{ asset('css/planance.css') }}" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="container">
             <nav class="nav">
-                <div class="logo">
-                    <img src="/api/placeholder/40/40" alt="Planance Logo"> Planance
-                </div>
+                <a href="#" class="logo">
+                    <div class="logo-img">P</div>
+                    Planance
+                </a>
                 <div class="nav-links">
                     <a href="#features">Features</a>
                     <a href="#pricing">Pricing</a>
@@ -521,20 +28,58 @@
                     <a href="/app/login" class="btn btn-outline">Log In</a>
                     <a href="/app/register" class="btn btn-primary">Sign Up</a>
                 </div>
+                <div class="mobile-nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </nav>
         </div>
     </header>
+    
+    <div class="mobile-nav">
+        <div class="mobile-nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <div class="mobile-auth-buttons">
+            <a href="/app/login" class="btn btn-outline">Log In</a>
+            <a href="/app/register" class="btn btn-primary">Sign Up</a>
+        </div>
+    </div>
 
     <section class="hero">
+        <div class="hero-shape-1"></div>
+        <div class="hero-shape-2"></div>
         <div class="container">
-            <div class="hero">
+            <div class="hero" style="padding-top: 0;">
                 <div class="hero-content">
-                    <h1>Smart <span class="highlight">Financial Planning</span> Made Simple</h1>
-                    <p>Planance helps individuals and businesses take control of their finances with intuitive budgeting, expense tracking, and financial goal planning.</p>
-                    <a href="/app/register" class="btn btn-primary">Start Free Trial</a>
+                    <div class="hero-tag">Smart Finance Management</div>
+                    <h1>Take Control of Your Financial Future</h1>
+                    <p>Planance helps individuals and businesses manage their finances with intelligent budgeting, expense tracking, and goal planning—all in one elegant platform.</p>
+                    <div class="hero-cta">
+                        <a href="/app/register" class="btn btn-primary">Start Free Trial</a>
+                        <a href="#features" class="btn btn-outline">Explore Features</a>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-item">
+                            <div class="stat-value">0+</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0+</div>
+                            <div class="stat-label">Managed Monthly</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">%+</div>
+                            <div class="stat-label">Customer Satisfaction</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="hero-image">
-                    <img src="/api/placeholder/500/400" alt="Planance Dashboard">
+                    <img src="images/PlananceDashboard.png" alt="Planance Dashboard">
                 </div>
             </div>
         </div>
@@ -543,63 +88,188 @@
     <section class="features" id="features">
         <div class="container">
             <div class="section-title">
-                <h2>Powerful Features</h2>
-                <p>Planance comes packed with all the tools you need to manage your finances effectively.</p>
+                <div class="section-tag">Powerful Tools</div>
+                <h2>Everything You Need to Master Your Finances</h2>
+                <p>This intuitive platform is packed with powerful features designed to give you complete control of your financial journey.</p>
             </div>
-            <div class="features-grid">
+            
+            <div class="features-wrapper">
+                <div class="features-left">
+                    <h3>Discover How Planance Works for You</h3>
+                    <p>Explore my comprehensive suite of financial tools designed to help you budget, track, and grow your finances with confidence.</p>
+                    
+                    <div class="features-tabs">
+                        <div class="feature-tab active">
+                            <h4>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 6v6l4 2"></path>
+                                </svg>
+                                Real-Time Tracking
+                            </h4>
+                            <p>Monitor your finances as they happen with instant updates and alerts.</p>
+                        </div>
+                        <div class="feature-tab">
+                            <h4>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                </svg>
+                                Smart Budgeting
+                            </h4>
+                            <p>Create customized budgets that adapt to your spending patterns.</p>
+                        </div>
+                        <div class="feature-tab">
+                            <h4>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                Intelligent Insights
+                            </h4>
+                            <p>Get personalized recommendations and insights based on your financial behavior.</p>
+                        </div>
+                        <div class="feature-tab">
+                            <h4>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                Multi-User Access
+                            </h4>
+                            <p>Share financial management with family or team members with custom permissions.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="features-right">
+                    <div class="feature-showcase">
+                        <img src="/api/placeholder/600/400" alt="Planance Feature Showcase">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-grid">
+        <div class="container">
+            <div class="section-title">
+                <div class="section-tag">Core Features</div>
+                <h2>Smart Tools for Better Financial Management</h2>
+                <p>Discover all the powerful features that make Planance the ultimate financial planning platform.</p>
+            </div>
+            
+            <div class="cards-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M16 12h-6"></path>
+                            <path d="M12 8v8"></path>
                         </svg>
                     </div>
                     <h3>Budget Management</h3>
                     <p>Create and manage detailed budgets with customizable categories and automatic tracking to stay on top of your spending.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                     </div>
                     <h3>Expense Tracking</h3>
                     <p>Effortlessly track your expenses with receipt scanning technology and automatic categorization of transactions.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                         </svg>
                     </div>
                     <h3>Financial Goals</h3>
                     <p>Set and track your financial goals with visual progress indicators and smart recommendations to help you achieve them faster.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
                         </svg>
                     </div>
                     <h3>Insightful Reports</h3>
                     <p>Access detailed financial reports and analytics to gain insights into your spending patterns and make informed decisions.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                     </div>
                     <h3>Secure & Private</h3>
                     <p>Your financial data is protected with bank-level security and encryption. We prioritize your privacy and data protection.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
                     </div>
                     <h3>Team Collaboration</h3>
                     <p>Perfect for businesses and families - collaborate on shared financial planning with customizable access levels.</p>
+                    <a href="#" class="feature-more">
+                        Learn more
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
@@ -608,43 +278,73 @@
     <section class="testimonials" id="testimonials">
         <div class="container">
             <div class="section-title">
-                <h2>What Our Users Say</h2>
-                <p>Join thousands of satisfied individuals and businesses who have transformed their financial management with Planance.</p>
+                <div class="section-tag">Testimonials</div>
+                <h2>What Are Users Saying</h2>
+                <p>Join individuals and businesses who have transformed their financial management with Planance.</p>
             </div>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Planance has completely transformed how I manage my personal finances. The intuitive interface and budgeting tools helped me save €5,000 in just 6 months!"</p>
+            
+            <div class="testimonials-wrapper">
+                <div class="testimonials-left">
+                    <div class="testimonials-title">
+                        <h3>Trusted by Financial Decision-Makers</h3>
+                        <p>Planance has helped individuals and businesses around the world take control of their finances and achieve their financial goals.</p>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="/api/placeholder/50/50" alt="Sarah K.">
-                        <div class="author-info">
-                            <h4>Sarah K.</h4>
-                            <p>Marketing Professional</p>
-                        </div>
-                    </div>
+                    
+
                 </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"As a small business owner, keeping track of expenses was always a challenge. Planance made it simple with its receipt scanning feature and detailed reports."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="/api/placeholder/50/50" alt="Michael D.">
-                        <div class="author-info">
-                            <h4>Michael D.</h4>
-                            <p>Small Business Owner</p>
+                
+                <div class="testimonials-right">
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <p>"x"</p>
+                            </div>
+                            <div class="testimonial-author">
+                                <img src="/api/placeholder/50/50" alt="x">
+                                <div class="author-info">
+                                    <h4>x</h4>
+                                    <p>x</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"The financial goal tracking feature helped me stay motivated while saving for my first home. Planance is now an essential part of my financial routine."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="/api/placeholder/50/50" alt="Emma T.">
-                        <div class="author-info">
-                            <h4>Emma T.</h4>
-                            <p>Software Engineer</p>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <p>"x"</p>
+                            </div>
+                            <div class="testimonial-author">
+                                <img src="/api/placeholder/50/50" alt="x">
+                                <div class="author-info">
+                                    <h4>x</h4>
+                                    <p>x</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <p>"x"</p>
+                            </div>
+                            <div class="testimonial-author">
+                                <img src="/api/placeholder/50/50" alt="x">
+                                <div class="author-info">
+                                    <h4>x</h4>
+                                    <p>x</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <p>"x"</p>
+                            </div>
+                            <div class="testimonial-author">
+                                <img src="/api/placeholder/50/50" alt="x">
+                                <div class="author-info">
+                                    <h4>x</h4>
+                                    <p>x</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -655,46 +355,155 @@
     <section class="pricing" id="pricing">
         <div class="container">
             <div class="section-title">
-                <h2>Simple, Transparent Pricing</h2>
+                <div class="section-tag">Pricing</div>
+                <h2>Simple, Transparent Pricing Plans</h2>
                 <p>Choose the plan that fits your needs, whether you're an individual or a business.</p>
             </div>
+            
+            <div class="pricing-toggle">
+                <span class="active">Monthly</span>
+                <div class="pricing-toggle-pill"></div>
+                <span>Yearly <span class="pricing-discount">Save 20%</span></span>
+            </div>
+            
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Personal</h3>
-                    <div class="price">€5<span>/month</span></div>
+                    <p class="pricing-description">Perfect for individuals looking to manage personal finances.</p>
+                    <div class="price">
+                        <span class="price-currency">€</span>*<span class="price-period">/mo</span>
+                    </div>
                     <ul class="pricing-features">
-                        <li>Unlimited Budget Categories</li>
-                        <li>Expense Tracking</li>
-                        <li>Financial Goal Setting</li>
-                        <li>Basic Reports</li>
-                        <li>Mobile App Access</li>
-                        <li>Email Support</li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Unlimited Budget Categories
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Expense Tracking
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Financial Goal Setting
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Basic Reports
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Mobile App Access
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Email Support
+                        </li>
                     </ul>
                     <a href="/app/register" class="btn btn-outline">Get Started</a>
                 </div>
+                
                 <div class="pricing-card featured">
                     <h3>Premium</h3>
-                    <div class="price">€12<span>/month</span></div>
+                    <p class="pricing-description">Advanced features for finance enthusiasts and professionals.</p>
+                    <div class="price">
+                        <span class="price-currency">€</span>**<span class="price-period">/mo</span>
+                    </div>
                     <ul class="pricing-features">
-                        <li>Everything in Personal</li>
-                        <li>Receipt Scanning</li>
-                        <li>Advanced Analytics</li>
-                        <li>Custom Categories</li>
-                        <li>Export Data (CSV, PDF)</li>
-                        <li>Priority Support</li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Everything in Personal
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Receipt Scanning
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Advanced Analytics
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Custom Categories
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Export Data (CSV, PDF)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Priority Support
+                        </li>
                     </ul>
                     <a href="/app/register" class="btn btn-primary">Get Started</a>
                 </div>
+                
                 <div class="pricing-card">
                     <h3>Business</h3>
-                    <div class="price">€25<span>/month</span></div>
+                    <p class="pricing-description">Collaborative tools for teams and businesses of all sizes.</p>
+                    <div class="price">
+                        <span class="price-currency">€</span>***<span class="price-period">/mo</span>
+                    </div>
                     <ul class="pricing-features">
-                        <li>Everything in Premium</li>
-                        <li>Multiple Users (up to 5)</li>
-                        <li>Team Collaboration</li>
-                        <li>Role-Based Permissions</li>
-                        <li>API Access</li>
-                        <li>Dedicated Support</li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Everything in Premium
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Multiple Users (up to 5)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Team Collaboration
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Role-Based Permissions
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            API Access
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Dedicated Support
+                        </li>
                     </ul>
                     <a href="/app/register" class="btn btn-outline">Get Started</a>
                 </div>
@@ -702,11 +511,158 @@
         </div>
     </section>
 
-    <section class="cta">
+    <section class="app-showcase">
         <div class="container">
-            <h2>Ready to Take Control of Your Finances?</h2>
-            <p>Join thousands of users who are already managing their finances smarter with Planance. Start your free 14-day trial today - no credit card required.</p>
-            <a href="/app/register" class="btn">Start Free Trial</a>
+            <div class="app-wrapper">
+                <div class="app-content">
+                    <div class="section-tag">Mobile App</div>
+                    <h1>COMING SOON</h1>
+                    <h2>Take Planance Wherever You Go</h2>
+                    <p>Mobile app will allow you to track expenses on the go, scan receipts instantly, and stay on top of your finances anywhere, anytime. Get notified when it's available!</p>
+                    
+                    <div class="app-buttons">
+                        <a href="#" class="app-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
+                            </svg>
+                            <div class="app-button-content">
+                                <span>COMING SOON ON</span>
+                                <span>App Store</span>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="app-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="3 3 21 12 3 21 3 3"></polygon>
+                            </svg>
+                            <div class="app-button-content">
+                                <span>COMING SOON ON</span>
+                                <span>Google Play</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="app-showcase-image">
+                    <div class="app-circles">
+                        <div class="circle circle-1"></div>
+                        <div class="circle circle-2"></div>
+                        <div class="circle circle-3"></div>
+                    </div>
+                    
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="screen-content">
+                                <div class="app-header">
+                                    <div class="app-header-logo">Planance</div>
+                                </div>
+                                
+                                <div class="wireframe-elements">
+                                    <div class="wireframe-box box-sm"></div>
+                                    <div class="wireframe-box box-md"></div>
+                                    <div class="wireframe-box box-lg"></div>
+                                    <div class="wireframe-box box-sm"></div>
+                                    <div class="wireframe-box box-md"></div>
+                                </div>
+                                
+                                <div class="dev-indicator">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v4M12 18v4M4.93 4.93L7.76 7.76M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                                    </svg>
+                                    <h3>Under Development</h3>
+                                    <p>We're working hard to bring you the best experience</p>
+                                    <div class="dev-progress">
+                                        <div class="dev-progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <div class="section-tag">FAQ</div>
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about Planance and how it can help you manage your finances.</p>
+            </div>
+            
+            <div class="faq-wrapper">
+                <div class="faq-item active">
+                    <div class="faq-question">
+                        How secure is my financial data with Planance?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>At Planance, I take security seriously. I use bank-level encryption and security practices to ensure your data is always protected. I never share your personal information with third parties without your consent.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I access Planance on multiple devices?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Planance is available on web browsers, iOS, and Android devices. Your data is automatically synced across all your devices, so you can manage your finances whenever and wherever it's convenient for you.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I share access with my spouse or business partner?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Premium and Business plans allow for shared access with customizable permissions. You can control exactly what each user can view or modify, making it perfect for families, businesses, and financial advisors.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is there a free trial available?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, Planance offers a 14-day free trial on all Planance plans. No credit card is required to start your trial, and you can upgrade or cancel at any time.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I get support if I have questions?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Support team is available via email, live chat, and phone. Premium and Business users get priority support with faster response times. We also have an extensive knowledge base and video tutorials to help you get the most out of Planance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-shape-1"></div>
+        <div class="cta-shape-2"></div>
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Take Control of Your Finances?</h2>
+                <p>Join thousands of users who are already managing their finances smarter with Planance. Start your free 14-day trial today - no credit card required.</p>
+                <a href="/app/register" class="btn">Start Free Trial</a>
+            </div>
         </div>
     </section>
 
@@ -714,8 +670,11 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-about">
-                    <div class="footer-logo">Planance</div>
-                    <p>Smart financial planning for individuals and businesses. Take control of your finances with our intuitive tools and powerful insights.</p>
+                    <div class="footer-logo">
+                        <div class="footer-logo-img">P</div>
+                        Planance
+                    </div>
+                    <p>Smart financial planning for individuals and businesses. Take control of your finances with Planance's intuitive tools and powerful insights.</p>
                     <div class="social-links">
                         <a href="#" aria-label="Facebook">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -739,107 +698,154 @@
                         </a>
                     </div>
                 </div>
+                
                 <div class="footer-links">
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Press</a></li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Careers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Blog
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Press
+                            </a>
+                        </li>
                     </ul>
                 </div>
+                
                 <div class="footer-links">
                     <h4>Products</h4>
                     <ul>
-                        <li><a href="#">Personal Finance</a></li>
-                        <li><a href="#">Business Solutions</a></li>
-                        <li><a href="#">Financial Education</a></li>
-                        <li><a href="#">API Documentation</a></li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Personal Finance
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Business Solutions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Financial Education
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                API Documentation
+                            </a>
+                        </li>
                     </ul>
                 </div>
+                
                 <div class="footer-links">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Security</a></li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Help Center
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Contact Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                FAQ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                Security
+                            </a>
+                        </li>
                     </ul>
                 </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">GDPR Compliance</a></li>
-                    </ul>
+                
+                <div class="newsletter">
+                    <h4>Subscribe to Planance Newsletter</h4>
+                    <p>Get the latest updates, news, and financial tips directly to your inbox.</p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Your email address">
+                        <button type="submit" class="newsletter-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </form>
+                    <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
                 </div>
             </div>
+            
             <div class="copyright">
                 &copy; 2025 Planance. All rights reserved.
             </div>
         </div>
     </footer>
-
-    <!-- FAQ Section -->
-    <section class="faq" id="faq" style="padding: 5rem 0; background-color: #f8fafc;">
-        <div class="container">
-            <div class="section-title">
-                <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about Planance and how it can help you manage your finances.</p>
-            </div>
-            <div style="max-width: 800px; margin: 0 auto;">
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">How secure is my financial data with Planance?</h3>
-                    <p style="color: #555;">At Planance, we take security seriously. We use bank-level encryption and security practices to ensure your data is always protected. Our system is regularly audited by independent security experts, and we never share your personal information with third parties without your consent.</p>
-                </div>
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">Can I access Planance on multiple devices?</h3>
-                    <p style="color: #555;">Yes! Planance is available on web browsers, iOS, and Android devices. Your data is automatically synced across all your devices, so you can manage your finances whenever and wherever it's convenient for you.</p>
-                </div>
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">Does Planance integrate with my bank accounts?</h3>
-                    <p style="color: #555;">Yes, Planance can connect securely to over 10,000 financial institutions worldwide. This allows for automatic transaction import and categorization, saving you time and ensuring your financial data is always up-to-date.</p>
-                </div>
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">Can I share access with my spouse or business partner?</h3>
-                    <p style="color: #555;">Absolutely! Our Premium and Business plans allow for shared access with customizable permissions. You can control exactly what each user can view or modify, making it perfect for families, businesses, and financial advisors.</p>
-                </div>
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">Is there a free trial available?</h3>
-                    <p style="color: #555;">Yes, we offer a 14-day free trial on all our plans. No credit card is required to start your trial, and you can upgrade or cancel at any time.</p>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary);">How do I get support if I have questions?</h3>
-                    <p style="color: #555;">Our support team is available via email, live chat, and phone. Premium and Business users get priority support with faster response times. We also have an extensive knowledge base and video tutorials to help you get the most out of Planance.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Mobile App Section -->
-    <section style="padding: 5rem 0; background-color: white;">
-        <div class="container">
-            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 3rem;">
-                <div style="flex: 1; min-width: 300px;">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Take Planance With You Everywhere</h2>
-                    <p style="font-size: 1.1rem; color: #555; margin-bottom: 2rem;">Our mobile app allows you to track expenses on the go, scan receipts instantly, and stay on top of your finances anywhere, anytime.</p>
-                    <div style="display: flex; gap: 1rem;">
-                        <a href="#" style="display: inline-block;">
-                            <img src="/api/placeholder/150/50" alt="Download on App Store" style="height: 50px; width: auto;">
-                        </a>
-                        <a href="#" style="display: inline-block;">
-                            <img src="/api/placeholder/150/50" alt="Get it on Google Play" style="height: 50px; width: auto;">
-                        </a>
-                    </div>
-                </div>
-                <div style="flex: 1; min-width: 300px; display: flex; justify-content: center;">
-                    <img src="/api/placeholder/300/600" alt="Planance Mobile App" style="max-width: 100%; height: auto; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);">
-                </div>
-            </div>
-        </div>
-    </section>
-
+<script src="{{ asset('js/planance.js') }}"></script>
 </body>
 </html>
