@@ -24,54 +24,143 @@
                 
                 const ctx = document.getElementById('categoryPieChart').getContext('2d');
                 
+                // Color palette - more professional, distinct colors
+                const colorPalette = [
+                    '#4338ca', '#3b82f6', '#0891b2', '#059669', '#84cc16', 
+                    '#8b5cf6', '#a855f7', '#ec4899', '#f43f5e', '#f97316'
+                ];
+                
+                // Create a more sophisticated doughnut chart
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: this.categoryBreakdown.map(item => this.formatCategoryName(item.category)),
                         datasets: [{
                             data: this.categoryBreakdown.map(item => item.total),
-                            backgroundColor: [
-                                '#4f46e5', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b',
-                                '#8b5cf6', '#ec4899', '#ef4444', '#f97316', '#6366f1'
-                            ],
-                            borderWidth: 2,
+                            backgroundColor: colorPalette,
+                            borderWidth: 1,
                             borderColor: '#ffffff',
+                            hoverBorderWidth: 3,
+                            hoverBorderColor: '#ffffff',
+                            hoverOffset: 10,
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                top: 10,
+                                bottom: 10,
+                                left: 10,
+                                right: 10
+                            }
+                        },
                         plugins: {
                             legend: {
-                                position: 'right',
+                                position: 'bottom',
                                 labels: {
                                     boxWidth: 12,
                                     padding: 15,
                                     font: {
-                                        size: 12
-                                    }
+                                        size: 11,
+                                        weight: 'bold'
+                                    },
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
                                 }
                             },
                             tooltip: {
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                titleColor: '#111827',
+                                bodyColor: '#374151',
+                                borderColor: '#e5e7eb',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                padding: 12,
+                                boxPadding: 6,
+                                usePointStyle: true,
                                 callbacks: {
                                     label: function(context) {
                                         const label = context.label || '';
                                         const value = context.raw || 0;
-                                        const percentage = context.dataset.data.reduce((a, b) => a + b, 0) > 0 
-                                            ? Math.round((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100) 
-                                            : 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
                                         return `${label}: €${value.toFixed(2)} (${percentage}%)`;
+                                    },
+                                    labelTextColor: function() {
+                                        return '#374151'; // Dark gray text for better readability
                                     }
+                                }
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                formatter: (value, ctx) => {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return percentage > 5 ? `${percentage}%` : ''; // Only show percentage for significant slices
                                 }
                             }
                         },
-                        cutout: '65%',
+                        cutout: '70%', // Larger hole for a more modern look
                         animation: {
                             animateScale: true,
-                            animateRotate: true
+                            animateRotate: true,
+                            duration: 1000,
+                            easing: 'easeOutQuart'
                         }
                     }
                 });
+                
+                // Add a center text element to display total expenses
+                this.addCenterText('categoryPieChart', this.formatMoney(this.totalExpenses), 'Total Expenses');
+            },
+            
+            // Add this new helper function to render the center text
+            addCenterText(chartId, mainText, subText) {
+                const chart = document.getElementById(chartId);
+                
+                // Remove any existing center text elements
+                const existingText = chart.parentNode.querySelector('.chart-center-text');
+                if (existingText) {
+                    existingText.remove();
+                }
+                
+                // Create the center text container
+                const centerText = document.createElement('div');
+                centerText.className = 'chart-center-text';
+                centerText.style.position = 'absolute';
+                centerText.style.top = '50%';
+                centerText.style.left = '50%';
+                centerText.style.transform = 'translate(-50%, -50%)';
+                centerText.style.textAlign = 'center';
+                
+                // Create main text
+                const mainTextEl = document.createElement('div');
+                mainTextEl.textContent = mainText;
+                mainTextEl.style.fontSize = '1.1rem';
+                mainTextEl.style.fontWeight = 'bold';
+                mainTextEl.style.color = '#1f2937';
+                mainTextEl.className = 'dark:text-white';
+                
+                // Create sub text
+                const subTextEl = document.createElement('div');
+                subTextEl.textContent = subText;
+                subTextEl.style.fontSize = '0.75rem';
+                subTextEl.style.color = '#6b7280';
+                subTextEl.className = 'dark:text-gray-300';
+                
+                // Append texts to container
+                centerText.appendChild(mainTextEl);
+                centerText.appendChild(subTextEl);
+                
+                // Add the center text to the chart's parent container
+                chart.parentNode.style.position = 'relative';
+                chart.parentNode.appendChild(centerText);
             },
             renderMonthlyTrendChart() {
                 if (this.monthlyTrend.length === 0) return;
@@ -248,29 +337,82 @@
         
         <!-- Charts -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- REPLACE THIS SECTION WITH THE NEW CHART IMPLEMENTATION -->
             <x-filament::section>
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold">Category Breakdown</h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $startDateFormatted }} - {{ $endDateFormatted }}</span>
+                    </div>
                 </div>
-                <div class="h-80">
+
+                <!-- Chart Container with Position Relative for Center Text -->
+                <div class="relative h-80">
                     <canvas id="categoryPieChart"></canvas>
                 </div>
                 
-                <div class="mt-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Top Categories</h3>
+                <!-- CSS for Chart Area -->
+                <style>
+                    .chart-center-text {
+                        pointer-events: none;
+                        z-index: 10;
+                    }
+                    
+                    /* Dark mode styles */
+                    .dark .chart-center-text div:first-child {
+                        color: white;
+                    }
+                    
+                    .dark .chart-center-text div:last-child {
+                        color: #9ca3af;
+                    }
+                </style>
+                
+                <!-- Top Categories with improved visualization -->
+                <div id="topCategoriesContainer" class="mt-6">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Top Expense Categories</h3>
                     <div class="space-y-3">
                         <template x-for="(category, index) in categoryBreakdown.slice(0, 5)" :key="index">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <div class="w-2 h-2 rounded-full mr-2" :style="`background-color: ${['#4f46e5', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b'][index]};`"></div>
-                                    <span class="text-sm" x-text="formatCategoryName(category.category)"></span>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium" x-text="formatCategoryName(category.category)"></span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                                        <span x-text="formatMoney(category.total)"></span>
+                                        <span x-text="`(${category.percentage}%)`"></span>
+                                    </span>
                                 </div>
-                                <div class="flex items-center">
-                                    <span class="text-sm font-medium" x-text="formatMoney(category.total)"></span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2" x-text="`${category.percentage}%`"></span>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                    <div class="h-2.5 rounded-full" 
+                                         :style="`width: ${category.percentage}%; background-color: ${['#4338ca', '#3b82f6', '#0891b2', '#059669', '#84cc16', '#8b5cf6', '#a855f7', '#ec4899', '#f43f5e', '#f97316'][index % 10]};`">
+                                    </div>
                                 </div>
                             </div>
                         </template>
+                    </div>
+                </div>
+                
+                <!-- Add quick insights section -->
+                <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Insights</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-start space-x-2">
+                            <div class="p-1.5 bg-indigo-100 dark:bg-indigo-900 rounded-full">
+                                <x-heroicon-o-arrow-trending-up class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-gray-700 dark:text-gray-300">Largest Category</p>
+                                <p class="text-sm" x-text="categoryBreakdown.length > 0 ? formatCategoryName(categoryBreakdown[0].category) + ' (' + formatMoney(categoryBreakdown[0].total) + ')' : 'No data'"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <div class="p-1.5 bg-emerald-100 dark:bg-emerald-900 rounded-full">
+                                <x-heroicon-o-arrow-trending-down class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-gray-700 dark:text-gray-300">Average Per Category</p>
+                                <p class="text-sm" x-text="categoryBreakdown.length > 0 ? formatMoney(totalExpenses / categoryBreakdown.length) : 'No data'"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </x-filament::section>
@@ -422,12 +564,21 @@
                                     <p class="text-xs text-emerald-700 dark:text-emerald-400 mt-1">Wait 24 hours before making non-essential purchases to avoid impulse buying.</p>
                                 </div>
                             </div>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </x-filament::section>
         </div>
         
+        <!-- Add the Chart.js libraries and plugins -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                // Register Chart.js plugins
+                Chart.register(ChartDataLabels);
+            });
+        </script>
     </div>
 </x-filament-panels::page>
