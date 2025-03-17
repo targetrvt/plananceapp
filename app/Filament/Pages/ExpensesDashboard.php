@@ -9,12 +9,17 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Filament\Actions\ActionGroup;
+use Filament\Notifications\Notification;
+use Filament\Pages\Actions\Action as PageAction;
 
 class ExpensesDashboard extends Page
 {
@@ -31,11 +36,96 @@ class ExpensesDashboard extends Page
     public $startDate;
     public $endDate;
     public $category = 'all';
+    public $currentMonth;
+    public $currentYear;
+    
+    protected $listeners = ['refreshDashboard' => '$refresh'];
     
     public function mount()
     {
-        $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $this->currentMonth = Carbon::now()->month;
+        $this->currentYear = Carbon::now()->year;
+        
+        $this->setDateRangeFromTimeframe();
+    }
+    
+    /**
+     * Set date range based on selected timeframe
+     */
+    protected function setDateRangeFromTimeframe()
+    {
+        // Create a Carbon instance for the current year/month
+        $date = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1);
+        
+        if ($this->timeframe === 'week') {
+            $this->startDate = Carbon::now()->startOfWeek()->format('Y-m-d');
+            $this->endDate = Carbon::now()->endOfWeek()->format('Y-m-d');
+        } elseif ($this->timeframe === 'month') {
+            $this->startDate = $date->copy()->startOfMonth()->format('Y-m-d');
+            $this->endDate = $date->copy()->endOfMonth()->format('Y-m-d');
+        } elseif ($this->timeframe === 'quarter') {
+            $this->startDate = $date->copy()->startOfQuarter()->format('Y-m-d');
+            $this->endDate = $date->copy()->endOfQuarter()->format('Y-m-d');
+        } elseif ($this->timeframe === 'year') {
+            $this->startDate = $date->copy()->startOfYear()->format('Y-m-d');
+            $this->endDate = $date->copy()->endOfYear()->format('Y-m-d');
+        }
+    }
+    
+    /**
+     * Navigate to previous period based on current timeframe
+     */
+    public function previousPeriod()
+    {
+        if ($this->timeframe === 'month') {
+            if ($this->currentMonth == 1) {
+                $this->currentMonth = 12;
+                $this->currentYear--;
+            } else {
+                $this->currentMonth--;
+            }
+        } elseif ($this->timeframe === 'quarter') {
+            $date = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->subMonths(3);
+            $this->currentMonth = $date->month;
+            $this->currentYear = $date->year;
+        } elseif ($this->timeframe === 'year') {
+            $this->currentYear--;
+        } elseif ($this->timeframe === 'week') {
+            $date = Carbon::parse($this->startDate)->subDays(7);
+            $this->startDate = $date->format('Y-m-d');
+            $this->endDate = $date->addDays(6)->format('Y-m-d');
+            return;
+        }
+        
+        $this->setDateRangeFromTimeframe();
+    }
+    
+    /**
+     * Navigate to next period based on current timeframe
+     */
+    public function nextPeriod()
+    {
+        if ($this->timeframe === 'month') {
+            if ($this->currentMonth == 12) {
+                $this->currentMonth = 1;
+                $this->currentYear++;
+            } else {
+                $this->currentMonth++;
+            }
+        } elseif ($this->timeframe === 'quarter') {
+            $date = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->addMonths(3);
+            $this->currentMonth = $date->month;
+            $this->currentYear = $date->year;
+        } elseif ($this->timeframe === 'year') {
+            $this->currentYear++;
+        } elseif ($this->timeframe === 'week') {
+            $date = Carbon::parse($this->startDate)->addDays(7);
+            $this->startDate = $date->format('Y-m-d');
+            $this->endDate = $date->addDays(6)->format('Y-m-d');
+            return;
+        }
+        
+        $this->setDateRangeFromTimeframe();
     }
     
     /**
@@ -47,28 +137,126 @@ class ExpensesDashboard extends Page
     public function updateTimeframe($timeframe)
     {
         $this->timeframe = $timeframe;
+        $this->setDateRangeFromTimeframe();
+    }
+    
+    /**
+     * Reset to current period
+     */
+    public function resetToCurrentPeriod()
+    {
+        $this->currentMonth = Carbon::now()->month;
+        $this->currentYear = Carbon::now()->year;
+        $this->setDateRangeFromTimeframe();
+    }
+    
+    /**
+     * Get form schema for adding a new expense
+     */
+    public function getExpenseFormSchema(): array
+    {
+        return [
+            Section::make('New Expense')
+                ->schema([
+                    Hidden::make('type')
+                        ->default('expense'),
+                    
+                    TextInput::make('amount')
+                        ->required()
+                        ->numeric()
+                        ->prefix('EUR')
+                        ->placeholder('0.00'),
+                    
+                    DatePicker::make('date')
+                        ->required()
+                        ->default(now()),
+                    
+                    Select::make('category')
+                        ->options([
+                            'food' => 'Food & Dining',
+                            'shopping' => 'Shopping',
+                            'entertainment' => 'Entertainment',
+                            'transportation' => 'Transportation',
+                            'housing' => 'Housing',
+                            'utilities' => 'Utilities',
+                            'health' => 'Health',
+                            'education' => 'Education',
+                            'travel' => 'Travel',
+                            'unhealthy_habits' => 'Unhealthy Habits',
+                            'other_expense' => 'Other Expense',
+                        ])
+                        ->searchable()
+                        ->required(),
+                    
+                    TextInput::make('description')
+                        ->maxLength(255)
+                        ->placeholder('Expense description')
+                ])
+        ];
+    }
+    
+    /**
+     * Define the quick expense form action
+     */
+    protected function getQuickExpenseAction(): Action
+    {
+        return Action::make('quickAddExpense')
+            ->label('Quick Add')
+            ->color('success')
+            ->icon('heroicon-m-plus-circle')
+            ->form($this->getExpenseFormSchema())
+            ->modalWidth('md')
+            ->modalHeading('Add New Expense')
+            ->modalDescription('Quickly add a new expense to your records.')
+            ->modalSubmitActionLabel('Save Expense')
+            ->action(function (array $data) {
+                // Add user_id to data
+                $data['user_id'] = auth()->id();
+                
+                // Create the transaction
+                $transaction = Transaction::create($data);
+                
+                // Update user balance if needed
+                $this->updateUserBalance($data['amount']);
+                
+                Notification::make()
+                    ->title('Expense added successfully')
+                    ->success()
+                    ->send();
+                
+                // Refresh the dashboard data
+                $this->dispatch('refreshDashboard');
+            });
+    }
+    
+    /**
+     * Update user balance after adding an expense
+     */
+    protected function updateUserBalance($amount)
+    {
+        $userBalance = \App\Models\UserBalance::firstOrCreate(
+            ['user_id' => auth()->id()],
+            ['balance' => 0, 'currency' => 'EUR']
+        );
         
-        // Set dates based on selected timeframe
-        $now = Carbon::now();
-        
-        if ($this->timeframe === 'week') {
-            $this->startDate = $now->copy()->startOfWeek()->format('Y-m-d');
-            $this->endDate = $now->copy()->endOfWeek()->format('Y-m-d');
-        } elseif ($this->timeframe === 'month') {
-            $this->startDate = $now->copy()->startOfMonth()->format('Y-m-d');
-            $this->endDate = $now->copy()->endOfMonth()->format('Y-m-d');
-        } elseif ($this->timeframe === 'quarter') {
-            $this->startDate = $now->copy()->startOfQuarter()->format('Y-m-d');
-            $this->endDate = $now->copy()->endOfQuarter()->format('Y-m-d');
-        } elseif ($this->timeframe === 'year') {
-            $this->startDate = $now->copy()->startOfYear()->format('Y-m-d');
-            $this->endDate = $now->copy()->endOfYear()->format('Y-m-d');
-        }
+        $userBalance->balance -= $amount;
+        $userBalance->save();
     }
     
     protected function getHeaderActions(): array
     {
         return [
+            ActionGroup::make([
+                $this->getQuickExpenseAction(),
+                Action::make('addExpense')
+                    ->label('Add Expense')
+                    ->url(fn (): string => url('/app/transactions/create'))
+                    ->color('primary')
+                    ->icon('heroicon-m-plus-circle'),
+            ])->label('Add Expense')
+              ->color('success')
+              ->icon('heroicon-m-plus-circle'),
+                
             Action::make('filter')
                 ->label('Filter')
                 ->icon('heroicon-m-funnel')
@@ -135,33 +323,17 @@ class ExpensesDashboard extends Page
                     $this->timeframe = $data['timeframe'] ?? 'month';
                     
                     // Set dates based on timeframe if not custom
-                    $now = Carbon::now();
-                    if ($this->timeframe === 'week') {
-                        $this->startDate = $now->copy()->startOfWeek()->format('Y-m-d');
-                        $this->endDate = $now->copy()->endOfWeek()->format('Y-m-d');
-                    } elseif ($this->timeframe === 'month') {
-                        $this->startDate = $now->copy()->startOfMonth()->format('Y-m-d');
-                        $this->endDate = $now->copy()->endOfMonth()->format('Y-m-d');
-                    } elseif ($this->timeframe === 'quarter') {
-                        $this->startDate = $now->copy()->startOfQuarter()->format('Y-m-d');
-                        $this->endDate = $now->copy()->endOfQuarter()->format('Y-m-d');
-                    } elseif ($this->timeframe === 'year') {
-                        $this->startDate = $now->copy()->startOfYear()->format('Y-m-d');
-                        $this->endDate = $now->copy()->endOfYear()->format('Y-m-d');
-                    } else {
+                    if ($this->timeframe === 'custom') {
                         // For custom timeframe, use the provided dates
                         $this->startDate = $data['startDate'] ?? $this->startDate;
                         $this->endDate = $data['endDate'] ?? $this->endDate;
+                    } else {
+                        // Otherwise set the date range based on the timeframe
+                        $this->setDateRangeFromTimeframe();
                     }
                     
                     $this->category = $data['category'] ?? 'all';
                 }),
-                
-            Action::make('addExpense')
-                ->label('Add Expense')
-                ->url(fn (): string => url('/app/transactions/create'))
-                ->color('success')
-                ->icon('heroicon-m-plus-circle'),
         ];
     }
     
@@ -352,5 +524,29 @@ class ExpensesDashboard extends Page
                     ->label('Description'),
             ])
             ->columns(4);
+    }
+    
+    // Get period label based on current timeframe
+    public function getPeriodLabel()
+    {
+        if ($this->timeframe === 'month') {
+            return Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->format('F Y');
+        } elseif ($this->timeframe === 'quarter') {
+            $startMonth = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->startOfQuarter();
+            $endMonth = $startMonth->copy()->endOfQuarter();
+            return $startMonth->format('M') . ' - ' . $endMonth->format('M Y');
+        } elseif ($this->timeframe === 'year') {
+            return $this->currentYear;
+        } elseif ($this->timeframe === 'week') {
+            $start = Carbon::parse($this->startDate);
+            $end = Carbon::parse($this->endDate);
+            return $start->format('M d') . ' - ' . $end->format('M d, Y');
+        } elseif ($this->timeframe === 'custom') {
+            $start = Carbon::parse($this->startDate);
+            $end = Carbon::parse($this->endDate);
+            return $start->format('M d') . ' - ' . $end->format('M d, Y');
+        }
+        
+        return '';
     }
 }
