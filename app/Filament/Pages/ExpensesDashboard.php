@@ -38,6 +38,34 @@ class ExpensesDashboard extends Page
         $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
     }
     
+    /**
+     * Update the timeframe and refresh the data
+     *
+     * @param string $timeframe
+     * @return void
+     */
+    public function updateTimeframe($timeframe)
+    {
+        $this->timeframe = $timeframe;
+        
+        // Set dates based on selected timeframe
+        $now = Carbon::now();
+        
+        if ($this->timeframe === 'week') {
+            $this->startDate = $now->copy()->startOfWeek()->format('Y-m-d');
+            $this->endDate = $now->copy()->endOfWeek()->format('Y-m-d');
+        } elseif ($this->timeframe === 'month') {
+            $this->startDate = $now->copy()->startOfMonth()->format('Y-m-d');
+            $this->endDate = $now->copy()->endOfMonth()->format('Y-m-d');
+        } elseif ($this->timeframe === 'quarter') {
+            $this->startDate = $now->copy()->startOfQuarter()->format('Y-m-d');
+            $this->endDate = $now->copy()->endOfQuarter()->format('Y-m-d');
+        } elseif ($this->timeframe === 'year') {
+            $this->startDate = $now->copy()->startOfYear()->format('Y-m-d');
+            $this->endDate = $now->copy()->endOfYear()->format('Y-m-d');
+        }
+    }
+    
     protected function getHeaderActions(): array
     {
         return [
