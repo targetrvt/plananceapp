@@ -49,12 +49,8 @@ class ExpensesDashboard extends Page
         $this->setDateRangeFromTimeframe();
     }
     
-    /**
-     * Set date range based on selected timeframe
-     */
     protected function setDateRangeFromTimeframe()
     {
-        // Create a Carbon instance for the current year/month
         $date = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1);
         
         if ($this->timeframe === 'week') {
@@ -71,10 +67,6 @@ class ExpensesDashboard extends Page
             $this->endDate = $date->copy()->endOfYear()->format('Y-m-d');
         }
     }
-    
-    /**
-     * Navigate to previous period based on current timeframe
-     */
     public function previousPeriod()
     {
         if ($this->timeframe === 'month') {
@@ -100,9 +92,6 @@ class ExpensesDashboard extends Page
         $this->setDateRangeFromTimeframe();
     }
     
-    /**
-     * Navigate to next period based on current timeframe
-     */
     public function nextPeriod()
     {
         if ($this->timeframe === 'month') {
@@ -127,28 +116,50 @@ class ExpensesDashboard extends Page
         
         $this->setDateRangeFromTimeframe();
     }
-    
-    /**
-     * Update the timeframe and refresh the data
-     *
-     * @param string $timeframe
-     * @return void
-     */
     public function updateTimeframe($timeframe)
     {
         $this->timeframe = $timeframe;
         $this->setDateRangeFromTimeframe();
     }
-    
-    /**
-     * Reset to current period
-     */
     public function resetToCurrentPeriod()
     {
         $this->currentMonth = Carbon::now()->month;
         $this->currentYear = Carbon::now()->year;
         $this->setDateRangeFromTimeframe();
     }
+    
+    /**
+     * Reset filters to default values
+     */
+    public function resetFilters()
+{
+    // Store current filter state to check for changes
+    $oldTimeframe = $this->timeframe;
+    $oldCategory = $this->category;
+    $oldStartDate = $this->startDate;
+    $oldEndDate = $this->endDate;
+    
+    $this->timeframe = 'month';
+    $this->category = 'all';
+    $this->currentMonth = Carbon::now()->month;
+    $this->currentYear = Carbon::now()->year;
+    $this->setDateRangeFromTimeframe();
+    
+    // Only notify and refresh if something changed
+    if (
+        $oldTimeframe !== $this->timeframe ||
+        $oldCategory !== $this->category ||
+        $oldStartDate !== $this->startDate ||
+        $oldEndDate !== $this->endDate
+    ) {
+        Notification::make()
+            ->title('Filters reset to defaults')
+            ->success()
+            ->send();
+            
+        $this->dispatch('refreshDashboard');
+    }
+}
     
     /**
      * Get form schema for adding a new expense
@@ -195,9 +206,6 @@ class ExpensesDashboard extends Page
         ];
     }
     
-    /**
-     * Define the quick expense form action
-     */
     protected function getQuickExpenseAction(): Action
     {
         return Action::make('quickAddExpense')
@@ -228,10 +236,6 @@ class ExpensesDashboard extends Page
                 $this->dispatch('refreshDashboard');
             });
     }
-    
-    /**
-     * Update user balance after adding an expense
-     */
     protected function updateUserBalance($amount)
     {
         $userBalance = \App\Models\UserBalance::firstOrCreate(
@@ -244,98 +248,142 @@ class ExpensesDashboard extends Page
     }
     
     protected function getHeaderActions(): array
-    {
-        return [
-            ActionGroup::make([
-                $this->getQuickExpenseAction(),
-                Action::make('addExpense')
-                    ->label('Add Expense')
-                    ->url(fn (): string => url('/app/transactions/create'))
-                    ->color('primary')
-                    ->icon('heroicon-m-plus-circle'),
-            ])->label('Add Expense')
-              ->color('success')
-              ->icon('heroicon-m-plus-circle'),
-                
-            Action::make('filter')
-                ->label('Filter')
-                ->icon('heroicon-m-funnel')
-                ->iconPosition(IconPosition::After)
-                ->form([
-                    Section::make()
-                        ->schema([
-                            Select::make('timeframe')
-                                ->label('Timeframe')
-                                ->options([
-                                    'week' => 'This Week',
-                                    'month' => 'This Month',
-                                    'quarter' => 'This Quarter',
-                                    'year' => 'This Year',
-                                    'custom' => 'Custom Range',
-                                ])
-                                ->default($this->timeframe)
-                                ->live()
-                                ->afterStateUpdated(function ($state, callable $set) {
-                                    $now = Carbon::now();
-                                    
-                                    if ($state === 'week') {
-                                        $set('startDate', $now->copy()->startOfWeek()->format('Y-m-d'));
-                                        $set('endDate', $now->copy()->endOfWeek()->format('Y-m-d'));
-                                    } elseif ($state === 'month') {
-                                        $set('startDate', $now->copy()->startOfMonth()->format('Y-m-d'));
-                                        $set('endDate', $now->copy()->endOfMonth()->format('Y-m-d'));
-                                    } elseif ($state === 'quarter') {
-                                        $set('startDate', $now->copy()->startOfQuarter()->format('Y-m-d'));
-                                        $set('endDate', $now->copy()->endOfQuarter()->format('Y-m-d'));
-                                    } elseif ($state === 'year') {
-                                        $set('startDate', $now->copy()->startOfYear()->format('Y-m-d'));
-                                        $set('endDate', $now->copy()->endOfYear()->format('Y-m-d'));
-                                    }
-                                }),
+{
+    return [
+        ActionGroup::make([
+            $this->getQuickExpenseAction(),
+            Action::make('addExpense')
+                ->label('Add Expense')
+                ->url(fn (): string => url('/app/transactions/create'))
+                ->color('primary')
+                ->icon('heroicon-m-plus-circle'),
+        ])->label('Add Expense')
+          ->color('success')
+          ->icon('heroicon-m-plus-circle'),
+            
+        Action::make('filter')
+            ->label('Filter')
+            ->icon('heroicon-m-funnel')
+            ->iconPosition(IconPosition::After)
+            ->form([
+                Section::make()
+                    ->schema([
+                        Select::make('timeframe')
+                            ->label('Timeframe')
+                            ->options([
+                                'week' => 'This Week',
+                                'month' => 'This Month',
+                                'quarter' => 'This Quarter',
+                                'year' => 'This Year',
+                                'custom' => 'Custom Range',
+                            ])
+                            ->default(fn() => $this->timeframe)
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $now = Carbon::now();
+                                
+                                if ($state === 'week') {
+                                    $set('startDate', $now->copy()->startOfWeek()->format('Y-m-d'));
+                                    $set('endDate', $now->copy()->endOfWeek()->format('Y-m-d'));
+                                } elseif ($state === 'month') {
+                                    $set('startDate', $now->copy()->startOfMonth()->format('Y-m-d'));
+                                    $set('endDate', $now->copy()->endOfMonth()->format('Y-m-d'));
+                                } elseif ($state === 'quarter') {
+                                    $set('startDate', $now->copy()->startOfQuarter()->format('Y-m-d'));
+                                    $set('endDate', $now->copy()->endOfQuarter()->format('Y-m-d'));
+                                } elseif ($state === 'year') {
+                                    $set('startDate', $now->copy()->startOfYear()->format('Y-m-d'));
+                                    $set('endDate', $now->copy()->endOfYear()->format('Y-m-d'));
+                                }
+                            }),
+                        
+                        DatePicker::make('startDate')
+                            ->label('Start Date')
+                            ->default(fn() => $this->startDate)
+                            ->visible(fn (callable $get) => $get('timeframe') === 'custom'),
                             
-                            DatePicker::make('startDate')
-                                ->label('Start Date')
-                                ->default($this->startDate)
-                                ->visible(fn ($get) => $get('timeframe') === 'custom'),
-                                
-                            DatePicker::make('endDate')
-                                ->label('End Date')
-                                ->default($this->endDate)
-                                ->visible(fn ($get) => $get('timeframe') === 'custom')
-                                ->afterOrEqual('startDate'),
-                                
-                            Select::make('category')
-                                ->label('Category')
-                                ->options(function() {
-                                    $categories = Transaction::where('user_id', auth()->id())
-                                        ->where('type', 'expense')
-                                        ->select('category')
-                                        ->distinct()
-                                        ->pluck('category', 'category')
-                                        ->toArray();
-                                        
-                                    return ['all' => 'All Categories'] + $categories;
-                                })
-                                ->default($this->category),
-                        ])
-                ])
-                ->action(function (array $data) {
-                    $this->timeframe = $data['timeframe'] ?? 'month';
-                    
-                    // Set dates based on timeframe if not custom
-                    if ($this->timeframe === 'custom') {
-                        // For custom timeframe, use the provided dates
-                        $this->startDate = $data['startDate'] ?? $this->startDate;
-                        $this->endDate = $data['endDate'] ?? $this->endDate;
-                    } else {
-                        // Otherwise set the date range based on the timeframe
-                        $this->setDateRangeFromTimeframe();
-                    }
-                    
-                    $this->category = $data['category'] ?? 'all';
-                }),
-        ];
-    }
+                        DatePicker::make('endDate')
+                            ->label('End Date')
+                            ->default(fn() => $this->endDate)
+                            ->visible(fn (callable $get) => $get('timeframe') === 'custom')
+                            ->afterOrEqual('startDate'),
+                            
+                        Select::make('category')
+                            ->label('Category')
+                            ->options(function() {
+                                $categories = Transaction::where('user_id', auth()->id())
+                                    ->where('type', 'expense')
+                                    ->select('category')
+                                    ->distinct()
+                                    ->pluck('category', 'category')
+                                    ->toArray();
+                                    
+                                return ['all' => 'All Categories'] + $categories;
+                            })
+                            ->default(fn() => $this->category),
+                    ])
+            ])
+            ->action(function (array $data) {
+                // Store current filter state to check for changes
+                $oldTimeframe = $this->timeframe;
+                $oldCategory = $this->category;
+                $oldStartDate = $this->startDate;
+                $oldEndDate = $this->endDate;
+                
+                // Update timeframe
+                $this->timeframe = $data['timeframe'] ?? 'month';
+                
+                // Set dates based on timeframe if not custom
+                if ($this->timeframe === 'custom') {
+                    // For custom timeframe, use the provided dates
+                    $this->startDate = $data['startDate'] ?? $this->startDate;
+                    $this->endDate = $data['endDate'] ?? $this->endDate;
+                } else {
+                    // Otherwise set the date range based on the timeframe
+                    $this->setDateRangeFromTimeframe();
+                }
+                
+                // Update category
+                $this->category = $data['category'] ?? 'all';
+                
+                // Only notify and refresh if something changed
+                if (
+                    $oldTimeframe !== $this->timeframe ||
+                    $oldCategory !== $this->category ||
+                    $oldStartDate !== $this->startDate ||
+                    $oldEndDate !== $this->endDate
+                ) {
+                    // Notify the user
+                    Notification::make()
+                        ->title('Filters applied successfully')
+                        ->success()
+                        ->send();
+                        
+                    // Dispatch the refresh event to update the dashboard
+                    $this->dispatch('refreshDashboard');
+                }
+            })
+            ->color('secondary')
+            ->extraAttributes([
+                'class' => 'filter-button',
+                'x-data' => "{ 
+                    isFiltered: " . (($this->timeframe !== 'month' || $this->category !== 'all') ? 'true' : 'false') . " 
+                }",
+                'x-bind:class' => "isFiltered ? 'filter-active' : ''"
+            ])
+            ->modalWidth('md')
+            ->modalHeading('Filter Dashboard')
+            ->extraModalFooterActions(fn(Action $action) => [
+                Action::make('resetFilters')
+                    ->label('Reset Filters')
+                    ->color('gray')
+                    ->action(function () use ($action) {
+                        $this->resetFilters();
+                        $action->cancel();
+                    }),
+            ]),
+    ];
+}
     
     public function getExpensesData()
     {

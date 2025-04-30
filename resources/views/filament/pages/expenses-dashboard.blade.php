@@ -13,7 +13,6 @@
 @endphp
 
 <x-filament-panels::page>
-    {{-- Load CSS & JS --}}
     <link rel="stylesheet" href="{{ asset('css/planance-expense-dashboard.css') }}">
     
     <div 
@@ -45,8 +44,7 @@
             });
         })"
     >
-        {{-- Dashboard Header --}}
-        <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
+            <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
             <div>
                 <h1 class="dashboard-title text-2xl font-bold dark:text-white">Expenses Dashboard</h1>
                 <div class="dashboard-period flex items-center gap-2 mt-1">
@@ -106,7 +104,6 @@
             </div>
         </div>
         
-        {{-- Stats Grid --}}
         <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {{-- Total Expenses --}}
             <div class="stat-card stat-primary bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
@@ -190,7 +187,6 @@
         
         {{-- Charts Grid --}}
         <div class="charts-grid grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {{-- Category Breakdown --}}
             <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="chart-header mb-4">
                     <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Category Breakdown</h3>
@@ -235,8 +231,7 @@
             </div>
             
             <div class="charts-col lg:col-span-2 flex flex-col gap-6">
-                {{-- Monthly Trend --}}
-                <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
                         <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Monthly Trend ({{ $currentYear }})</h3>
                     </div>
@@ -254,8 +249,7 @@
                     @endif
                 </div>
                 
-                {{-- Daily Trend --}}
-                <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
                         <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Daily Expenses</h3>
                     </div>
@@ -278,9 +272,7 @@
             </div>
         </div>
         
-        {{-- Transactions Grid --}}
         <div class="transactions-grid grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {{-- Recent Transactions --}}
             <div class="trans-card lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="trans-header flex justify-between items-center mb-4">
                     <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Recent Transactions</h3>
@@ -344,8 +336,7 @@
             </div>
             
             <div class="flex flex-col gap-6">
-                {{-- Largest Expenses --}}
-                <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
                         <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Largest Expenses</h3>
                     </div>
@@ -383,8 +374,7 @@
                     @endif
                 </div>
                 
-                {{-- Savings Tips --}}
-                <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
                         <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Savings Tips</h3>
                     </div>
@@ -443,6 +433,5 @@
         </div>
     </div>
     
-    {{-- Load JavaScript --}}
     <script src="{{ asset('js/planance-expense-dashboard.js') }}"></script>
 </x-filament-panels::page>

@@ -14,76 +14,231 @@ document.addEventListener('alpine:init', () => {
             category: initialData.category || 'all',
             startDate: initialData.startDate,
             endDate: initialData.endDate,
+            darkMode: initialData.darkMode || document.documentElement.classList.contains('dark'),
             
             // Chart instances
             categoryChart: null,
             dailyChart: null,
             monthlyChart: null,
+            chartsInitialized: false,
             
-            // Chart colors
-            chartColors: [
+            // Colors for charts
+            lightColors: [
                 '#4F46E5', '#3B82F6', '#06B6D4', '#10B981', '#F59E0B', 
                 '#8B5CF6', '#EC4899', '#EF4444', '#6366F1', '#0EA5E9',
                 '#14B8A6', '#84CC16', '#D946EF', '#F43F5E', '#FACC15'
             ],
+            darkColors: [
+                '#818CF8', '#60A5FA', '#22D3EE', '#34D399', '#FBBF24', 
+                '#A78BFA', '#F472B6', '#FB7185', '#A5B4FC', '#38BDF8',
+                '#2DD4BF', '#A3E635', '#E879F9', '#FB7185', '#FDE047'
+            ],
             
+            // Initialize the component
             init() {
-                // Initialize charts once DOM is fully loaded
-                this.$nextTick(() => {
-                    this.initializeCharts();
-                });
+                // Safely load ECharts if needed
+                this.safelyLoadECharts();
                 
-                // Handle window resize to make charts responsive
+                // Handle window resize with debounce
+                let resizeTimer;
                 window.addEventListener('resize', () => {
-                    this.resizeCharts();
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => this.resizeCharts(), 250);
                 });
                 
-                // Setup Livewire event listeners
-                this.$watch('timeframe', (value) => {
-                    this.$wire.set('timeframe', value);
-                });
+                // Listen for dark mode changes
+                this.setupDarkModeDetection();
+                
+                // Watch for refreshes
+                document.addEventListener('echart-loaded', () => this.initializeCharts());
+                
+                // Handle Livewire refresh events
+                if (typeof Livewire !== 'undefined') {
+                    document.addEventListener('livewire:update', () => {
+                        setTimeout(() => this.refreshChartsAfterUpdate(), 100);
+                    });
+                }
             },
             
+            // Safely load ECharts library if needed
+            safelyLoadECharts() {
+                try {
+                    if (typeof echarts !== 'undefined') {
+                        // ECharts already loaded, initialize charts
+                        this.$nextTick(() => {
+                            this.initializeCharts();
+                            this.chartsInitialized = true;
+                        });
+                        return;
+                    }
+                    
+                    // Create script element to load ECharts
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js';
+                    script.integrity = 'sha512-EmNxF3E6bM0Xg1zvmkeYD3HDBeGxtsG92IxFt1myNZhXdCav9MzvuH/zNMBU1DmIPN6njrhX1VTbqdJxQ2wHDg==';
+                    script.crossOrigin = 'anonymous';
+                    script.referrerPolicy = 'no-referrer';
+                    
+                    script.onload = () => {
+                        // Dispatch custom event when loaded
+                        document.dispatchEvent(new CustomEvent('echart-loaded'));
+                        this.chartsInitialized = true;
+                    };
+                    
+                    script.onerror = (error) => {
+                        console.error('Failed to load ECharts library:', error);
+                    };
+                    
+                    document.head.appendChild(script);
+                } catch (error) {
+                    console.error('Error loading ECharts:', error);
+                }
+            },
+            
+            // Handle chart refreshes after Livewire updates
+            refreshChartsAfterUpdate() {
+                try {
+                    if (typeof echarts === 'undefined') {
+                        this.safelyLoadECharts();
+                        return;
+                    }
+                    
+                    if (this.chartsInitialized) {
+                        this.resizeCharts();
+                    } else {
+                        this.initializeCharts();
+                        this.chartsInitialized = true;
+                    }
+                } catch (error) {
+                    console.error('Error refreshing charts:', error);
+                }
+            },
+            
+            // Setup dark mode detection
+            setupDarkModeDetection() {
+                try {
+                    // Watch for class changes on the HTML element
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.attributeName === 'class') {
+                                const isDarkMode = document.documentElement.classList.contains('dark');
+                                if (this.darkMode !== isDarkMode) {
+                                    this.darkMode = isDarkMode;
+                                    this.refreshCharts();
+                                }
+                            }
+                        });
+                    });
+                    
+                    observer.observe(document.documentElement, { attributes: true });
+                    
+                    // Also listen for system preference changes
+                    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                    mediaQuery.addEventListener('change', (e) => {
+                        if (document.documentElement.classList.contains('dark') !== e.matches && 
+                            document.documentElement.dataset.theme === 'auto') {
+                            this.darkMode = e.matches;
+                            this.refreshCharts();
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error setting up dark mode detection:', error);
+                }
+            },
+            
+            // Initialize all charts
             initializeCharts() {
-                // Only initialize charts if the DOM elements exist
-                if (document.getElementById('categoryPieChart')) {
-                    this.initCategoryChart();
-                }
-                
-                if (document.getElementById('dailyTrendChart')) {
-                    this.initDailyTrendChart();
-                }
-                
-                if (document.getElementById('monthlyTrendChart')) {
-                    this.initMonthlyTrendChart();
+                try {
+                    if (typeof echarts === 'undefined') {
+                        console.warn('ECharts not loaded yet, will try again');
+                        this.safelyLoadECharts();
+                        return;
+                    }
+                    
+                    this.$nextTick(() => {
+                        // Initialize charts if DOM elements exist
+                        if (document.getElementById('categoryPieChart')) {
+                            this.initCategoryChart();
+                        }
+                        
+                        if (document.getElementById('dailyTrendChart')) {
+                            this.initDailyTrendChart();
+                        }
+                        
+                        if (document.getElementById('monthlyTrendChart')) {
+                            this.initMonthlyTrendChart();
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error initializing charts:', error);
                 }
             },
             
+            // Refresh all charts (for theme changes, etc.)
+            refreshCharts() {
+                try {
+                    // Safely dispose existing charts first
+                    if (this.categoryChart) {
+                        try { this.categoryChart.dispose(); } catch {}
+                        this.categoryChart = null;
+                    }
+                    
+                    if (this.dailyChart) {
+                        try { this.dailyChart.dispose(); } catch {}
+                        this.dailyChart = null;
+                    }
+                    
+                    if (this.monthlyChart) {
+                        try { this.monthlyChart.dispose(); } catch {}
+                        this.monthlyChart = null;
+                    }
+                    
+                    // Re-initialize the charts
+                    this.$nextTick(() => this.initializeCharts());
+                } catch (error) {
+                    console.error('Error refreshing charts:', error);
+                }
+            },
+            
+            // Resize all charts
             resizeCharts() {
-                if (this.categoryChart) {
-                    this.categoryChart.resize();
-                }
-                
-                if (this.dailyChart) {
-                    this.dailyChart.resize();
-                }
-                
-                if (this.monthlyChart) {
-                    this.monthlyChart.resize();
+                try {
+                    if (this.categoryChart && document.getElementById('categoryPieChart')) {
+                        this.categoryChart.resize();
+                    }
+                    
+                    if (this.dailyChart && document.getElementById('dailyTrendChart')) {
+                        this.dailyChart.resize();
+                    }
+                    
+                    if (this.monthlyChart && document.getElementById('monthlyTrendChart')) {
+                        this.monthlyChart.resize();
+                    }
+                } catch (error) {
+                    console.error('Error resizing charts:', error);
                 }
             },
             
+            // Get appropriate chart colors based on theme
+            getChartColors() {
+                return this.darkMode ? this.darkColors : this.lightColors;
+            },
+            
+            // Initialize category pie chart
             initCategoryChart() {
-                if (this.categoryBreakdown.length === 0) {
+                if (!this.categoryBreakdown || this.categoryBreakdown.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('categoryPieChart');
+                if (!chartElement) return;
                 
-                // Destroy existing chart if it exists
+                // Safely dispose existing chart if it exists
                 if (this.categoryChart) {
-                    this.categoryChart.dispose();
+                    try { this.categoryChart.dispose(); } catch {}
                 }
+                
+                const colors = this.getChartColors();
                 
                 // Prepare chart data
                 const chartData = this.categoryBreakdown.map((item, index) => ({
@@ -91,7 +246,7 @@ document.addEventListener('alpine:init', () => {
                     value: item.total,
                     percentage: item.percentage,
                     itemStyle: {
-                        color: this.chartColors[index % this.chartColors.length]
+                        color: colors[index % colors.length]
                     }
                 }));
                 
@@ -110,7 +265,8 @@ document.addEventListener('alpine:init', () => {
                         right: 10,
                         top: 'center',
                         textStyle: {
-                            fontSize: 12
+                            fontSize: 12,
+                            color: this.darkMode ? '#d1d5db' : '#4b5563'
                         },
                         formatter: name => {
                             // Truncate long category names
@@ -124,7 +280,7 @@ document.addEventListener('alpine:init', () => {
                         avoidLabelOverlap: true,
                         itemStyle: {
                             borderRadius: 6,
-                            borderColor: '#fff',
+                            borderColor: this.darkMode ? '#1f2937' : '#ffffff',
                             borderWidth: 2
                         },
                         label: {
@@ -144,22 +300,40 @@ document.addEventListener('alpine:init', () => {
                     }]
                 };
                 
-                // Initialize chart
-                this.categoryChart = echarts.init(chartElement);
-                this.categoryChart.setOption(options);
+                try {
+                    // Initialize chart with proper renderer
+                    this.categoryChart = echarts.init(chartElement, null, { 
+                        renderer: 'canvas',
+                        width: 'auto',
+                        height: 'auto'
+                    });
+                    this.categoryChart.setOption(options, true);
+                } catch (error) {
+                    console.error('Error initializing category chart:', error);
+                }
             },
             
+            // Initialize daily trend chart
             initDailyTrendChart() {
-                if (this.dailyTrend.length === 0) {
+                if (!this.dailyTrend || this.dailyTrend.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('dailyTrendChart');
+                if (!chartElement) return;
                 
-                // Destroy existing chart if it exists
+                // Safely dispose existing chart if it exists
                 if (this.dailyChart) {
-                    this.dailyChart.dispose();
+                    try { this.dailyChart.dispose(); } catch {}
                 }
+                
+                // Determine theme-specific colors
+                const lineColor = this.darkMode ? '#10b981' : '#059669';
+                const areaColorTop = this.darkMode ? 'rgba(16, 185, 129, 0.5)' : 'rgba(5, 150, 105, 0.5)';
+                const areaColorBottom = this.darkMode ? 'rgba(16, 185, 129, 0.05)' : 'rgba(5, 150, 105, 0.05)';
+                const axisLineColor = this.darkMode ? '#374151' : '#e5e7eb';
+                const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
+                const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
                 
                 // Create chart options
                 const options = {
@@ -182,12 +356,13 @@ document.addEventListener('alpine:init', () => {
                         data: this.dailyTrend.map(item => item.date),
                         axisLine: {
                             lineStyle: {
-                                color: '#E5E7EB'
+                                color: axisLineColor
                             }
                         },
                         axisLabel: {
-                            color: '#6B7280',
-                            fontSize: 10
+                            color: axisLabelColor,
+                            fontSize: 10,
+                            rotate: this.dailyTrend.length > 15 ? 45 : 0
                         }
                     },
                     yAxis: {
@@ -196,7 +371,7 @@ document.addEventListener('alpine:init', () => {
                             show: false
                         },
                         axisLabel: {
-                            color: '#6B7280',
+                            color: axisLabelColor,
                             fontSize: 10,
                             formatter: value => {
                                 return '€' + value;
@@ -204,7 +379,7 @@ document.addEventListener('alpine:init', () => {
                         },
                         splitLine: {
                             lineStyle: {
-                                color: '#E5E7EB',
+                                color: splitLineColor,
                                 type: 'dashed'
                             }
                         }
@@ -217,10 +392,10 @@ document.addEventListener('alpine:init', () => {
                         symbolSize: 6,
                         lineStyle: {
                             width: 3,
-                            color: '#4F46E5'
+                            color: lineColor
                         },
                         itemStyle: {
-                            color: '#4F46E5'
+                            color: lineColor
                         },
                         areaStyle: {
                             color: {
@@ -231,10 +406,10 @@ document.addEventListener('alpine:init', () => {
                                 y2: 1,
                                 colorStops: [{
                                     offset: 0,
-                                    color: 'rgba(79, 70, 229, 0.4)'
+                                    color: areaColorTop
                                 }, {
                                     offset: 1,
-                                    color: 'rgba(79, 70, 229, 0.1)'
+                                    color: areaColorBottom
                                 }]
                             }
                         },
@@ -242,22 +417,39 @@ document.addEventListener('alpine:init', () => {
                     }]
                 };
                 
-                // Initialize chart
-                this.dailyChart = echarts.init(chartElement);
-                this.dailyChart.setOption(options);
+                try {
+                    // Initialize chart with proper renderer
+                    this.dailyChart = echarts.init(chartElement, null, { 
+                        renderer: 'canvas',
+                        width: 'auto',
+                        height: 'auto'
+                    });
+                    this.dailyChart.setOption(options, true);
+                } catch (error) {
+                    console.error('Error initializing daily chart:', error);
+                }
             },
             
+            // Initialize monthly trend chart
             initMonthlyTrendChart() {
-                if (this.monthlyTrend.length === 0) {
+                if (!this.monthlyTrend || this.monthlyTrend.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('monthlyTrendChart');
+                if (!chartElement) return;
                 
-                // Destroy existing chart if it exists
+                // Safely dispose existing chart if it exists
                 if (this.monthlyChart) {
-                    this.monthlyChart.dispose();
+                    try { this.monthlyChart.dispose(); } catch {}
                 }
+                
+                // Determine theme-specific colors
+                const barColor = this.darkMode ? '#60a5fa' : '#3b82f6';
+                const barHoverColor = this.darkMode ? '#93c5fd' : '#2563eb';
+                const axisLineColor = this.darkMode ? '#374151' : '#e5e7eb';
+                const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
+                const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
                 
                 // Create chart options
                 const options = {
@@ -279,11 +471,11 @@ document.addEventListener('alpine:init', () => {
                         data: this.monthlyTrend.map(item => item.month),
                         axisLine: {
                             lineStyle: {
-                                color: '#E5E7EB'
+                                color: axisLineColor
                             }
                         },
                         axisLabel: {
-                            color: '#6B7280',
+                            color: axisLabelColor,
                             fontSize: 10
                         }
                     },
@@ -293,7 +485,7 @@ document.addEventListener('alpine:init', () => {
                             show: false
                         },
                         axisLabel: {
-                            color: '#6B7280',
+                            color: axisLabelColor,
                             fontSize: 10,
                             formatter: value => {
                                 if (value >= 1000) {
@@ -304,7 +496,7 @@ document.addEventListener('alpine:init', () => {
                         },
                         splitLine: {
                             lineStyle: {
-                                color: '#E5E7EB',
+                                color: splitLineColor,
                                 type: 'dashed'
                             }
                         }
@@ -314,24 +506,32 @@ document.addEventListener('alpine:init', () => {
                         type: 'bar',
                         barWidth: '60%',
                         itemStyle: {
-                            color: '#4F46E5',
+                            color: barColor,
                             borderRadius: [4, 4, 0, 0]
                         },
                         emphasis: {
                             itemStyle: {
-                                color: '#4338CA'
+                                color: barHoverColor
                             }
                         },
                         data: this.monthlyTrend.map(item => item.total)
                     }]
                 };
                 
-                // Initialize chart
-                this.monthlyChart = echarts.init(chartElement);
-                this.monthlyChart.setOption(options);
+                try {
+                    // Initialize chart with proper renderer
+                    this.monthlyChart = echarts.init(chartElement, null, { 
+                        renderer: 'canvas',
+                        width: 'auto',
+                        height: 'auto'
+                    });
+                    this.monthlyChart.setOption(options, true);
+                } catch (error) {
+                    console.error('Error initializing monthly chart:', error);
+                }
             },
             
-            // Helper methods
+            // Format money values
             formatMoney(amount) {
                 return new Intl.NumberFormat('de-DE', {
                     style: 'currency', 
@@ -341,6 +541,7 @@ document.addEventListener('alpine:init', () => {
                 }).format(amount);
             },
             
+            // Format category names for display
             formatCategoryName(category) {
                 if (!category) return 'Uncategorized';
                 
@@ -351,61 +552,59 @@ document.addEventListener('alpine:init', () => {
                     .join(' ');
             },
             
+            // Get color for a category
             getCategoryColor(index) {
-                return this.chartColors[index % this.chartColors.length];
+                const colors = this.getChartColors();
+                return colors[index % colors.length];
             },
             
+            // Get CSS class for a category badge
             getCategoryClass(category) {
-                const essentialCategories = ['food', 'transportation', 'housing', 'utilities', 'health', 'education', 'travel'];
-                const lifestyleCategories = ['shopping', 'entertainment', 'other_expense'];
+                const classes = {
+                    food: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                    transportation: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+                    housing: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+                    utilities: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+                    health: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
+                    education: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
+                    travel: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
+                    unhealthy_habits: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+                    shopping: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
+                    entertainment: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+                    other_expense: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                };
                 
-                if (essentialCategories.includes(category)) {
-                    return 'badge-essential';
-                } else if (category === 'unhealthy_habits') {
-                    return 'badge-unhealthy';
-                } else if (lifestyleCategories.includes(category)) {
-                    return 'badge-lifestyle';
-                } else {
-                    return 'badge-other';
-                }
+                return classes[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
             },
             
-            getProgressWidth(value, total) {
-                if (!total || total === 0) return '0%';
-                const percentage = (value / total) * 100;
-                return `${Math.min(100, percentage)}%`;
-            },
-            
+            // Update timeframe and refresh data
             updateTimeframe(newTimeframe) {
-                if (this.timeframe !== newTimeframe) {
+                // Prevent unnecessary updates
+                if (this.timeframe === newTimeframe) return;
+            
+                try {
                     this.timeframe = newTimeframe;
-                    this.$wire.call('updateTimeframe', newTimeframe)
-                        .then(() => {
-                            // After the server returns new data, re-initialize charts
-                            this.$nextTick(() => {
-                                this.initializeCharts();
+            
+                    // Only try to call Livewire method if $wire is available
+                    if (typeof this.$wire !== 'undefined' && this.$wire && typeof this.$wire.call === 'function') {
+                        this.$wire.call('updateTimeframe', newTimeframe)
+                            .then(() => {
+                                // Use Alpine.js safe way to wait for DOM updates
+                                if (typeof Alpine !== 'undefined' && Alpine.nextTick) {
+                                    Alpine.nextTick(() => this.initializeCharts());
+                                } else {
+                                    // Fallback to basic timeout if Alpine is not available
+                                    setTimeout(() => this.initializeCharts(), 0);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating timeframe:', error);
                             });
-                        });
+                    }
+                } catch (error) {
+                    console.error('Error in updateTimeframe:', error);
                 }
             }
         };
     });
-});
-
-// Load ECharts library
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof echarts === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js';
-        script.integrity = 'sha512-EmNxF3E6bM0Xg1zvmkeYD3HDBeGxtsG92IxFt1myNZhXdCav9MzvuH/zNMBU1DmIPN6njrhX1VTbqdJxQ2wHDg==';
-        script.crossOrigin = 'anonymous';
-        script.referrerPolicy = 'no-referrer';
-        
-        script.onload = function() {
-            // Dispatch custom event when ECharts is loaded
-            document.dispatchEvent(new CustomEvent('echart-loaded'));
-        };
-        
-        document.head.appendChild(script);
-    }
 });

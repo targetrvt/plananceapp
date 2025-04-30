@@ -137,12 +137,6 @@ class TransactionResource extends Resource
             ]);
     }
 
-    /**
-     * Process receipt image with AI to extract transaction data
-     * 
-     * @param string $imagePath
-     * @return array
-     */
     protected static function processReceiptWithAI($imagePath)
 {
     // Read image file and convert to base64
@@ -284,12 +278,6 @@ class TransactionResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
 
     public static function getPages(): array
     {
