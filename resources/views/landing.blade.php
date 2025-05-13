@@ -14,8 +14,7 @@
     <header>
         <div class="container">
             <nav class="nav">
-                <a href="#" class="logo">
-                    <div class="logo-img">P</div>
+                <a href="/" class="logo">
                     Planance
                 </a>
                 <div class="nav-links">

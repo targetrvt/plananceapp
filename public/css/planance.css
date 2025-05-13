@@ -244,8 +244,9 @@
 }
 
 .pricing-card.featured .btn {
-    background-color: white;
-    color: var(--primary);
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
     box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
 }
 
@@ -1275,20 +1276,6 @@ header {
     text-decoration: none;
 }
 
-.logo-img {
-    width: 40px;
-    height: 40px;
-    margin-right: 8px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 800;
-    font-size: 20px;
-}
-
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -1548,7 +1535,6 @@ header {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
 }
 
 .hero p {
