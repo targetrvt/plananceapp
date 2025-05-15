@@ -1,4 +1,138 @@
-/* Testimonials Section */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+.logo {
+    z-index: 1001; /* Keep logo above mobile menu */
+}
+
+/* CRITICAL: Remove ALL existing mobile navigation CSS first */
+
+/* DESKTOP NAVIGATION - Hidden on mobile */
+@media (max-width: 768px) {
+    .nav-links, 
+    .auth-buttons {
+        display: none;
+    }
+}
+
+/* MOBILE NAVIGATION TOGGLE */
+.mobile-nav-toggle {
+    display: none;
+    width: 30px;
+    height: 25px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1001;
+    background: transparent;
+    border: 0;
+    margin-left: auto;
+}
+
+.mobile-nav-toggle span {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: var(--dark);
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: 0.25s ease-in-out;
+}
+
+.mobile-nav-toggle span:nth-child(1) {
+    top: 0px;
+}
+
+.mobile-nav-toggle span:nth-child(2) {
+    top: 10px;
+}
+
+.mobile-nav-toggle span:nth-child(3) {
+    top: 20px;
+}
+
+/* X animation */
+.mobile-nav-toggle.active span:nth-child(1) {
+    top: 10px;
+    transform: rotate(135deg);
+}
+
+.mobile-nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+    left: -60px;
+}
+
+.mobile-nav-toggle.active span:nth-child(3) {
+    top: 10px;
+    transform: rotate(-135deg);
+}
+
+/* MOBILE NAVIGATION */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 1000;
+    padding-top: 80px;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.mobile-nav-links {
+    margin-bottom: 30px;
+}
+
+.mobile-nav-links a {
+    display: block;
+    padding: 15px;
+    font-size: 18px;
+    color: var(--dark);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 30px;
+}
+
+/* RESPONSIVE RULES */
+@media (max-width: 768px) {
+    /* Show toggle on mobile */
+    .mobile-nav-toggle {
+        display: block;
+    }
+    
+    /* Show mobile nav when active */
+    .mobile-nav.active {
+        display: block;
+    }
+    
+    /* Prevent scrolling when menu open */
+    body.nav-open {
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 769px) {
+    /* Always hide mobile elements on larger screens */
+    .mobile-nav,
+    .mobile-nav-toggle {
+        display: none !important;
+    }
+}
 .testimonials {
     padding: 8rem 0;
     background-color: var(--white);
@@ -244,9 +378,9 @@
 }
 
 .pricing-card.featured .btn {
-    background-color: transparent;
-    color: white;
-    border: 1px solid white;
+    background-color: transparent; /* Changed from white to transparent */
+    color: white; /* Changed from var(--primary) to white */
+    border: 1px solid white; /* Added border for better visibility */
     box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
 }
 
@@ -1276,6 +1410,20 @@ header {
     text-decoration: none;
 }
 
+.logo-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 20px;
+}
+
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -1535,6 +1683,7 @@ header {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-fill-color: transparent;
 }
 
 .hero p {
@@ -1869,4 +2018,79 @@ header {
 
 .feature-more:hover svg {
     transform: translateX(3px);
+}
+@media (max-width: 768px) {
+    /* Desktop elements */
+    .nav-links, 
+    .auth-buttons {
+        display: none !important;
+    }
+    
+    /* Force mobile toggle visibility */
+    .mobile-nav-toggle {
+        display: block !important;
+        position: relative;
+        cursor: pointer;
+        z-index: 9999;
+        width: 30px;
+        height: 24px;
+        margin-left: auto;
+        background: transparent;
+        border: none;
+    }
+    
+    /* Mobile toggle spans */
+    .mobile-nav-toggle span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: var(--dark);
+        transition: all 0.25s ease;
+    }
+    
+    .mobile-nav-toggle span:nth-child(1) { top: 0; }
+    .mobile-nav-toggle span:nth-child(2) { top: 10px; }
+    .mobile-nav-toggle span:nth-child(3) { top: 20px; }
+    
+    /* X animation */
+    .mobile-nav-toggle.active span:nth-child(1) {
+        top: 10px;
+        transform: rotate(45deg);
+    }
+    
+    .mobile-nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-nav-toggle.active span:nth-child(3) {
+        top: 10px;
+        transform: rotate(-45deg);
+    }
+}
+
+/* Mobile navigation visibility */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #fff;
+    z-index: 9998;
+    padding-top: 80px;
+    overflow-y: auto;
+}
+
+/* CRITICAL: Make sure active state is clearly defined */
+.mobile-nav.active {
+    display: block !important;
+}
+
+/* Prevent scrolling when menu is open */
+body.nav-open {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
 }
