@@ -44,65 +44,61 @@
             });
         })"
     >
-            <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
-            <div>
-                <h1 class="dashboard-title text-2xl font-bold dark:text-white">Expenses Dashboard</h1>
-                <div class="dashboard-period flex items-center gap-2 mt-1">
-                    @if($this->timeframe === 'month' || $this->timeframe === 'quarter' || $this->timeframe === 'year')
-                        <button 
-                            type="button" 
-                            wire:click="previousPeriod" 
-                            class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
-                        >
-                            <x-heroicon-o-chevron-left class="w-5 h-5" />
-                        </button>
-                        
-                        <span class="dashboard-subtitle text-sm text-gray-600 dark:text-gray-300 min-w-[120px] text-center">
-                            {{ $this->getPeriodLabel() }}
-                        </span>
-                        
-                        <button 
-                            type="button" 
-                            wire:click="nextPeriod" 
-                            class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
-                        >
-                            <x-heroicon-o-chevron-right class="w-5 h-5" />
-                        </button>
-                        
-                        <button 
-                            type="button" 
-                            wire:click="resetToCurrentPeriod" 
-                            class="text-xs text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 ml-2 transition-colors"
-                            title="Reset to current period"
-                        >
-                            <x-heroicon-o-arrow-path class="w-4 h-4" />
-                        </button>
-                    @else
-                        <span class="dashboard-subtitle text-sm text-gray-600 dark:text-gray-300">
-                            {{ $startDateFormatted }} - {{ $endDateFormatted }}
-                            @if($this->category !== 'all')
-                                · Category: {{ ucwords(str_replace('_', ' ', $this->category)) }}
-                            @endif
-                        </span>
-                    @endif
-                </div>
+    <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
+        <div>
+            <div class="dashboard-period flex items-center gap-2 mt-1">
+                @if($this->timeframe === 'month' || $this->timeframe === 'quarter' || $this->timeframe === 'year')
+                    <button 
+                        type="button" 
+                        wire:click="previousPeriod" 
+                        class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
+                    >
+                        <x-heroicon-o-chevron-left class="w-5 h-5" />
+                    </button>
+                    
+                    <span class="dashboard-subtitle text-sm text-gray-600 dark:text-gray-300 min-w-[120px] text-center">
+                        {{ $this->getPeriodLabel() }}
+                    </span>
+                    
+                    <button 
+                        type="button" 
+                        wire:click="nextPeriod" 
+                        class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
+                    >
+                        <x-heroicon-o-chevron-right class="w-5 h-5" />
+                    </button>
+                    
+                    <button 
+                        type="button" 
+                        wire:click="resetToCurrentPeriod" 
+                        class="text-xs text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 ml-2 transition-colors"
+                        title="Reset to current period"
+                    >
+                        <x-heroicon-o-arrow-path class="w-4 h-4" />
+                    </button>
+                @else
+                    <span class="dashboard-subtitle text-sm text-gray-600 dark:text-gray-300">
+                        {{ $startDateFormatted }} - {{ $endDateFormatted }}
+                        @if($this->category !== 'all')
+                            · Category: {{ ucwords(str_replace('_', ' ', $this->category)) }}
+                        @endif
+                    </span>
+                @endif
             </div>
-            
-            <div class="dashboard-actions flex items-center gap-2 flex-wrap">
+        </div>
+        
+        <div class="dashboard-actions flex items-center gap-2 flex-wrap">
+            {{-- Only show timeframe selector if not using custom dates --}}
+            @if($this->timeframe !== 'custom')
                 <div class="timeframe-selector flex rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
                     <button @click="$wire.updateTimeframe('week')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'week', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'week'}">Week</button>
                     <button @click="$wire.updateTimeframe('month')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'month', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'month'}">Month</button>
                     <button @click="$wire.updateTimeframe('quarter')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'quarter', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'quarter'}">Quarter</button>
                     <button @click="$wire.updateTimeframe('year')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'year', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'year'}">Year</button>
                 </div>
-                
-                <div class="flex gap-2">
-                    @foreach($this->getHeaderActions() as $action)
-                        {{ $action }}
-                    @endforeach
-                </div>
-            </div>
+            @endif
         </div>
+    </div>
         
         <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {{-- Total Expenses --}}
