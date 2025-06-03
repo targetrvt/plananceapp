@@ -230,13 +230,14 @@ class MonthlySubscriptionResource extends Resource
                         return '€' . number_format($monthly, 2) . '/mo';
                     }),
                     
-                Tables\Columns\TextColumn::make('billing_date')
+                    Tables\Columns\TextColumn::make('billing_date')
                     ->label('Next Payment')
                     ->date()
                     ->sortable()
                     ->description(function (MonthlySubscription $record): string {
                         $billingDate = Carbon::parse($record->billing_date);
-                        $daysLeft = Carbon::now()->diffInDays($billingDate, false);
+                        $today = Carbon::today(); // Use today() instead of now() for consistent day comparison
+                        $daysLeft = (int) $today->diffInDays($billingDate, false); // Cast to integer
                         
                         if ($daysLeft < 0) {
                             return 'Overdue!';
@@ -248,7 +249,8 @@ class MonthlySubscriptionResource extends Resource
                     })
                     ->color(function (MonthlySubscription $record): string {
                         $billingDate = Carbon::parse($record->billing_date);
-                        $daysLeft = Carbon::now()->diffInDays($billingDate, false);
+                        $today = Carbon::today();
+                        $daysLeft = (int) $today->diffInDays($billingDate, false);
                         
                         if ($daysLeft < 0) {
                             return 'danger';
