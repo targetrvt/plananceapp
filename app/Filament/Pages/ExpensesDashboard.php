@@ -38,6 +38,7 @@ class ExpensesDashboard extends Page
     public $category = 'all';
     public $currentMonth;
     public $currentYear;
+    public $dataUpdated = false;
     
     protected $listeners = ['refreshDashboard' => '$refresh'];
     
@@ -47,6 +48,7 @@ class ExpensesDashboard extends Page
         $this->currentYear = Carbon::now()->year;
         
         $this->setDateRangeFromTimeframe();
+        $this->dataUpdated = true;
     }
     
     protected function setDateRangeFromTimeframe()
@@ -66,7 +68,10 @@ class ExpensesDashboard extends Page
             $this->startDate = $date->copy()->startOfYear()->format('Y-m-d');
             $this->endDate = $date->copy()->endOfYear()->format('Y-m-d');
         }
+        
+        $this->dataUpdated = true;
     }
+    
     public function previousPeriod()
     {
         if ($this->timeframe === 'month') {
@@ -86,10 +91,13 @@ class ExpensesDashboard extends Page
             $date = Carbon::parse($this->startDate)->subDays(7);
             $this->startDate = $date->format('Y-m-d');
             $this->endDate = $date->addDays(6)->format('Y-m-d');
+            $this->dataUpdated = true;
+            $this->dispatch('refreshCharts');
             return;
         }
         
         $this->setDateRangeFromTimeframe();
+        $this->dispatch('refreshCharts');
     }
     
     public function nextPeriod()
@@ -111,59 +119,62 @@ class ExpensesDashboard extends Page
             $date = Carbon::parse($this->startDate)->addDays(7);
             $this->startDate = $date->format('Y-m-d');
             $this->endDate = $date->addDays(6)->format('Y-m-d');
+            $this->dataUpdated = true;
+            $this->dispatch('refreshCharts');
             return;
         }
         
         $this->setDateRangeFromTimeframe();
+        $this->dispatch('refreshCharts');
     }
+    
     public function updateTimeframe($timeframe)
     {
         $this->timeframe = $timeframe;
+        $this->currentMonth = Carbon::now()->month;
+        $this->currentYear = Carbon::now()->year;
+        
         $this->setDateRangeFromTimeframe();
+
+        $this->redirect(request()->header('Referer'));
     }
+    
     public function resetToCurrentPeriod()
     {
         $this->currentMonth = Carbon::now()->month;
         $this->currentYear = Carbon::now()->year;
         $this->setDateRangeFromTimeframe();
+        $this->dispatch('refreshCharts');
     }
     
-    /**
-     * Reset filters to default values
-     */
     public function resetFilters()
-{
-    // Store current filter state to check for changes
-    $oldTimeframe = $this->timeframe;
-    $oldCategory = $this->category;
-    $oldStartDate = $this->startDate;
-    $oldEndDate = $this->endDate;
-    
-    $this->timeframe = 'month';
-    $this->category = 'all';
-    $this->currentMonth = Carbon::now()->month;
-    $this->currentYear = Carbon::now()->year;
-    $this->setDateRangeFromTimeframe();
-    
-    // Only notify and refresh if something changed
-    if (
-        $oldTimeframe !== $this->timeframe ||
-        $oldCategory !== $this->category ||
-        $oldStartDate !== $this->startDate ||
-        $oldEndDate !== $this->endDate
-    ) {
-        Notification::make()
-            ->title('Filters reset to defaults')
-            ->success()
-            ->send();
-            
-        $this->dispatch('refreshDashboard');
+    {
+        $oldTimeframe = $this->timeframe;
+        $oldCategory = $this->category;
+        $oldStartDate = $this->startDate;
+        $oldEndDate = $this->endDate;
+        
+        $this->timeframe = 'month';
+        $this->category = 'all';
+        $this->currentMonth = Carbon::now()->month;
+        $this->currentYear = Carbon::now()->year;
+        $this->setDateRangeFromTimeframe();
+        
+        if (
+            $oldTimeframe !== $this->timeframe ||
+            $oldCategory !== $this->category ||
+            $oldStartDate !== $this->startDate ||
+            $oldEndDate !== $this->endDate
+        ) {
+            Notification::make()
+                ->title('Filters reset to defaults')
+                ->success()
+                ->send();
+                
+            $this->dispatch('refreshCharts');
+        }
     }
-}
     
-    /**
-     * Get form schema for adding a new expense
-     */
     public function getExpenseFormSchema(): array
     {
         return [
@@ -218,13 +229,9 @@ class ExpensesDashboard extends Page
             ->modalDescription('Quickly add a new expense to your records.')
             ->modalSubmitActionLabel('Save Expense')
             ->action(function (array $data) {
-                // Add user_id to data
                 $data['user_id'] = auth()->id();
-                
-                // Create the transaction
                 $transaction = Transaction::create($data);
                 
-                // Update user balance if needed
                 $this->updateUserBalance($data['amount']);
                 
                 Notification::make()
@@ -232,10 +239,10 @@ class ExpensesDashboard extends Page
                     ->success()
                     ->send();
                 
-                // Refresh the dashboard data
-                $this->dispatch('refreshDashboard');
+                $this->dispatch('refreshCharts');
             });
     }
+    
     protected function updateUserBalance($amount)
     {
         $userBalance = \App\Models\UserBalance::firstOrCreate(
@@ -248,142 +255,132 @@ class ExpensesDashboard extends Page
     }
     
     protected function getHeaderActions(): array
-{
-    return [
-        ActionGroup::make([
-            $this->getQuickExpenseAction(),
-            Action::make('addExpense')
-                ->label('Add Expense')
-                ->url(fn (): string => url('/app/transactions/create'))
-                ->color('primary')
-                ->icon('heroicon-m-plus-circle'),
-        ])->label('Add Expense')
-          ->color('success')
-          ->icon('heroicon-m-plus-circle'),
-            
-        Action::make('filter')
-            ->label('Filter')
-            ->icon('heroicon-m-funnel')
-            ->iconPosition(IconPosition::After)
-            ->form([
-                Section::make()
-                    ->schema([
-                        Select::make('timeframe')
-                            ->label('Timeframe')
-                            ->options([
-                                'week' => 'This Week',
-                                'month' => 'This Month',
-                                'quarter' => 'This Quarter',
-                                'year' => 'This Year',
-                                'custom' => 'Custom Range',
-                            ])
-                            ->default(fn() => $this->timeframe)
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                $now = Carbon::now();
-                                
-                                if ($state === 'week') {
-                                    $set('startDate', $now->copy()->startOfWeek()->format('Y-m-d'));
-                                    $set('endDate', $now->copy()->endOfWeek()->format('Y-m-d'));
-                                } elseif ($state === 'month') {
-                                    $set('startDate', $now->copy()->startOfMonth()->format('Y-m-d'));
-                                    $set('endDate', $now->copy()->endOfMonth()->format('Y-m-d'));
-                                } elseif ($state === 'quarter') {
-                                    $set('startDate', $now->copy()->startOfQuarter()->format('Y-m-d'));
-                                    $set('endDate', $now->copy()->endOfQuarter()->format('Y-m-d'));
-                                } elseif ($state === 'year') {
-                                    $set('startDate', $now->copy()->startOfYear()->format('Y-m-d'));
-                                    $set('endDate', $now->copy()->endOfYear()->format('Y-m-d'));
-                                }
-                            }),
-                        
-                        DatePicker::make('startDate')
-                            ->label('Start Date')
-                            ->default(fn() => $this->startDate)
-                            ->visible(fn (callable $get) => $get('timeframe') === 'custom'),
-                            
-                        DatePicker::make('endDate')
-                            ->label('End Date')
-                            ->default(fn() => $this->endDate)
-                            ->visible(fn (callable $get) => $get('timeframe') === 'custom')
-                            ->afterOrEqual('startDate'),
-                            
-                        Select::make('category')
-                            ->label('Category')
-                            ->options(function() {
-                                $categories = Transaction::where('user_id', auth()->id())
-                                    ->where('type', 'expense')
-                                    ->select('category')
-                                    ->distinct()
-                                    ->pluck('category', 'category')
-                                    ->toArray();
+    {
+        return [
+            ActionGroup::make([
+                $this->getQuickExpenseAction(),
+                Action::make('addExpense')
+                    ->label('Add Expense')
+                    ->url(fn (): string => url('/app/transactions/create'))
+                    ->color('primary')
+                    ->icon('heroicon-m-plus-circle'),
+            ])->label('Add Expense')
+              ->color('success')
+              ->icon('heroicon-m-plus-circle'),
+                
+            Action::make('filter')
+                ->label('Filter')
+                ->icon('heroicon-m-funnel')
+                ->iconPosition(IconPosition::After)
+                ->form([
+                    Section::make()
+                        ->schema([
+                            Select::make('timeframe')
+                                ->label('Timeframe')
+                                ->options([
+                                    'week' => 'This Week',
+                                    'month' => 'This Month',
+                                    'quarter' => 'This Quarter',
+                                    'year' => 'This Year',
+                                    'custom' => 'Custom Range',
+                                ])
+                                ->default(fn() => $this->timeframe)
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    $now = Carbon::now();
                                     
-                                return ['all' => 'All Categories'] + $categories;
-                            })
-                            ->default(fn() => $this->category),
-                    ])
-            ])
-            ->action(function (array $data) {
-                // Store current filter state to check for changes
-                $oldTimeframe = $this->timeframe;
-                $oldCategory = $this->category;
-                $oldStartDate = $this->startDate;
-                $oldEndDate = $this->endDate;
-                
-                // Update timeframe
-                $this->timeframe = $data['timeframe'] ?? 'month';
-                
-                // Set dates based on timeframe if not custom
-                if ($this->timeframe === 'custom') {
-                    // For custom timeframe, use the provided dates
-                    $this->startDate = $data['startDate'] ?? $this->startDate;
-                    $this->endDate = $data['endDate'] ?? $this->endDate;
-                } else {
-                    // Otherwise set the date range based on the timeframe
-                    $this->setDateRangeFromTimeframe();
-                }
-                
-                // Update category
-                $this->category = $data['category'] ?? 'all';
-                
-                // Only notify and refresh if something changed
-                if (
-                    $oldTimeframe !== $this->timeframe ||
-                    $oldCategory !== $this->category ||
-                    $oldStartDate !== $this->startDate ||
-                    $oldEndDate !== $this->endDate
-                ) {
-                    // Notify the user
-                    Notification::make()
-                        ->title('Filters applied successfully')
-                        ->success()
-                        ->send();
-                        
-                    // Dispatch the refresh event to update the dashboard
-                    $this->dispatch('refreshDashboard');
-                }
-            })
-            ->color('secondary')
-            ->extraAttributes([
-                'class' => 'filter-button',
-                'x-data' => "{ 
-                    isFiltered: " . (($this->timeframe !== 'month' || $this->category !== 'all') ? 'true' : 'false') . " 
-                }",
-                'x-bind:class' => "isFiltered ? 'filter-active' : ''"
-            ])
-            ->modalWidth('md')
-            ->modalHeading('Filter Dashboard')
-            ->extraModalFooterActions(fn(Action $action) => [
-                Action::make('resetFilters')
-                    ->label('Reset Filters')
-                    ->color('gray')
-                    ->action(function () use ($action) {
-                        $this->resetFilters();
-                        $action->cancel();
-                    }),
-            ]),
-    ];
-}
+                                    if ($state === 'week') {
+                                        $set('startDate', $now->copy()->startOfWeek()->format('Y-m-d'));
+                                        $set('endDate', $now->copy()->endOfWeek()->format('Y-m-d'));
+                                    } elseif ($state === 'month') {
+                                        $set('startDate', $now->copy()->startOfMonth()->format('Y-m-d'));
+                                        $set('endDate', $now->copy()->endOfMonth()->format('Y-m-d'));
+                                    } elseif ($state === 'quarter') {
+                                        $set('startDate', $now->copy()->startOfQuarter()->format('Y-m-d'));
+                                        $set('endDate', $now->copy()->endOfQuarter()->format('Y-m-d'));
+                                    } elseif ($state === 'year') {
+                                        $set('startDate', $now->copy()->startOfYear()->format('Y-m-d'));
+                                        $set('endDate', $now->copy()->endOfYear()->format('Y-m-d'));
+                                    }
+                                }),
+                            
+                            DatePicker::make('startDate')
+                                ->label('Start Date')
+                                ->default(fn() => $this->startDate)
+                                ->visible(fn (callable $get) => $get('timeframe') === 'custom'),
+                                
+                            DatePicker::make('endDate')
+                                ->label('End Date')
+                                ->default(fn() => $this->endDate)
+                                ->visible(fn (callable $get) => $get('timeframe') === 'custom')
+                                ->afterOrEqual('startDate'),
+                                
+                            Select::make('category')
+                                ->label('Category')
+                                ->options(function() {
+                                    $categories = Transaction::where('user_id', auth()->id())
+                                        ->where('type', 'expense')
+                                        ->select('category')
+                                        ->distinct()
+                                        ->pluck('category', 'category')
+                                        ->toArray();
+                                        
+                                    return ['all' => 'All Categories'] + $categories;
+                                })
+                                ->default(fn() => $this->category),
+                        ])
+                ])
+                ->action(function (array $data) {
+                    $oldTimeframe = $this->timeframe;
+                    $oldCategory = $this->category;
+                    $oldStartDate = $this->startDate;
+                    $oldEndDate = $this->endDate;
+                    $this->timeframe = $data['timeframe'] ?? 'month';
+                    
+                    if ($this->timeframe === 'custom') {
+                        $this->startDate = $data['startDate'] ?? $this->startDate;
+                        $this->endDate = $data['endDate'] ?? $this->endDate;
+                    } else {
+                        $this->setDateRangeFromTimeframe();
+                    }
+                    
+                    $this->category = $data['category'] ?? 'all';
+                    
+                    if (
+                        $oldTimeframe !== $this->timeframe ||
+                        $oldCategory !== $this->category ||
+                        $oldStartDate !== $this->startDate ||
+                        $oldEndDate !== $this->endDate
+                    ) {
+                        Notification::make()
+                            ->title('Filters applied successfully')
+                            ->success()
+                            ->send();
+                            
+                        $this->dispatch('refreshCharts');
+                    }
+                })
+                ->color('secondary')
+                ->extraAttributes([
+                    'class' => 'filter-button',
+                    'x-data' => "{ 
+                        isFiltered: " . (($this->timeframe !== 'month' || $this->category !== 'all') ? 'true' : 'false') . " 
+                    }",
+                    'x-bind:class' => "isFiltered ? 'filter-active' : ''"
+                ])
+                ->modalWidth('md')
+                ->modalHeading('Filter Dashboard')
+                ->extraModalFooterActions(fn(Action $action) => [
+                    Action::make('resetFilters')
+                        ->label('Reset Filters')
+                        ->color('gray')
+                        ->action(function () use ($action) {
+                            $this->resetFilters();
+                            $action->cancel();
+                        }),
+                ]),
+        ];
+    }
     
     public function getExpensesData()
     {
@@ -408,7 +405,7 @@ class ExpensesDashboard extends Page
             $query->where('category', $this->category);
         }
         
-        return $query->sum('amount');
+        return $query->sum('amount') ?: 0;
     }
     
     public function getAverageExpensePerDay()
@@ -431,15 +428,12 @@ class ExpensesDashboard extends Page
             $query->where('category', $this->category);
         }
         
-        // First, get the data without ordering
         $results = $query->select('category', DB::raw('SUM(amount) as total'))
             ->groupBy('category')
             ->get();
+
+        $totalAll = $query->sum('amount') ?: 0;
         
-        // Get total for percentage calculation
-        $totalAll = $query->sum('amount');
-        
-        // Map and transform the results, then sort manually
         $data = $results->map(function ($item) use ($totalAll) {
                 $percentage = $totalAll > 0 ? round(($item->total / $totalAll) * 100, 1) : 0;
                 return [
@@ -449,7 +443,7 @@ class ExpensesDashboard extends Page
                 ];
             })
             ->sortByDesc('total')
-            ->values(); // Convert to indexed array after sorting
+            ->values();
             
         return $data;
     }
@@ -531,7 +525,7 @@ class ExpensesDashboard extends Page
             ->where('type', 'expense')
             ->where('category', 'unhealthy_habits')
             ->whereBetween('date', [$this->startDate, $this->endDate])
-            ->sum('amount');
+            ->sum('amount') ?: 0;
     }
     
     public function getRecentTransactions($limit = 10)
@@ -574,7 +568,6 @@ class ExpensesDashboard extends Page
             ->columns(4);
     }
     
-    // Get period label based on current timeframe
     public function getPeriodLabel()
     {
         if ($this->timeframe === 'month') {

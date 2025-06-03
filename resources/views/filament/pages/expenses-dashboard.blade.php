@@ -10,6 +10,15 @@
         'year' => 'This Year',
         'custom' => 'Custom Range'
     ];
+    
+    $categoryBreakdown = $this->getCategoryBreakdown();
+    $monthlyTrend = $this->getMonthlyTrend();
+    $dailyTrend = $this->getDailyTrend();
+    $totalExpenses = $this->getTotalExpenses();
+    $averageDailyExpense = $this->getAverageExpensePerDay();
+    $unhealthyExpenses = $this->getUnhealthyExpenses();
+    $recentTransactions = $this->getRecentTransactions(5);
+    $largestExpenses = $this->getLargestExpenses();
 @endphp
 
 <x-filament-panels::page>
@@ -18,14 +27,14 @@
     <div 
         class="expenses-dashboard dashboard-container"
         x-data="expensesDashboard({
-            categoryBreakdown: {{ json_encode($this->getCategoryBreakdown()) }},
-            monthlyTrend: {{ json_encode($this->getMonthlyTrend()) }},
-            dailyTrend: {{ json_encode($this->getDailyTrend()) }},
-            totalExpenses: {{ $this->getTotalExpenses() }},
-            averageDailyExpense: {{ $this->getAverageExpensePerDay() }},
-            unhealthyExpenses: {{ $this->getUnhealthyExpenses() }},
-            recentTransactions: {{ json_encode($this->getRecentTransactions(5)) }},
-            largestExpenses: {{ json_encode($this->getLargestExpenses()) }},
+            categoryBreakdown: {{ json_encode($categoryBreakdown) }},
+            monthlyTrend: {{ json_encode($monthlyTrend) }},
+            dailyTrend: {{ json_encode($dailyTrend) }},
+            totalExpenses: {{ $totalExpenses }},
+            averageDailyExpense: {{ $averageDailyExpense }},
+            unhealthyExpenses: {{ $unhealthyExpenses }},
+            recentTransactions: {{ json_encode($recentTransactions) }},
+            largestExpenses: {{ json_encode($largestExpenses) }},
             timeframe: '{{ $this->timeframe }}',
             category: '{{ $this->category }}',
             startDate: '{{ $this->startDate }}',
@@ -35,7 +44,6 @@
         x-init="$nextTick(() => { 
             document.addEventListener('echart-loaded', initializeCharts);
             
-            // Listen for theme changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
                 darkMode = e.matches;
                 if (typeof refreshCharts === 'function') {
@@ -43,6 +51,7 @@
                 }
             });
         })"
+        wire:key="dashboard-{{ $this->timeframe }}-{{ $this->category }}-{{ $this->startDate }}-{{ $this->endDate }}"
     >
     <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
         <div>
@@ -88,25 +97,43 @@
         </div>
         
         <div class="dashboard-actions flex items-center gap-2 flex-wrap">
-            {{-- Only show timeframe selector if not using custom dates --}}
             @if($this->timeframe !== 'custom')
                 <div class="timeframe-selector flex rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <button @click="$wire.updateTimeframe('week')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'week', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'week'}">Week</button>
-                    <button @click="$wire.updateTimeframe('month')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'month', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'month'}">Month</button>
-                    <button @click="$wire.updateTimeframe('quarter')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'quarter', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'quarter'}">Quarter</button>
-                    <button @click="$wire.updateTimeframe('year')" class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors" :class="{'text-white bg-primary-600 dark:bg-primary-500': $wire.timeframe === 'year', 'hover:bg-gray-100 dark:hover:bg-gray-700': $wire.timeframe !== 'year'}">Year</button>
+                    <button 
+                        wire:click="updateTimeframe('week')" 
+                        class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'week' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                    >
+                        Week
+                    </button>
+                    <button 
+                        wire:click="updateTimeframe('month')" 
+                        class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'month' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                    >
+                        Month
+                    </button>
+                    <button 
+                        wire:click="updateTimeframe('quarter')" 
+                        class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'quarter' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                    >
+                        Quarter
+                    </button>
+                    <button 
+                        wire:click="updateTimeframe('year')" 
+                        class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'year' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+                    >
+                        Year
+                    </button>
                 </div>
             @endif
         </div>
     </div>
         
         <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {{-- Total Expenses --}}
             <div class="stat-card stat-primary bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
                         <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Expenses</div>
-                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white" x-text="formatMoney(totalExpenses)"></div>
+                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($totalExpenses, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
                             {{ $timeframeLabels[$this->timeframe] }}
                         </div>
@@ -120,12 +147,11 @@
                 </div>
             </div>
             
-            {{-- Average Daily --}}
             <div class="stat-card stat-success bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
                         <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Average Daily</div>
-                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white" x-text="formatMoney(averageDailyExpense)"></div>
+                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($averageDailyExpense, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
                             per day on average
                         </div>
@@ -138,12 +164,11 @@
                 </div>
             </div>
             
-            {{-- Categories --}}
             <div class="stat-card stat-warning bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
                         <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Categories</div>
-                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">{{ count($this->getCategoryBreakdown()) }}</div>
+                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">{{ count($categoryBreakdown) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
                             expense categories used
                         </div>
@@ -158,14 +183,13 @@
                 </div>
             </div>
             
-            {{-- Unhealthy Expenses --}}
             <div class="stat-card stat-danger bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
                         <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Unhealthy Expenses</div>
-                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white" x-text="formatMoney(unhealthyExpenses)"></div>
+                        <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($unhealthyExpenses, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            <span x-text="(totalExpenses > 0 ? (unhealthyExpenses / totalExpenses * 100).toFixed(1) : 0) + '%'"></span> of total expenses
+                            {{ $totalExpenses > 0 ? number_format(($unhealthyExpenses / $totalExpenses) * 100, 1) : 0 }}% of total expenses
                         </div>
                     </div>
                     <div class="stat-icon bg-rose-100 dark:bg-rose-900/50 p-3 rounded-lg">
@@ -181,18 +205,17 @@
             </div>
         </div>
         
-        {{-- Charts Grid --}}
         <div class="charts-grid grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="chart-header mb-4">
                     <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Category Breakdown</h3>
                 </div>
                 
-                @if(count($this->getCategoryBreakdown()) > 0)
+                @if(count($categoryBreakdown) > 0)
                     <div class="chart-container h-64" id="categoryPieChart"></div>
                     
                     <div class="category-list mt-4 space-y-3">
-                        @foreach($this->getCategoryBreakdown()->take(5) as $index => $item)
+                        @foreach($categoryBreakdown->take(5) as $index => $item)
                             <div class="category-item">
                                 <div class="category-label flex items-center justify-between mb-1">
                                     <div class="flex items-center">
@@ -227,12 +250,12 @@
             </div>
             
             <div class="charts-col lg:col-span-2 flex flex-col gap-6">
-                    <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
                         <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Monthly Trend ({{ $currentYear }})</h3>
                     </div>
                     
-                    @if(count($this->getMonthlyTrend()) > 0)
+                    @if(count($monthlyTrend) > 0)
                         <div class="chart-container h-64" id="monthlyTrendChart"></div>
                     @else
                         <div class="empty-state flex flex-col items-center justify-center py-12 text-center">
@@ -245,12 +268,12 @@
                     @endif
                 </div>
                 
-                    <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
                         <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Daily Expenses</h3>
                     </div>
                     
-                    @if(count($this->getDailyTrend()) > 0)
+                    @if(count($dailyTrend) > 0)
                         <div class="chart-container h-64" id="dailyTrendChart"></div>
                     @else
                         <div class="empty-state flex flex-col items-center justify-center py-12 text-center">
@@ -272,7 +295,7 @@
             <div class="trans-card lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="trans-header flex justify-between items-center mb-4">
                     <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Recent Transactions</h3>
-                    @if(count($this->getRecentTransactions()) > 0)
+                    @if(count($recentTransactions) > 0)
                         <a href="{{ url('/app/transactions') }}" class="trans-link flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
                             View All
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-1">
@@ -282,7 +305,7 @@
                     @endif
                 </div>
                 
-                @if(count($this->getRecentTransactions()) > 0)
+                @if(count($recentTransactions) > 0)
                     <div class="overflow-x-auto">
                         <table class="trans-table w-full text-left">
                             <thead>
@@ -294,7 +317,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                @foreach($this->getRecentTransactions(8) as $transaction)
+                                @foreach($recentTransactions->take(8) as $transaction)
                                     <tr>
                                         <td class="py-3 text-sm text-gray-600 dark:text-gray-300">{{ \Carbon\Carbon::parse($transaction->date)->format('M d, Y') }}</td>
                                         <td class="py-3 text-sm text-gray-900 dark:text-white">{{ $transaction->description }}</td>
@@ -332,14 +355,14 @@
             </div>
             
             <div class="flex flex-col gap-6">
-                    <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
                         <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Largest Expenses</h3>
                     </div>
                     
-                    @if(count($this->getLargestExpenses()) > 0)
+                    @if(count($largestExpenses) > 0)
                         <div class="expense-list divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($this->getLargestExpenses() as $expense)
+                            @foreach($largestExpenses as $expense)
                                 <div class="expense-item py-3">
                                     <div class="expense-info flex justify-between mb-1">
                                         <div class="expense-desc text-sm font-medium text-gray-900 dark:text-white truncate max-w-[70%]">{{ $expense->description }}</div>
@@ -370,7 +393,7 @@
                     @endif
                 </div>
                 
-                    <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
                         <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Savings Tips</h3>
                     </div>

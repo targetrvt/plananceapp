@@ -1,7 +1,6 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('expensesDashboard', function(initialData) {
         return {
-            // Data properties
             categoryBreakdown: initialData.categoryBreakdown || [],
             monthlyTrend: initialData.monthlyTrend || [],
             dailyTrend: initialData.dailyTrend || [],
@@ -16,13 +15,11 @@ document.addEventListener('alpine:init', () => {
             endDate: initialData.endDate,
             darkMode: initialData.darkMode || document.documentElement.classList.contains('dark'),
             
-            // Chart instances
             categoryChart: null,
             dailyChart: null,
             monthlyChart: null,
             chartsInitialized: false,
             
-            // Colors for charts
             lightColors: [
                 '#4F46E5', '#3B82F6', '#06B6D4', '#10B981', '#F59E0B', 
                 '#8B5CF6', '#EC4899', '#EF4444', '#6366F1', '#0EA5E9',
@@ -34,37 +31,22 @@ document.addEventListener('alpine:init', () => {
                 '#2DD4BF', '#A3E635', '#E879F9', '#FB7185', '#FDE047'
             ],
             
-            // Initialize the component
             init() {
-                // Safely load ECharts if needed
                 this.safelyLoadECharts();
                 
-                // Handle window resize with debounce
                 let resizeTimer;
                 window.addEventListener('resize', () => {
                     clearTimeout(resizeTimer);
                     resizeTimer = setTimeout(() => this.resizeCharts(), 250);
                 });
                 
-                // Listen for dark mode changes
                 this.setupDarkModeDetection();
-                
-                // Watch for refreshes
                 document.addEventListener('echart-loaded', () => this.initializeCharts());
-                
-                // Handle Livewire refresh events
-                if (typeof Livewire !== 'undefined') {
-                    document.addEventListener('livewire:update', () => {
-                        setTimeout(() => this.refreshChartsAfterUpdate(), 100);
-                    });
-                }
             },
             
-            // Safely load ECharts library if needed
             safelyLoadECharts() {
                 try {
                     if (typeof echarts !== 'undefined') {
-                        // ECharts already loaded, initialize charts
                         this.$nextTick(() => {
                             this.initializeCharts();
                             this.chartsInitialized = true;
@@ -72,7 +54,6 @@ document.addEventListener('alpine:init', () => {
                         return;
                     }
                     
-                    // Create script element to load ECharts
                     const script = document.createElement('script');
                     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js';
                     script.integrity = 'sha512-EmNxF3E6bM0Xg1zvmkeYD3HDBeGxtsG92IxFt1myNZhXdCav9MzvuH/zNMBU1DmIPN6njrhX1VTbqdJxQ2wHDg==';
@@ -80,7 +61,6 @@ document.addEventListener('alpine:init', () => {
                     script.referrerPolicy = 'no-referrer';
                     
                     script.onload = () => {
-                        // Dispatch custom event when loaded
                         document.dispatchEvent(new CustomEvent('echart-loaded'));
                         this.chartsInitialized = true;
                     };
@@ -95,29 +75,8 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Handle chart refreshes after Livewire updates
-            refreshChartsAfterUpdate() {
-                try {
-                    if (typeof echarts === 'undefined') {
-                        this.safelyLoadECharts();
-                        return;
-                    }
-                    
-                    if (this.chartsInitialized) {
-                        this.resizeCharts();
-                    } else {
-                        this.initializeCharts();
-                        this.chartsInitialized = true;
-                    }
-                } catch (error) {
-                    console.error('Error refreshing charts:', error);
-                }
-            },
-            
-            // Setup dark mode detection
             setupDarkModeDetection() {
                 try {
-                    // Watch for class changes on the HTML element
                     const observer = new MutationObserver((mutations) => {
                         mutations.forEach((mutation) => {
                             if (mutation.attributeName === 'class') {
@@ -132,7 +91,6 @@ document.addEventListener('alpine:init', () => {
                     
                     observer.observe(document.documentElement, { attributes: true });
                     
-                    // Also listen for system preference changes
                     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
                     mediaQuery.addEventListener('change', (e) => {
                         if (document.documentElement.classList.contains('dark') !== e.matches && 
@@ -146,17 +104,14 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Initialize all charts
             initializeCharts() {
                 try {
                     if (typeof echarts === 'undefined') {
-                        console.warn('ECharts not loaded yet, will try again');
                         this.safelyLoadECharts();
                         return;
                     }
                     
                     this.$nextTick(() => {
-                        // Initialize charts if DOM elements exist
                         if (document.getElementById('categoryPieChart')) {
                             this.initCategoryChart();
                         }
@@ -174,10 +129,8 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Refresh all charts (for theme changes, etc.)
             refreshCharts() {
                 try {
-                    // Safely dispose existing charts first
                     if (this.categoryChart) {
                         try { this.categoryChart.dispose(); } catch {}
                         this.categoryChart = null;
@@ -193,14 +146,12 @@ document.addEventListener('alpine:init', () => {
                         this.monthlyChart = null;
                     }
                     
-                    // Re-initialize the charts
                     this.$nextTick(() => this.initializeCharts());
                 } catch (error) {
                     console.error('Error refreshing charts:', error);
                 }
             },
             
-            // Resize all charts
             resizeCharts() {
                 try {
                     if (this.categoryChart && document.getElementById('categoryPieChart')) {
@@ -219,38 +170,35 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Get appropriate chart colors based on theme
             getChartColors() {
                 return this.darkMode ? this.darkColors : this.lightColors;
             },
             
-            // Initialize category pie chart
             initCategoryChart() {
                 if (!this.categoryBreakdown || this.categoryBreakdown.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('categoryPieChart');
-                if (!chartElement) return;
+                if (!chartElement) {
+                    return;
+                }
                 
-                // Safely dispose existing chart if it exists
                 if (this.categoryChart) {
                     try { this.categoryChart.dispose(); } catch {}
                 }
                 
                 const colors = this.getChartColors();
                 
-                // Prepare chart data
                 const chartData = this.categoryBreakdown.map((item, index) => ({
                     name: this.formatCategoryName(item.category),
-                    value: item.total,
-                    percentage: item.percentage,
+                    value: parseFloat(item.total) || 0,
+                    percentage: parseFloat(item.percentage) || 0,
                     itemStyle: {
                         color: colors[index % colors.length]
                     }
                 }));
                 
-                // Create chart options
                 const options = {
                     tooltip: {
                         trigger: 'item',
@@ -269,7 +217,6 @@ document.addEventListener('alpine:init', () => {
                             color: this.darkMode ? '#d1d5db' : '#4b5563'
                         },
                         formatter: name => {
-                            // Truncate long category names
                             return name.length > 15 ? name.slice(0, 15) + '...' : name;
                         }
                     },
@@ -301,7 +248,6 @@ document.addEventListener('alpine:init', () => {
                 };
                 
                 try {
-                    // Initialize chart with proper renderer
                     this.categoryChart = echarts.init(chartElement, null, { 
                         renderer: 'canvas',
                         width: 'auto',
@@ -313,21 +259,20 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Initialize daily trend chart
             initDailyTrendChart() {
                 if (!this.dailyTrend || this.dailyTrend.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('dailyTrendChart');
-                if (!chartElement) return;
+                if (!chartElement) {
+                    return;
+                }
                 
-                // Safely dispose existing chart if it exists
                 if (this.dailyChart) {
                     try { this.dailyChart.dispose(); } catch {}
                 }
                 
-                // Determine theme-specific colors
                 const lineColor = this.darkMode ? '#10b981' : '#059669';
                 const areaColorTop = this.darkMode ? 'rgba(16, 185, 129, 0.5)' : 'rgba(5, 150, 105, 0.5)';
                 const areaColorBottom = this.darkMode ? 'rgba(16, 185, 129, 0.05)' : 'rgba(5, 150, 105, 0.05)';
@@ -335,7 +280,9 @@ document.addEventListener('alpine:init', () => {
                 const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
                 const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
                 
-                // Create chart options
+                const dailyData = this.dailyTrend.map(item => parseFloat(item.total) || 0);
+                const dailyLabels = this.dailyTrend.map(item => item.date);
+                
                 const options = {
                     tooltip: {
                         trigger: 'axis',
@@ -353,7 +300,7 @@ document.addEventListener('alpine:init', () => {
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
-                        data: this.dailyTrend.map(item => item.date),
+                        data: dailyLabels,
                         axisLine: {
                             lineStyle: {
                                 color: axisLineColor
@@ -362,7 +309,7 @@ document.addEventListener('alpine:init', () => {
                         axisLabel: {
                             color: axisLabelColor,
                             fontSize: 10,
-                            rotate: this.dailyTrend.length > 15 ? 45 : 0
+                            rotate: dailyLabels.length > 15 ? 45 : 0
                         }
                     },
                     yAxis: {
@@ -413,12 +360,11 @@ document.addEventListener('alpine:init', () => {
                                 }]
                             }
                         },
-                        data: this.dailyTrend.map(item => item.total)
+                        data: dailyData
                     }]
                 };
                 
                 try {
-                    // Initialize chart with proper renderer
                     this.dailyChart = echarts.init(chartElement, null, { 
                         renderer: 'canvas',
                         width: 'auto',
@@ -430,28 +376,29 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Initialize monthly trend chart
             initMonthlyTrendChart() {
                 if (!this.monthlyTrend || this.monthlyTrend.length === 0) {
                     return;
                 }
                 
                 const chartElement = document.getElementById('monthlyTrendChart');
-                if (!chartElement) return;
+                if (!chartElement) {
+                    return;
+                }
                 
-                // Safely dispose existing chart if it exists
                 if (this.monthlyChart) {
                     try { this.monthlyChart.dispose(); } catch {}
                 }
                 
-                // Determine theme-specific colors
                 const barColor = this.darkMode ? '#60a5fa' : '#3b82f6';
                 const barHoverColor = this.darkMode ? '#93c5fd' : '#2563eb';
                 const axisLineColor = this.darkMode ? '#374151' : '#e5e7eb';
                 const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
                 const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
                 
-                // Create chart options
+                const monthlyData = this.monthlyTrend.map(item => parseFloat(item.total) || 0);
+                const monthlyLabels = this.monthlyTrend.map(item => item.month);
+                
                 const options = {
                     tooltip: {
                         trigger: 'axis',
@@ -468,7 +415,7 @@ document.addEventListener('alpine:init', () => {
                     },
                     xAxis: {
                         type: 'category',
-                        data: this.monthlyTrend.map(item => item.month),
+                        data: monthlyLabels,
                         axisLine: {
                             lineStyle: {
                                 color: axisLineColor
@@ -514,12 +461,11 @@ document.addEventListener('alpine:init', () => {
                                 color: barHoverColor
                             }
                         },
-                        data: this.monthlyTrend.map(item => item.total)
+                        data: monthlyData
                     }]
                 };
                 
                 try {
-                    // Initialize chart with proper renderer
                     this.monthlyChart = echarts.init(chartElement, null, { 
                         renderer: 'canvas',
                         width: 'auto',
@@ -531,17 +477,16 @@ document.addEventListener('alpine:init', () => {
                 }
             },
             
-            // Format money values
             formatMoney(amount) {
+                const value = parseFloat(amount) || 0;
                 return new Intl.NumberFormat('de-DE', {
                     style: 'currency', 
                     currency: 'EUR',
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
-                }).format(amount);
+                }).format(value);
             },
             
-            // Format category names for display
             formatCategoryName(category) {
                 if (!category) return 'Uncategorized';
                 
@@ -552,13 +497,11 @@ document.addEventListener('alpine:init', () => {
                     .join(' ');
             },
             
-            // Get color for a category
             getCategoryColor(index) {
                 const colors = this.getChartColors();
                 return colors[index % colors.length];
             },
             
-            // Get CSS class for a category badge
             getCategoryClass(category) {
                 const classes = {
                     food: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
@@ -575,35 +518,6 @@ document.addEventListener('alpine:init', () => {
                 };
                 
                 return classes[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-            },
-            
-            // Update timeframe and refresh data
-            updateTimeframe(newTimeframe) {
-                // Prevent unnecessary updates
-                if (this.timeframe === newTimeframe) return;
-            
-                try {
-                    this.timeframe = newTimeframe;
-            
-                    // Only try to call Livewire method if $wire is available
-                    if (typeof this.$wire !== 'undefined' && this.$wire && typeof this.$wire.call === 'function') {
-                        this.$wire.call('updateTimeframe', newTimeframe)
-                            .then(() => {
-                                // Use Alpine.js safe way to wait for DOM updates
-                                if (typeof Alpine !== 'undefined' && Alpine.nextTick) {
-                                    Alpine.nextTick(() => this.initializeCharts());
-                                } else {
-                                    // Fallback to basic timeout if Alpine is not available
-                                    setTimeout(() => this.initializeCharts(), 0);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error updating timeframe:', error);
-                            });
-                    }
-                } catch (error) {
-                    console.error('Error in updateTimeframe:', error);
-                }
             }
         };
     });
