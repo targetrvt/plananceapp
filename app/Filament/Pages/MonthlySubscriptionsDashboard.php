@@ -21,13 +21,11 @@ class MonthlySubscriptionsDashboard extends Page
     
     public function getTotalMonthlyAmount()
     {
-        // Get all active subscriptions first, then calculate the sum of monthly_cost
         $subscriptions = MonthlySubscription::where('user_id', auth()->id())
             ->where('is_active', true)
             ->get();
             
         return $subscriptions->sum(function($subscription) {
-            // Calculate the monthly cost for each subscription
             $divisor = match($subscription->billing_cycle) {
                 'monthly' => 1,
                 'quarterly' => 3,
@@ -42,13 +40,11 @@ class MonthlySubscriptionsDashboard extends Page
     
     public function getTotalAnnualAmount()
     {
-        // Get all active subscriptions first, then calculate the sum of annual_cost
         $subscriptions = MonthlySubscription::where('user_id', auth()->id())
             ->where('is_active', true)
             ->get();
             
         return $subscriptions->sum(function($subscription) {
-            // Calculate the annual cost for each subscription
             $multiplier = match($subscription->billing_cycle) {
                 'monthly' => 12,
                 'quarterly' => 4,
@@ -77,7 +73,6 @@ class MonthlySubscriptionsDashboard extends Page
             ->orderBy('billing_date')
             ->get();
         
-        // Add days_left as an integer property to each subscription
         $subscriptions->each(function($subscription) {
             $subscription->days_left = (int) Carbon::now()->diffInDays($subscription->billing_date);
             return $subscription;
@@ -101,7 +96,6 @@ class MonthlySubscriptionsDashboard extends Page
             ->map(function ($group) use ($subscriptions) {
                 $totalMonthly = $this->getTotalMonthlyAmount();
                 
-                // Calculate monthly cost for this category
                 $monthlyCost = $group->sum(function($subscription) {
                     $divisor = match($subscription->billing_cycle) {
                         'monthly' => 1,
@@ -114,7 +108,6 @@ class MonthlySubscriptionsDashboard extends Page
                     return $subscription->amount / $divisor;
                 });
                 
-                // Calculate percentage as integer
                 $percentage = $totalMonthly > 0 ? (int)(($monthlyCost / $totalMonthly) * 100) : 0;
                 
                 return [
@@ -128,12 +121,10 @@ class MonthlySubscriptionsDashboard extends Page
     
     public function getSubscriptionsSortedByMonthlyCost()
     {
-        // Get active subscriptions
         $subscriptions = MonthlySubscription::where('user_id', auth()->id())
             ->where('is_active', true)
             ->get(['id', 'name', 'amount', 'category', 'billing_cycle']);
         
-        // Calculate monthly cost for each subscription
         $subscriptionsWithMonthlyCost = $subscriptions->map(function($subscription) {
             $divisor = match($subscription->billing_cycle) {
                 'monthly' => 1,
@@ -152,7 +143,6 @@ class MonthlySubscriptionsDashboard extends Page
             ];
         });
         
-        // Sort by monthly cost and return top 10
         return $subscriptionsWithMonthlyCost
             ->sortByDesc('monthly_cost')
             ->take(10)
@@ -165,7 +155,6 @@ class MonthlySubscriptionsDashboard extends Page
             ->where('is_active', true)
             ->get(['id', 'name', 'amount', 'billing_date', 'billing_cycle', 'category']);
             
-        // Add days_left as integer property to each subscription
         $subscriptions->each(function($subscription) {
             $subscription->days_left = (int) Carbon::now()->diffInDays($subscription->billing_date);
             return $subscription;
@@ -194,17 +183,17 @@ class MonthlySubscriptionsDashboard extends Page
     protected function getCategoryColor($category)
     {
         return match($category) {
-            'streaming' => '#ef4444', // red
-            'software' => '#3b82f6', // blue
-            'cloud' => '#6366f1', // indigo
-            'membership' => '#10b981', // emerald
-            'utilities' => '#f59e0b', // amber
-            'phone' => '#ec4899', // pink
-            'education' => '#8b5cf6', // violet
-            'health' => '#22c55e', // green
-            'gaming' => '#a855f7', // purple
-            'news' => '#14b8a6', // teal
-            default => '#6b7280', // gray
+            'streaming' => '#ef4444',
+            'software' => '#3b82f6',
+            'cloud' => '#6366f1',
+            'membership' => '#10b981',
+            'utilities' => '#f59e0b',
+            'phone' => '#ec4899',
+            'education' => '#8b5cf6',
+            'health' => '#22c55e',
+            'gaming' => '#a855f7',
+            'news' => '#14b8a6',
+            default => '#6b7280',
         };
     }
     
@@ -217,7 +206,6 @@ class MonthlySubscriptionsDashboard extends Page
         return $subscriptions
             ->groupBy('billing_cycle')
             ->map(function ($group) {
-                // Calculate monthly equivalent
                 $monthlyEquivalent = $group->sum(function($subscription) {
                     $divisor = match($subscription->billing_cycle) {
                         'monthly' => 1,
@@ -252,6 +240,23 @@ class MonthlySubscriptionsDashboard extends Page
                 ->url(route('filament.app.resources.monthly-subscriptions.index'))
                 ->icon('heroicon-o-rectangle-stack')
                 ->color('gray'),
+        ];
+    }
+
+    protected function getStylesheets(): array
+    {
+        return [
+            'subscription-dashboard' => asset('css/subscription-dashboard.css'),
+        ];
+    }
+
+    protected function getScripts(): array
+    {
+        return [
+            'chart-js' => 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+            'chartjs-plugin-datalabels' => 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0',
+            'moment-js' => 'https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js',
+            'subscription-dashboard' => asset('js/subscription-dashboard.js'),
         ];
     }
 }
