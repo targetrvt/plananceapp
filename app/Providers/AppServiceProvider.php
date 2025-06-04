@@ -22,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
+    view()->composer('*', function ($view) {
+        app()->setLocale(session('locale', 'en'));
+    });
     MonthlySubscription::observe(MonthlySubscriptionObserver::class);
     LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
         $switch->locales(['lv', 'en']); // Also accepts a closure

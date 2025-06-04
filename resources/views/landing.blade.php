@@ -26,6 +26,14 @@
                 <div class="auth-buttons">
                     <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
                     <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
+                    <div class="premium-language-switch {{ app()->getLocale() === 'lv' ? 'lv-active' : '' }}">
+                        <a href="{{ route('lang.switch', 'en') }}" class="premium-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
+                            <span class="flag-emoji">🇬🇧</span>
+                        </a>
+                        <a href="{{ route('lang.switch', 'lv') }}" class="premium-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
+                            <span class="flag-emoji">🇱🇻</span>
+                        </a>
+                    </div>
                 </div>
                 <div class="mobile-nav-toggle">
                     <span></span>
@@ -44,9 +52,20 @@
             <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
         </div>
         <div class="mobile-auth-buttons">
+            <!-- Mobile Premium Language Switcher -->
+            <div class="mobile-premium-language-switch">
+                <a href="{{ route('lang.switch', 'en') }}" class="premium-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
+                    <span class="flag-emoji">🇬🇧</span>
+                    English
+                </a>
+                <a href="{{ route('lang.switch', 'lv') }}" class="premium-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
+                    <span class="flag-emoji">🇱🇻</span>
+                    Latviešu
+                </a>
+            </div>
             <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
             <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
-        </div>
+            </div>
     </div>
 
     <section class="hero">
@@ -601,17 +620,6 @@
                     </div>
                 </div>
                 
-                <div class="faq-item">
-                    <div class="faq-question">
-                        {{ __('messages.landing.faq.devices.question') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                    <div class="faq-answer">
-                        <p>{{ __('messages.landing.faq.devices.answer') }}</p>
-                    </div>
-                </div>
                 <div class="faq-item">
                     <div class="faq-question">
                         {{ __('messages.landing.faq.sharing.question') }}
