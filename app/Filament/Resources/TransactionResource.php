@@ -249,8 +249,8 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->limit(50),
-                
+                    ->limit(50)
+                    ->searchable()
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
