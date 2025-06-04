@@ -4,11 +4,11 @@
     $currentYear = \Carbon\Carbon::parse($this->startDate)->year;
     
     $timeframeLabels = [
-        'week' => 'This Week',
-        'month' => 'This Month',
-        'quarter' => 'This Quarter',
-        'year' => 'This Year',
-        'custom' => 'Custom Range'
+        'week' => __('messages.dashboard.expenses.period_labels.week'),
+        'month' => __('messages.dashboard.expenses.period_labels.month'),
+        'quarter' => __('messages.dashboard.expenses.period_labels.quarter'),
+        'year' => __('messages.dashboard.expenses.period_labels.year'),
+        'custom' => __('messages.dashboard.expenses.period_labels.custom')
     ];
     
     $categoryBreakdown = $this->getCategoryBreakdown();
@@ -89,7 +89,7 @@
                     <span class="dashboard-subtitle text-sm text-gray-600 dark:text-gray-300">
                         {{ $startDateFormatted }} - {{ $endDateFormatted }}
                         @if($this->category !== 'all')
-                            · Category: {{ ucwords(str_replace('_', ' ', $this->category)) }}
+                            · {{ __('messages.dashboard.expenses.filter.category') }}: {{ ucwords(str_replace('_', ' ', $this->category)) }}
                         @endif
                     </span>
                 @endif
@@ -103,25 +103,25 @@
                         wire:click="updateTimeframe('week')" 
                         class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'week' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                     >
-                        Week
+                        {{ __('messages.dashboard.expenses.period_labels.week') }}
                     </button>
                     <button 
                         wire:click="updateTimeframe('month')" 
                         class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'month' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                     >
-                        Month
+                        {{ __('messages.dashboard.expenses.period_labels.month') }}
                     </button>
                     <button 
                         wire:click="updateTimeframe('quarter')" 
                         class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'quarter' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                     >
-                        Quarter
+                        {{ __('messages.dashboard.expenses.period_labels.quarter') }}
                     </button>
                     <button 
                         wire:click="updateTimeframe('year')" 
                         class="timeframe-btn px-3 py-1.5 text-sm dark:text-gray-300 transition-colors {{ $this->timeframe === 'year' ? 'text-white bg-primary-600 dark:bg-primary-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                     >
-                        Year
+                        {{ __('messages.dashboard.expenses.period_labels.year') }}
                     </button>
                 </div>
             @endif
@@ -132,7 +132,7 @@
             <div class="stat-card stat-primary bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
-                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Expenses</div>
+                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('messages.dashboard.expenses.stats.total_expenses') }}</div>
                         <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($totalExpenses, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
                             {{ $timeframeLabels[$this->timeframe] }}
@@ -150,10 +150,10 @@
             <div class="stat-card stat-success bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
-                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Average Daily</div>
+                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('messages.dashboard.expenses.stats.average_daily') }}</div>
                         <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($averageDailyExpense, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            per day on average
+                            {{ __('messages.dashboard.expenses.stats.per_day_average') }}
                         </div>
                     </div>
                     <div class="stat-icon bg-emerald-100 dark:bg-emerald-900/50 p-3 rounded-lg">
@@ -167,10 +167,10 @@
             <div class="stat-card stat-warning bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
-                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Categories</div>
+                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('messages.dashboard.expenses.stats.categories') }}</div>
                         <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">{{ count($categoryBreakdown) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            expense categories used
+                            {{ __('messages.dashboard.expenses.stats.expense_categories_used') }}
                         </div>
                     </div>
                     <div class="stat-icon bg-amber-100 dark:bg-amber-900/50 p-3 rounded-lg">
@@ -186,10 +186,10 @@
             <div class="stat-card stat-danger bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
                     <div class="stat-info">
-                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Unhealthy Expenses</div>
+                        <div class="stat-title text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('messages.dashboard.expenses.stats.unhealthy_expenses') }}</div>
                         <div class="stat-value text-2xl font-bold text-gray-900 dark:text-white">€{{ number_format($unhealthyExpenses, 2) }}</div>
                         <div class="stat-trend text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {{ $totalExpenses > 0 ? number_format(($unhealthyExpenses / $totalExpenses) * 100, 1) : 0 }}% of total expenses
+                            {{ $totalExpenses > 0 ? number_format(($unhealthyExpenses / $totalExpenses) * 100, 1) : 0 }}% {{ __('messages.dashboard.expenses.stats.percentage_of_total') }}
                         </div>
                     </div>
                     <div class="stat-icon bg-rose-100 dark:bg-rose-900/50 p-3 rounded-lg">
@@ -208,7 +208,7 @@
         <div class="charts-grid grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="chart-header mb-4">
-                    <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Category Breakdown</h3>
+                    <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.charts.category_breakdown') }}</h3>
                 </div>
                 
                 @if(count($categoryBreakdown) > 0)
@@ -220,7 +220,7 @@
                                 <div class="category-label flex items-center justify-between mb-1">
                                     <div class="flex items-center">
                                         <div class="category-color w-3 h-3 rounded-full mr-2" x-data="{ color: getCategoryColor({{ $index }}) }" :style="{ backgroundColor: color }"></div>
-                                        <div class="category-name text-sm font-medium text-gray-700 dark:text-gray-300">{{ ucwords(str_replace('_', ' ', $item['category'])) }}</div>
+                                        <div class="category-name text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.categories.expense.' . $item['category']) }}</div>
                                     </div>
                                     <div class="category-value text-sm text-gray-600 dark:text-gray-400">
                                         <span>€{{ number_format($item['total'], 2) }}</span>
@@ -243,8 +243,8 @@
                             <line x1="8" x2="16" y1="12" y2="12" />
                             <line x1="12" x2="12" y1="8" y2="16" />
                         </svg>
-                        <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">No Categories Found</h3>
-                        <p class="empty-text text-sm text-gray-500 dark:text-gray-400">There are no expenses in this time period to categorize.</p>
+                        <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.charts.no_categories') }}</h3>
+                        <p class="empty-text text-sm text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.charts.no_categories_desc') }}</p>
                     </div>
                 @endif
             </div>
@@ -252,7 +252,7 @@
             <div class="charts-col lg:col-span-2 flex flex-col gap-6">
                 <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
-                        <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Monthly Trend ({{ $currentYear }})</h3>
+                        <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.charts.monthly_trend') }} ({{ $currentYear }})</h3>
                     </div>
                     
                     @if(count($monthlyTrend) > 0)
@@ -262,15 +262,15 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-icon w-12 h-12 text-gray-400 dark:text-gray-600 mb-4">
                                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                             </svg>
-                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">No Monthly Data</h3>
-                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">There's no monthly expense data to display.</p>
+                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.charts.no_monthly_data') }}</h3>
+                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.charts.no_monthly_desc') }}</p>
                         </div>
                     @endif
                 </div>
                 
                 <div class="chart-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="chart-header mb-4">
-                        <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">Daily Expenses</h3>
+                        <h3 class="chart-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.charts.daily_expenses') }}</h3>
                     </div>
                     
                     @if(count($dailyTrend) > 0)
@@ -283,8 +283,8 @@
                                 <line x1="8" x2="8" y1="2" y2="6" />
                                 <line x1="3" x2="21" y1="10" y2="10" />
                             </svg>
-                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">No Daily Data</h3>
-                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">There's no daily expense data to display.</p>
+                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.charts.no_daily_data') }}</h3>
+                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.charts.no_daily_desc') }}</p>
                         </div>
                     @endif
                 </div>
@@ -294,10 +294,10 @@
         <div class="transactions-grid grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="trans-card lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="trans-header flex justify-between items-center mb-4">
-                    <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Recent Transactions</h3>
+                    <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.transactions.recent') }}</h3>
                     @if(count($recentTransactions) > 0)
                         <a href="{{ url('/app/transactions') }}" class="trans-link flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
-                            View All
+                            {{ __('messages.dashboard.expenses.transactions.view_all') }}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-1">
                                 <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
                             </svg>
@@ -310,10 +310,10 @@
                         <table class="trans-table w-full text-left">
                             <thead>
                                 <tr>
-                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">Date</th>
-                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">Description</th>
-                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">Category</th>
-                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400 text-right">Amount</th>
+                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.transactions.date') }}</th>
+                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.transactions.description') }}</th>
+                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.transactions.category') }}</th>
+                                    <th class="pb-3 text-xs font-medium text-gray-500 dark:text-gray-400 text-right">{{ __('messages.dashboard.expenses.transactions.amount') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -325,7 +325,7 @@
                                             <span x-data="{ category: '{{ $transaction->category }}' }" 
                                                   :class="getCategoryClass(category)"
                                                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                                                {{ ucwords(str_replace('_', ' ', $transaction->category)) }}
+                                                {{ __('messages.categories.expense.' . $transaction->category) }}
                                             </span>
                                         </td>
                                         <td class="py-3 text-sm font-medium text-gray-900 dark:text-white text-right">€{{ number_format($transaction->amount, 2) }}</td>
@@ -341,14 +341,14 @@
                             <path d="M12 8H5a3 3 0 0 0-3 3v1a3 3 0 0 0 3 3h7" />
                             <line x1="12" x2="12" y1="3" y2="21" />
                         </svg>
-                        <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">No Transactions</h3>
-                        <p class="empty-text text-sm text-gray-500 dark:text-gray-400 mb-4">No expense transactions found for the selected period.</p>
+                        <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.transactions.no_transactions') }}</h3>
+                        <p class="empty-text text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('messages.dashboard.expenses.transactions.no_transactions_desc') }}</p>
                         <a href="{{ url('/app/transactions/create') }}" class="empty-button inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-800">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
                                 <line x1="12" x2="12" y1="5" y2="19" />
                                 <line x1="5" x2="19" y1="12" y2="12" />
                             </svg>
-                            Add Expense
+                            {{ __('messages.dashboard.expenses.transactions.add_expense') }}
                         </a>
                     </div>
                 @endif
@@ -357,7 +357,7 @@
             <div class="flex flex-col gap-6">
                 <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
-                        <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Largest Expenses</h3>
+                        <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.transactions.largest_expenses') }}</h3>
                     </div>
                     
                     @if(count($largestExpenses) > 0)
@@ -372,7 +372,7 @@
                                         <span x-data="{ category: '{{ $expense->category }}' }" 
                                               :class="getCategoryClass(category)"
                                               class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">
-                                            {{ ucwords(str_replace('_', ' ', $expense->category)) }}
+                                            {{ __('messages.categories.expense.' . $expense->category) }}
                                         </span>
                                         <span>{{ \Carbon\Carbon::parse($expense->date)->format('M d, Y') }}</span>
                                     </div>
@@ -387,15 +387,15 @@
                                 <path d="M15 10h.01" />
                                 <path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
                             </svg>
-                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">No Expenses</h3>
-                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">No expenses found for this period.</p>
+                            <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.transactions.no_expenses') }}</h3>
+                            <p class="empty-text text-sm text-gray-500 dark:text-gray-400">{{ __('messages.dashboard.expenses.transactions.no_expenses_desc') }}</p>
                         </div>
                     @endif
                 </div>
                 
                 <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="trans-header mb-4">
-                        <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">Savings Tips</h3>
+                        <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.tips.title') }}</h3>
                     </div>
                     
                     <div class="tips-list space-y-4">
@@ -411,8 +411,8 @@
                                     </svg>
                                 </div>
                                 <div class="tip-content">
-                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">Plan Your Meals</h4>
-                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">Planning meals in advance can reduce food expenses by up to 25%.</p>
+                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.tips.meal_planning.title') }}</h4>
+                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">{{ __('messages.dashboard.expenses.tips.meal_planning.description') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -426,8 +426,8 @@
                                     </svg>
                                 </div>
                                 <div class="tip-content">
-                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">Use Public Transport</h4>
-                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">Using public transportation instead of driving can save you money on fuel and parking.</p>
+                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.tips.public_transport.title') }}</h4>
+                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">{{ __('messages.dashboard.expenses.tips.public_transport.description') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -441,8 +441,8 @@
                                     </svg>
                                 </div>
                                 <div class="tip-content">
-                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">24-Hour Rule</h4>
-                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">Wait 24 hours before making non-essential purchases to avoid impulse buying.</p>
+                                    <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.expenses.tips.hour_rule.title') }}</h4>
+                                    <p class="tip-desc text-xs text-gray-600 dark:text-gray-400">{{ __('messages.dashboard.expenses.tips.hour_rule.description') }}</p>
                                 </div>
                             </div>
                         </div>

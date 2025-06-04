@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +18,14 @@
                     Planance
                 </a>
                 <div class="nav-links">
-                    <a href="#features">Features</a>
-                    <a href="#pricing">Pricing</a>
-                    <a href="#testimonials">Testimonials</a>
-                    <a href="#faq">FAQ</a>
+                    <a href="#features">{{ __('messages.landing.nav.features') }}</a>
+                    <a href="#pricing">{{ __('messages.landing.nav.pricing') }}</a>
+                    <a href="#testimonials">{{ __('messages.landing.nav.testimonials') }}</a>
+                    <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
                 </div>
                 <div class="auth-buttons">
-                    <a href="/app/login" class="btn btn-outline">Log In</a>
-                    <a href="/app/register" class="btn btn-primary">Sign Up</a>
+                    <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
+                    <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
                 </div>
                 <div class="mobile-nav-toggle">
                     <span></span>
@@ -38,14 +38,14 @@
     
     <div class="mobile-nav">
         <div class="mobile-nav-links">
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#testimonials">Testimonials</a>
-            <a href="#faq">FAQ</a>
+            <a href="#features">{{ __('messages.landing.nav.features') }}</a>
+            <a href="#pricing">{{ __('messages.landing.nav.pricing') }}</a>
+            <a href="#testimonials">{{ __('messages.landing.nav.testimonials') }}</a>
+            <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
         </div>
         <div class="mobile-auth-buttons">
-            <a href="/app/login" class="btn btn-outline">Log In</a>
-            <a href="/app/register" class="btn btn-primary">Sign Up</a>
+            <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
+            <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
         </div>
     </div>
 
@@ -55,25 +55,25 @@
         <div class="container">
             <div class="hero" style="padding-top: 0;">
                 <div class="hero-content">
-                    <div class="hero-tag">Smart Finance Management</div>
-                    <h1>Take Control of Your Financial Future</h1>
-                    <p>Planance helps individuals and businesses manage their finances with intelligent budgeting, expense tracking, and goal planning—all in one elegant platform.</p>
+                    <div class="hero-tag">{{ __('messages.landing.hero.tag') }}</div>
+                    <h1>{{ __('messages.landing.hero.title') }}</h1>
+                    <p>{{ __('messages.landing.hero.description') }}</p>
                     <div class="hero-cta">
-                        <a href="/app/register" class="btn btn-primary">Start Free Trial</a>
-                        <a href="#features" class="btn btn-outline">Explore Features</a>
+                        <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.hero.start_trial') }}</a>
+                        <a href="#features" class="btn btn-outline">{{ __('messages.landing.hero.explore_features') }}</a>
                     </div>
                     <div class="hero-stat">
                         <div class="stat-item">
                             <div class="stat-value">0+</div>
-                            <div class="stat-label">Active Users</div>
+                            <div class="stat-label">{{ __('messages.landing.hero.stats.active_users') }}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">0+</div>
-                            <div class="stat-label">Managed Monthly</div>
+                            <div class="stat-label">{{ __('messages.landing.hero.stats.managed_monthly') }}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">%+</div>
-                            <div class="stat-label">Customer Satisfaction</div>
+                            <div class="stat-label">{{ __('messages.landing.hero.stats.satisfaction') }}</div>
                         </div>
                     </div>
                 </div>
@@ -87,15 +87,15 @@
     <section class="features" id="features">
         <div class="container">
             <div class="section-title">
-                <div class="section-tag">Powerful Tools</div>
-                <h2>Everything You Need to Master Your Finances</h2>
-                <p>This intuitive platform is packed with powerful features designed to give you complete control of your financial journey.</p>
+                <div class="section-tag">{{ __('messages.landing.features.tag') }}</div>
+                <h2>{{ __('messages.landing.features.title') }}</h2>
+                <p>{{ __('messages.landing.features.description') }}</p>
             </div>
             
             <div class="features-wrapper">
                 <div class="features-left">
-                    <h3>Discover How Planance Works for You</h3>
-                    <p>Explore my comprehensive suite of financial tools designed to help you budget, track, and grow your finances with confidence.</p>
+                    <h3>{{ __('messages.landing.features.discover_title') }}</h3>
+                    <p>{{ __('messages.landing.features.discover_description') }}</p>
                     
                     <div class="features-tabs">
                         <div class="feature-tab active">
@@ -104,9 +104,9 @@
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M12 6v6l4 2"></path>
                                 </svg>
-                                Real-Time Tracking
+                                {{ __('messages.landing.features.real_time.title') }}
                             </h4>
-                            <p>Monitor your finances as they happen with instant updates and alerts.</p>
+                            <p>{{ __('messages.landing.features.real_time.description') }}</p>
                         </div>
                         <div class="feature-tab">
                             <h4>
@@ -114,18 +114,18 @@
                                     <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
                                     <line x1="4" y1="22" x2="4" y2="15"></line>
                                 </svg>
-                                Smart Budgeting
+                                {{ __('messages.landing.features.smart_budgeting.title') }}
                             </h4>
-                            <p>Create customized budgets that adapt to your spending patterns.</p>
+                            <p>{{ __('messages.landing.features.smart_budgeting.description') }}</p>
                         </div>
                         <div class="feature-tab">
                             <h4>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                                 </svg>
-                                Intelligent Insights
+                                {{ __('messages.landing.features.intelligent_insights.title') }}
                             </h4>
-                            <p>Get personalized recommendations and insights based on your financial behavior.</p>
+                            <p>{{ __('messages.landing.features.intelligent_insights.description') }}</p>
                         </div>
                         <div class="feature-tab">
                             <h4>
@@ -135,9 +135,9 @@
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                Multi-User Access
+                                {{ __('messages.landing.features.multi_user.title') }}
                             </h4>
-                            <p>Share financial management with family or team members with custom permissions.</p>
+                            <p>{{ __('messages.landing.features.multi_user.description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -154,9 +154,9 @@
     <section class="features-grid">
         <div class="container">
             <div class="section-title">
-                <div class="section-tag">Core Features</div>
-                <h2>Smart Tools for Better Financial Management</h2>
-                <p>Discover all the powerful features that make Planance the ultimate financial planning platform.</p>
+                <div class="section-tag">{{ __('messages.landing.features.core_features.tag') }}</div>
+                <h2>{{ __('messages.landing.features.core_features.title') }}</h2>
+                <p>{{ __('messages.landing.features.core_features.description') }}</p>
             </div>
             
             <div class="cards-grid">
@@ -168,10 +168,10 @@
                             <path d="M12 8v8"></path>
                         </svg>
                     </div>
-                    <h3>Budget Management</h3>
-                    <p>Create and manage detailed budgets with customizable categories and automatic tracking to stay on top of your spending.</p>
+                    <h3>{{ __('messages.landing.features.core_features.budget_management.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.budget_management.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -186,10 +186,10 @@
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                     </div>
-                    <h3>Expense Tracking</h3>
-                    <p>Effortlessly track your expenses with receipt scanning technology and automatic categorization of transactions.</p>
+                    <h3>{{ __('messages.landing.features.core_features.expense_tracking.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.expense_tracking.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -203,10 +203,10 @@
                             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                         </svg>
                     </div>
-                    <h3>Financial Goals</h3>
-                    <p>Set and track your financial goals with visual progress indicators and smart recommendations to help you achieve them faster.</p>
+                    <h3>{{ __('messages.landing.features.core_features.financial_goals.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.financial_goals.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -222,10 +222,10 @@
                             <line x1="9" y1="21" x2="9" y2="9"></line>
                         </svg>
                     </div>
-                    <h3>Insightful Reports</h3>
-                    <p>Access detailed financial reports and analytics to gain insights into your spending patterns and make informed decisions.</p>
+                    <h3>{{ __('messages.landing.features.core_features.reports.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.reports.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -240,10 +240,10 @@
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                     </div>
-                    <h3>Secure & Private</h3>
-                    <p>Your financial data is protected with bank-level security and encryption. We prioritize your privacy and data protection.</p>
+                    <h3>{{ __('messages.landing.features.core_features.secure.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.secure.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -260,10 +260,10 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
                     </div>
-                    <h3>Team Collaboration</h3>
-                    <p>Perfect for businesses and families - collaborate on shared financial planning with customizable access levels.</p>
+                    <h3>{{ __('messages.landing.features.core_features.collaboration.title') }}</h3>
+                    <p>{{ __('messages.landing.features.core_features.collaboration.description') }}</p>
                     <a href="#" class="feature-more">
-                        Learn more
+                        {{ __('messages.landing.features.learn_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -277,19 +277,17 @@
     <section class="testimonials" id="testimonials">
         <div class="container">
             <div class="section-title">
-                <div class="section-tag">Testimonials</div>
-                <h2>What Are Users Saying</h2>
-                <p>Join individuals and businesses who have transformed their financial management with Planance.</p>
+                <div class="section-tag">{{ __('messages.landing.testimonials.tag') }}</div>
+                <h2>{{ __('messages.landing.testimonials.title') }}</h2>
+                <p>{{ __('messages.landing.testimonials.description') }}</p>
             </div>
             
             <div class="testimonials-wrapper">
                 <div class="testimonials-left">
                     <div class="testimonials-title">
-                        <h3>Trusted by Financial Decision-Makers</h3>
-                        <p>Planance has helped individuals and businesses around the world take control of their finances and achieve their financial goals.</p>
+                        <h3>{{ __('messages.landing.testimonials.trusted_title') }}</h3>
+                        <p>{{ __('messages.landing.testimonials.trusted_description') }}</p>
                     </div>
-                    
-
                 </div>
                 
                 <div class="testimonials-right">
@@ -354,21 +352,21 @@
     <section class="pricing" id="pricing">
         <div class="container">
             <div class="section-title">
-                <div class="section-tag">Pricing</div>
-                <h2>Simple, Transparent Pricing Plans</h2>
-                <p>Choose the plan that fits your needs, whether you're an individual or a business.</p>
+                <div class="section-tag">{{ __('messages.landing.pricing.tag') }}</div>
+                <h2>{{ __('messages.landing.pricing.title') }}</h2>
+                <p>{{ __('messages.landing.pricing.description') }}</p>
             </div>
             
             <div class="pricing-toggle">
-                <span class="active">Monthly</span>
+                <span class="active">{{ __('messages.landing.pricing.monthly') }}</span>
                 <div class="pricing-toggle-pill"></div>
-                <span>Yearly <span class="pricing-discount">Save 20%</span></span>
+                <span>{{ __('messages.landing.pricing.yearly') }} <span class="pricing-discount">{{ __('messages.landing.pricing.save_discount') }}</span></span>
             </div>
             
             <div class="pricing-grid">
                 <div class="pricing-card">
-                    <h3>Personal</h3>
-                    <p class="pricing-description">Perfect for individuals looking to manage personal finances.</p>
+                    <h3>{{ __('messages.landing.pricing.personal.title') }}</h3>
+                    <p class="pricing-description">{{ __('messages.landing.pricing.personal.description') }}</p>
                     <div class="price">
                         <span class="price-currency">€</span>*<span class="price-period">/mo</span>
                     </div>
@@ -377,45 +375,45 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Unlimited Budget Categories
+                            {{ __('messages.landing.pricing.personal.features.unlimited_categories') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Expense Tracking
+                            {{ __('messages.landing.pricing.personal.features.expense_tracking') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Financial Goal Setting
+                            {{ __('messages.landing.pricing.personal.features.goal_setting') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Basic Reports
+                            {{ __('messages.landing.pricing.personal.features.basic_reports') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Mobile App Access
+                            {{ __('messages.landing.pricing.personal.features.mobile_access') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Email Support
+                            {{ __('messages.landing.pricing.personal.features.email_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-outline">Get Started</a>
+                    <a href="/app/register" class="btn btn-outline">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
                 
                 <div class="pricing-card featured">
-                    <h3>Premium</h3>
-                    <p class="pricing-description">Advanced features for finance enthusiasts and professionals.</p>
+                    <h3>{{ __('messages.landing.pricing.premium.title') }}</h3>
+                    <p class="pricing-description">{{ __('messages.landing.pricing.premium.description') }}</p>
                     <div class="price">
                         <span class="price-currency">€</span>**<span class="price-period">/mo</span>
                     </div>
@@ -424,45 +422,45 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Everything in Personal
+                            {{ __('messages.landing.pricing.premium.features.everything_personal') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Receipt Scanning
+                            {{ __('messages.landing.pricing.premium.features.receipt_scanning') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Advanced Analytics
+                            {{ __('messages.landing.pricing.premium.features.advanced_analytics') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Custom Categories
+                            {{ __('messages.landing.pricing.premium.features.custom_categories') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Export Data (CSV, PDF)
+                            {{ __('messages.landing.pricing.premium.features.export_data') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Priority Support
+                            {{ __('messages.landing.pricing.premium.features.priority_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-primary">Get Started</a>
+                    <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
                 
                 <div class="pricing-card">
-                    <h3>Business</h3>
-                    <p class="pricing-description">Collaborative tools for teams and businesses of all sizes.</p>
+                    <h3>{{ __('messages.landing.pricing.business.title') }}</h3>
+                    <p class="pricing-description">{{ __('messages.landing.pricing.business.description') }}</p>
                     <div class="price">
                         <span class="price-currency">€</span>***<span class="price-period">/mo</span>
                     </div>
@@ -471,40 +469,40 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Everything in Premium
+                            {{ __('messages.landing.pricing.business.features.everything_premium') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Multiple Users (up to 5)
+                            {{ __('messages.landing.pricing.business.features.multiple_users') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Team Collaboration
+                            {{ __('messages.landing.pricing.business.features.team_collaboration') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Role-Based Permissions
+                            {{ __('messages.landing.pricing.business.features.role_permissions') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            API Access
+                            {{ __('messages.landing.pricing.business.features.api_access') }}
                         </li>
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            Dedicated Support
+                            {{ __('messages.landing.pricing.business.features.dedicated_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-outline">Get Started</a>
+                    <a href="/app/register" class="btn btn-outline">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
             </div>
         </div>
@@ -514,10 +512,10 @@
         <div class="container">
             <div class="app-wrapper">
                 <div class="app-content">
-                    <div class="section-tag">Mobile App</div>
-                    <h1>COMING SOON</h1>
-                    <h2>Take Planance Wherever You Go</h2>
-                    <p>Mobile app will allow you to track expenses on the go, scan receipts instantly, and stay on top of your finances anywhere, anytime. Get notified when it's available!</p>
+                    <div class="section-tag">{{ __('messages.landing.mobile_app.tag') }}</div>
+                    <h1>{{ __('messages.landing.mobile_app.coming_soon') }}</h1>
+                    <h2>{{ __('messages.landing.mobile_app.title') }}</h2>
+                    <p>{{ __('messages.landing.mobile_app.description') }}</p>
                     
                     <div class="app-buttons">
                         <a href="#" class="app-button">
@@ -525,8 +523,8 @@
                                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
                             </svg>
                             <div class="app-button-content">
-                                <span>COMING SOON ON</span>
-                                <span>App Store</span>
+                                <span>{{ __('messages.landing.mobile_app.coming_soon_on') }}</span>
+                                <span>{{ __('messages.landing.mobile_app.app_store') }}</span>
                             </div>
                         </a>
                         
@@ -535,8 +533,8 @@
                                 <polygon points="3 3 21 12 3 21 3 3"></polygon>
                             </svg>
                             <div class="app-button-content">
-                                <span>COMING SOON ON</span>
-                                <span>Google Play</span>
+                                <span>{{ __('messages.landing.mobile_app.coming_soon_on') }}</span>
+                                <span>{{ __('messages.landing.mobile_app.google_play') }}</span>
                             </div>
                         </a>
                     </div>
@@ -568,8 +566,8 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 2v4M12 18v4M4.93 4.93L7.76 7.76M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
                                     </svg>
-                                    <h3>Under Development</h3>
-                                    <p>We're working hard to bring you the best experience</p>
+                                    <h3>{{ __('messages.landing.mobile_app.under_development') }}</h3>
+                                    <p>{{ __('messages.landing.mobile_app.working_hard') }}</p>
                                     <div class="dev-progress">
                                         <div class="dev-progress-bar"></div>
                                     </div>
@@ -585,68 +583,68 @@
     <section class="faq" id="faq">
         <div class="container">
             <div class="section-title">
-                <div class="section-tag">FAQ</div>
-                <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about Planance and how it can help you manage your finances.</p>
+                <div class="section-tag">{{ __('messages.landing.faq.tag') }}</div>
+                <h2>{{ __('messages.landing.faq.title') }}</h2>
+                <p>{{ __('messages.landing.faq.description') }}</p>
             </div>
             
             <div class="faq-wrapper">
                 <div class="faq-item active">
                     <div class="faq-question">
-                        How secure is my financial data with Planance?
+                        {{ __('messages.landing.faq.security.question') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p>At Planance, I take security seriously. I use bank-level encryption and security practices to ensure your data is always protected. I never share your personal information with third parties without your consent.</p>
+                        <p>{{ __('messages.landing.faq.security.answer') }}</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        Can I access Planance on multiple devices?
+                        {{ __('messages.landing.faq.devices.question') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes! Planance is available on web browsers, iOS, and Android devices. Your data is automatically synced across all your devices, so you can manage your finances whenever and wherever it's convenient for you.</p>
+                        <p>{{ __('messages.landing.faq.devices.answer') }}</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        Can I share access with my spouse or business partner?
+                        {{ __('messages.landing.faq.sharing.question') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p>Absolutely! Premium and Business plans allow for shared access with customizable permissions. You can control exactly what each user can view or modify, making it perfect for families, businesses, and financial advisors.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Is there a free trial available?
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Yes, Planance offers a 14-day free trial on all Planance plans. No credit card is required to start your trial, and you can upgrade or cancel at any time.</p>
+                        <p>{{ __('messages.landing.faq.sharing.answer') }}</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        How do I get support if I have questions?
+                        {{ __('messages.landing.faq.trial.question') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p>Support team is available via email, live chat, and phone. Premium and Business users get priority support with faster response times. We also have an extensive knowledge base and video tutorials to help you get the most out of Planance.</p>
+                        <p>{{ __('messages.landing.faq.trial.answer') }}</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        {{ __('messages.landing.faq.support.question') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>{{ __('messages.landing.faq.support.answer') }}</p>
                     </div>
                 </div>
             </div>
@@ -658,9 +656,9 @@
         <div class="cta-shape-2"></div>
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to Take Control of Your Finances?</h2>
-                <p>Join thousands of users who are already managing their finances smarter with Planance. Start your free 14-day trial today - no credit card required.</p>
-                <a href="/app/register" class="btn">Start Free Trial</a>
+                <h2>{{ __('messages.landing.cta.title') }}</h2>
+                <p>{{ __('messages.landing.cta.description') }}</p>
+                <a href="/app/register" class="btn">{{ __('messages.landing.cta.start_trial') }}</a>
             </div>
         </div>
     </section>
@@ -673,7 +671,7 @@
                         <div class="footer-logo-img">P</div>
                         Planance
                     </div>
-                    <p>Smart financial planning for individuals and businesses. Take control of your finances with Planance's intuitive tools and powerful insights.</p>
+                    <p>{{ __('messages.landing.footer.description') }}</p>
                     <div class="social-links">
                         <a href="#" aria-label="Facebook">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -699,7 +697,7 @@
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Company</h4>
+                    <h4>{{ __('messages.landing.footer.company') }}</h4>
                     <ul>
                         <li>
                             <a href="#">
@@ -707,7 +705,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                About Us
+                                {{ __('messages.landing.footer.links.about') }}
                             </a>
                         </li>
                         <li>
@@ -716,7 +714,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Careers
+                                {{ __('messages.landing.footer.links.careers') }}
                             </a>
                         </li>
                         <li>
@@ -725,7 +723,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Blog
+                                {{ __('messages.landing.footer.links.blog') }}
                             </a>
                         </li>
                         <li>
@@ -734,14 +732,14 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Press
+                                {{ __('messages.landing.footer.links.press') }}
                             </a>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Products</h4>
+                    <h4>{{ __('messages.landing.footer.products') }}</h4>
                     <ul>
                         <li>
                             <a href="#">
@@ -749,7 +747,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Personal Finance
+                                {{ __('messages.landing.footer.links.personal_finance') }}
                             </a>
                         </li>
                         <li>
@@ -758,7 +756,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Business Solutions
+                                {{ __('messages.landing.footer.links.business_solutions') }}
                             </a>
                         </li>
                         <li>
@@ -767,7 +765,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Financial Education
+                                {{ __('messages.landing.footer.links.financial_education') }}
                             </a>
                         </li>
                         <li>
@@ -776,14 +774,14 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                API Documentation
+                                {{ __('messages.landing.footer.links.api_docs') }}
                             </a>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Support</h4>
+                    <h4>{{ __('messages.landing.footer.support') }}</h4>
                     <ul>
                         <li>
                             <a href="#">
@@ -791,7 +789,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Help Center
+                                {{ __('messages.landing.footer.links.help_center') }}
                             </a>
                         </li>
                         <li>
@@ -800,7 +798,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Contact Us
+                                {{ __('messages.landing.footer.links.contact') }}
                             </a>
                         </li>
                         <li>
@@ -809,7 +807,7 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                FAQ
+                                {{ __('messages.landing.footer.links.faq') }}
                             </a>
                         </li>
                         <li>
@@ -818,17 +816,17 @@
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
-                                Security
+                                {{ __('messages.landing.footer.links.security') }}
                             </a>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="newsletter">
-                    <h4>Subscribe to Planance Newsletter</h4>
-                    <p>Get the latest updates, news, and financial tips directly to your inbox.</p>
+                    <h4>{{ __('messages.landing.footer.newsletter.title') }}</h4>
+                    <p>{{ __('messages.landing.footer.newsletter.description') }}</p>
                     <form class="newsletter-form">
-                        <input type="email" class="newsletter-input" placeholder="Your email address">
+                        <input type="email" class="newsletter-input" placeholder="{{ __('messages.landing.footer.newsletter.placeholder') }}">
                         <button type="submit" class="newsletter-button">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -836,12 +834,12 @@
                             </svg>
                         </button>
                     </form>
-                    <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
+                    <p class="newsletter-note">{{ __('messages.landing.footer.newsletter.privacy_note') }}</p>
                 </div>
             </div>
             
             <div class="copyright">
-                &copy; 2025 Planance. All rights reserved.
+                {{ __('messages.landing.footer.copyright') }}
             </div>
         </div>
     </footer>
