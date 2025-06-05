@@ -4,7 +4,7 @@ return [
     // Landing Page
     'landing' => [
         'hero' => [
-            'tag' => 'Viedā finanšu pārvaldība',
+            'tag' => 'Gudra finanšu pārvaldība',
             'title' => 'Pārņemiet kontroli pār savu finanšu nākotni',
             'description' => 'Planance palīdz indivīdiem un uzņēmumiem pārvaldīt savus finanses ar inteliģentu budžeta plānošanu, izdevumu izsekošanu un mērķu plānošanu — viss vienā elegantā platformā.',
             'start_trial' => 'Sākt bezmaksas izmēģinājumu',
@@ -26,7 +26,7 @@ return [
                 'description' => 'Sekojiet saviem finansiem, kad tie notiek, ar tūlītējiem atjauninājumiem un brīdinājumiem.',
             ],
             'smart_budgeting' => [
-                'title' => 'Viedā budžeta plānošana',
+                'title' => 'Gudra budžeta plānošana',
                 'description' => 'Izveidojiet pielāgotus budžetus, kas pielāgojas jūsu tērēšanas paradumiem.',
             ],
             'intelligent_insights' => [
@@ -39,7 +39,7 @@ return [
             ],
             'core_features' => [
                 'tag' => 'Galvenās funkcijas',
-                'title' => 'Viedi rīki labākai finanšu pārvaldībai',
+                'title' => 'Spēcigi rīki labākai finanšu pārvaldībai',
                 'description' => 'Atklājiet visas spēcīgās funkcijas, kas padara Planance par galveno finanšu plānošanas platformu.',
                 'budget_management' => [
                     'title' => 'Budžeta pārvaldība',
@@ -51,7 +51,7 @@ return [
                 ],
                 'financial_goals' => [
                     'title' => 'Finanšu mērķi',
-                    'description' => 'Uzstādiet un sekojiet saviem finanšu mērķiem ar vizuāliem progresa rādītājiem un viediem ieteikumiem, lai palīdzētu jums tos sasniegt ātrāk.',
+                    'description' => 'Uzstādiet un sekojiet saviem finanšu mērķiem ar vizuāliem progresa rādītājiem un gudriem ieteikumiem, lai palīdzētu jums tos sasniegt ātrāk.',
                 ],
                 'reports' => [
                     'title' => 'Izsmeļoši ziņojumi',
@@ -158,11 +158,11 @@ return [
         ],
         'cta' => [
             'title' => 'Gatavi pārņemt kontroli pār saviem finansiem?',
-            'description' => 'Pievienojieties tūkstošiem lietotāju, kas jau pārvalda savus finanses viedāk ar Planance. Sāciet savu 14 dienu bezmaksas izmēģinājumu šodien - kredītkarte nav nepieciešama.',
+            'description' => 'Pievienojieties tūkstošiem lietotāju, kas jau pārvalda savus finanses gudrāk ar Planance. Sāciet savu 14 dienu bezmaksas izmēģinājumu šodien - kredītkarte nav nepieciešama.',
             'start_trial' => 'Sākt bezmaksas izmēģinājumu',
         ],
         'footer' => [
-            'description' => 'Viedā finanšu plānošana indivīdiem un uzņēmumiem. Pārņemiet kontroli pār saviem finansiem ar Planance intuitīvajiem rīkiem un spēcīgajiem ieskaitiem.',
+            'description' => 'Finanšu plānošana indivīdiem un uzņēmumiem. Pārņemiet kontroli pār saviem finansiem ar Planance intuitīvajiem rīkiem un spēcīgajiem ieskaitiem.',
             'company' => 'Uzņēmums',
             'products' => 'Produkti',
             'support' => 'Atbalsts',
