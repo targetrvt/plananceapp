@@ -20,13 +20,13 @@ return new class extends Migration
             $table->string('category');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
+            $table->date('last_paid_date')->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->string('billing_cycle')->default('monthly');
             $table->boolean('auto_create_transaction')->default(false);
             $table->timestamps();
-            $table->enum('status', ['paid', 'unpaid'])->default('unpaid')->after('is_active');
-            $table->date('last_paid_date')->nullable()->after('status');
         });
     }
 

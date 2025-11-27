@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('type', ['income', 'expense']);
             $table->date('date');
             $table->text('description')->nullable();
+            $table->string('category')->nullable();
+            $table->string('receipt_image')->nullable();
             $table->timestamps();
         });
     }
