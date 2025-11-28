@@ -3,185 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planance - Financial Planning</title>
+    <title>Planance - {{ __('messages.landing.hero.title') }}</title>
     <link rel="icon" href="favicon.ico" type="images/Planancelogomini.png"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="{{ asset('css/planance.css') }}" rel="stylesheet">
 </head>
-<body>
-    <header>
+<body class="dark-theme">
+    <!-- Navigation -->
+    <header class="dark-header">
         <div class="container">
-            <nav class="nav">
-                <a href="/" class="logo">
-                    Planance
+            <nav class="nav-dark">
+                <a href="/" class="logo-dark">
+                    <img src="{{ asset('images/PlananceText.png') }}" alt="Planance" class="logo-text-image" style="height: 55px; width: auto; max-width: 340px;">
                 </a>
-                <div class="nav-links">
-                    <a href="#features">{{ __('messages.landing.nav.features') }}</a>
-                    <a href="#pricing">{{ __('messages.landing.nav.pricing') }}</a>
-                    <a href="#testimonials">{{ __('messages.landing.nav.testimonials') }}</a>
-                    <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
-                </div>
-                <div class="auth-buttons">
-                    <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
-                    <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
-                    <div class="premium-language-switch {{ app()->getLocale() === 'lv' ? 'lv-active' : '' }}">
-                        <a href="{{ route('lang.switch', 'en') }}" class="premium-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
-                            <span class="flag-emoji">🇬🇧</span>
-                        </a>
-                        <a href="{{ route('lang.switch', 'lv') }}" class="premium-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
-                            <span class="flag-emoji">🇱🇻</span>
-                        </a>
+                
+                <div class="nav-center">
+                    <div class="nav-links-dark">
+                        <a href="#features">{{ __('messages.landing.nav.features') }}</a>
+                        <a href="#pricing">{{ __('messages.landing.nav.pricing') }}</a>
+                        <a href="#testimonials">{{ __('messages.landing.nav.testimonials') }}</a>
+                        <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
+                    </div>
+                    
+                    <div class="nav-actions">
+                        <a href="/app/login" class="btn-dark-outline">{{ __('messages.landing.nav.login') }}</a>
+                        <a href="/app/register" class="btn-dark-primary">{{ __('messages.landing.nav.signup') }}</a>
                     </div>
                 </div>
-                <div class="mobile-nav-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                
+                <!-- Language Switcher -->
+                <div class="dark-language-switch {{ app()->getLocale() === 'lv' ? 'lv-active' : '' }}">
+                    <a href="{{ route('lang.switch', 'en') }}" class="dark-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
+                        <span class="flag-emoji">🇬🇧</span>
+                    </a>
+                    <a href="{{ route('lang.switch', 'lv') }}" class="dark-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
+                        <span class="flag-emoji">🇱🇻</span>
+                    </a>
                 </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
         </div>
     </header>
-    
-    <div class="mobile-nav">
-        <div class="mobile-nav-links">
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-dark">
+        <div class="mobile-menu-content">
             <a href="#features">{{ __('messages.landing.nav.features') }}</a>
             <a href="#pricing">{{ __('messages.landing.nav.pricing') }}</a>
             <a href="#testimonials">{{ __('messages.landing.nav.testimonials') }}</a>
             <a href="#faq">{{ __('messages.landing.nav.faq') }}</a>
+            
+            <!-- Mobile Language Switcher -->
+            <div class="mobile-dark-language-switch">
+                <a href="{{ route('lang.switch', 'en') }}" class="dark-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
+                    <span class="flag-emoji">🇬🇧</span> English
+                </a>
+                <a href="{{ route('lang.switch', 'lv') }}" class="dark-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
+                    <span class="flag-emoji">🇱🇻</span> Latviešu
+                </a>
+            </div>
+            
+            <div class="mobile-menu-buttons">
+                <a href="/app/login" class="btn-dark-outline">{{ __('messages.landing.nav.login') }}</a>
+                <a href="/app/register" class="btn-dark-primary">{{ __('messages.landing.nav.signup') }}</a>
+            </div>
         </div>
-        <div class="mobile-auth-buttons">
-            <!-- Mobile Premium Language Switcher -->
-            <div class="mobile-premium-language-switch">
-                <a href="{{ route('lang.switch', 'en') }}" class="premium-lang-option {{ app()->getLocale() === 'en' ? 'active' : '' }}">
-                    <span class="flag-emoji">🇬🇧</span>
-                    English
-                </a>
-                <a href="{{ route('lang.switch', 'lv') }}" class="premium-lang-option {{ app()->getLocale() === 'lv' ? 'active' : '' }}">
-                    <span class="flag-emoji">🇱🇻</span>
-                    Latviešu
-                </a>
-            </div>
-            <a href="/app/login" class="btn btn-outline">{{ __('messages.landing.nav.login') }}</a>
-            <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.nav.signup') }}</a>
-            </div>
     </div>
 
-    <section class="hero">
-        <div class="hero-shape-1"></div>
-        <div class="hero-shape-2"></div>
+    <!-- Hero Section -->
+    <section class="hero-dark">
+        <div class="hero-gradient"></div>
+        <div class="hero-grid-pattern"></div>
         <div class="container">
-            <div class="hero" style="padding-top: 0;">
-                <div class="hero-content">
-                    <div class="hero-tag">{{ __('messages.landing.hero.tag') }}</div>
-                    <h1>{{ __('messages.landing.hero.title') }}</h1>
-                    <p>{{ __('messages.landing.hero.description') }}</p>
-                    <div class="hero-cta">
-                        <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.hero.start_trial') }}</a>
-                        <a href="#features" class="btn btn-outline">{{ __('messages.landing.hero.explore_features') }}</a>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="stat-item">
-                            <div class="stat-value">0+</div>
-                            <div class="stat-label">{{ __('messages.landing.hero.stats.active_users') }}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">0+</div>
-                            <div class="stat-label">{{ __('messages.landing.hero.stats.managed_monthly') }}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">%+</div>
-                            <div class="stat-label">{{ __('messages.landing.hero.stats.satisfaction') }}</div>
-                        </div>
-                    </div>
+            <div class="hero-content-dark">
+                <div class="hero-badge">{{ __('messages.landing.hero.tag') }}</div>
+                <h1 class="hero-title-dark">{{ __('messages.landing.hero.title') }}</h1>
+                <p class="hero-description-dark">{{ __('messages.landing.hero.description') }}</p>
+                
+                <div class="hero-cta-dark">
+                    <a href="/app/register" class="btn-hero-primary">
+                        {{ __('messages.landing.hero.start_trial') }}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4.16663 10H15.8333M15.8333 10L9.99996 4.16669M15.8333 10L9.99996 15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-hero-secondary">{{ __('messages.landing.hero.explore_features') }}</a>
                 </div>
-                <div class="hero-image">
-                    <img src="images/PlananceDashboard.png" alt="Planance Dashboard">
+            </div>
+            
+            <div class="hero-image-dark">
+                <div class="image-glow"></div>
+                <img src="images/PlananceDashboard.png" alt="Planance Dashboard" class="dashboard-preview">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-dark">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item-dark">
+                    <div class="stat-value-dark">0+</div>
+                    <div class="stat-label-dark">{{ __('messages.landing.hero.stats.active_users') }}</div>
+                </div>
+                <div class="stat-item-dark">
+                    <div class="stat-value-dark">0+</div>
+                    <div class="stat-label-dark">{{ __('messages.landing.hero.stats.managed_monthly') }}</div>
+                </div>
+                <div class="stat-item-dark">
+                    <div class="stat-value-dark">%+</div>
+                    <div class="stat-label-dark">{{ __('messages.landing.hero.stats.satisfaction') }}</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="features" id="features">
+    <!-- Features Intro Section -->
+    <section class="features-intro-dark" id="features">
         <div class="container">
-            <div class="section-title">
-                <div class="section-tag">{{ __('messages.landing.features.tag') }}</div>
+            <div class="section-header-dark">
+                <span class="section-tag-dark">{{ __('messages.landing.features.tag') }}</span>
                 <h2>{{ __('messages.landing.features.title') }}</h2>
                 <p>{{ __('messages.landing.features.description') }}</p>
             </div>
-            
-            <div class="features-wrapper">
-                <div class="features-left">
-                    <h3>{{ __('messages.landing.features.discover_title') }}</h3>
-                    <p>{{ __('messages.landing.features.discover_description') }}</p>
-                    
-                    <div class="features-tabs">
-                        <div class="feature-tab active">
-                            <h4>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M12 6v6l4 2"></path>
-                                </svg>
-                                {{ __('messages.landing.features.real_time.title') }}
-                            </h4>
-                            <p>{{ __('messages.landing.features.real_time.description') }}</p>
-                        </div>
-                        <div class="feature-tab">
-                            <h4>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                    <line x1="4" y1="22" x2="4" y2="15"></line>
-                                </svg>
-                                {{ __('messages.landing.features.smart_budgeting.title') }}
-                            </h4>
-                            <p>{{ __('messages.landing.features.smart_budgeting.description') }}</p>
-                        </div>
-                        <div class="feature-tab">
-                            <h4>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                                </svg>
-                                {{ __('messages.landing.features.intelligent_insights.title') }}
-                            </h4>
-                            <p>{{ __('messages.landing.features.intelligent_insights.description') }}</p>
-                        </div>
-                        <div class="feature-tab">
-                            <h4>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                {{ __('messages.landing.features.multi_user.title') }}
-                            </h4>
-                            <p>{{ __('messages.landing.features.multi_user.description') }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="features-right">
-                    <div class="feature-showcase">
-                        <img src="/api/placeholder/600/400" alt="Planance Feature Showcase">
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
-    
-    <section class="features-grid">
+
+    <!-- Main Features Grid -->
+    <section class="features-main-dark">
         <div class="container">
-            <div class="section-title">
-                <div class="section-tag">{{ __('messages.landing.features.core_features.tag') }}</div>
-                <h2>{{ __('messages.landing.features.core_features.title') }}</h2>
-                <p>{{ __('messages.landing.features.core_features.description') }}</p>
-            </div>
-            
-            <div class="cards-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="features-grid-dark">
+                <!-- Feature 1: Real-time -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                    </div>
+                    <h3>{{ __('messages.landing.features.real_time.title') }}</h3>
+                    <p>{{ __('messages.landing.features.real_time.description') }}</p>
+                </div>
+
+                <!-- Feature 2: Smart Budgeting -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>{{ __('messages.landing.features.smart_budgeting.title') }}</h3>
+                    <p>{{ __('messages.landing.features.smart_budgeting.description') }}</p>
+                </div>
+
+                <!-- Feature 3: Intelligent Insights -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3>{{ __('messages.landing.features.intelligent_insights.title') }}</h3>
+                    <p>{{ __('messages.landing.features.intelligent_insights.description') }}</p>
+                </div>
+
+                <!-- Feature 4: Multi-user -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>{{ __('messages.landing.features.multi_user.title') }}</h3>
+                    <p>{{ __('messages.landing.features.multi_user.description') }}</p>
+                </div>
+
+                <!-- Feature 5: Budget Management -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M16 12h-6"></path>
                             <path d="M12 8v8"></path>
@@ -189,409 +200,214 @@
                     </div>
                     <h3>{{ __('messages.landing.features.core_features.budget_management.title') }}</h3>
                     <p>{{ __('messages.landing.features.core_features.budget_management.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                    </div>
-                    <h3>{{ __('messages.landing.features.core_features.expense_tracking.title') }}</h3>
-                    <p>{{ __('messages.landing.features.core_features.expense_tracking.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                    </div>
-                    <h3>{{ __('messages.landing.features.core_features.financial_goals.title') }}</h3>
-                    <p>{{ __('messages.landing.features.core_features.financial_goals.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="3" y1="9" x2="21" y2="9"></line>
-                            <line x1="9" y1="21" x2="9" y2="9"></line>
-                        </svg>
-                    </div>
-                    <h3>{{ __('messages.landing.features.core_features.reports.title') }}</h3>
-                    <p>{{ __('messages.landing.features.core_features.reports.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                <!-- Feature 6: Secure -->
+                <div class="feature-card-dark">
+                    <div class="feature-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                     </div>
                     <h3>{{ __('messages.landing.features.core_features.secure.title') }}</h3>
                     <p>{{ __('messages.landing.features.core_features.secure.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <h3>{{ __('messages.landing.features.core_features.collaboration.title') }}</h3>
-                    <p>{{ __('messages.landing.features.core_features.collaboration.description') }}</p>
-                    <a href="#" class="feature-more">
-                        {{ __('messages.landing.features.learn_more') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="testimonials" id="testimonials">
+    <!-- Pricing Section -->
+    <section class="pricing-dark" id="pricing">
         <div class="container">
-            <div class="section-title">
-                <div class="section-tag">{{ __('messages.landing.testimonials.tag') }}</div>
-                <h2>{{ __('messages.landing.testimonials.title') }}</h2>
-                <p>{{ __('messages.landing.testimonials.description') }}</p>
-            </div>
-            
-            <div class="testimonials-wrapper">
-                <div class="testimonials-left">
-                    <div class="testimonials-title">
-                        <h3>{{ __('messages.landing.testimonials.trusted_title') }}</h3>
-                        <p>{{ __('messages.landing.testimonials.trusted_description') }}</p>
-                    </div>
-                </div>
-                
-                <div class="testimonials-right">
-                    <div class="testimonials-grid">
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"x"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="/api/placeholder/50/50" alt="x">
-                                <div class="author-info">
-                                    <h4>x</h4>
-                                    <p>x</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"x"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="/api/placeholder/50/50" alt="x">
-                                <div class="author-info">
-                                    <h4>x</h4>
-                                    <p>x</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"x"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="/api/placeholder/50/50" alt="x">
-                                <div class="author-info">
-                                    <h4>x</h4>
-                                    <p>x</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"x"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="/api/placeholder/50/50" alt="x">
-                                <div class="author-info">
-                                    <h4>x</h4>
-                                    <p>x</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-title">
-                <div class="section-tag">{{ __('messages.landing.pricing.tag') }}</div>
+            <div class="section-header-dark">
+                <span class="section-tag-dark">{{ __('messages.landing.pricing.tag') }}</span>
                 <h2>{{ __('messages.landing.pricing.title') }}</h2>
                 <p>{{ __('messages.landing.pricing.description') }}</p>
             </div>
-            
-            <div class="pricing-toggle">
-                <span class="active">{{ __('messages.landing.pricing.monthly') }}</span>
-                <div class="pricing-toggle-pill"></div>
-                <span>{{ __('messages.landing.pricing.yearly') }} <span class="pricing-discount">{{ __('messages.landing.pricing.save_discount') }}</span></span>
-            </div>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>{{ __('messages.landing.pricing.personal.title') }}</h3>
-                    <p class="pricing-description">{{ __('messages.landing.pricing.personal.description') }}</p>
-                    <div class="price">
-                        <span class="price-currency">€</span>*<span class="price-period">/mo</span>
+
+            <div class="pricing-grid-dark">
+                <!-- Personal Plan -->
+                <div class="pricing-card-dark">
+                    <div class="pricing-header-dark">
+                        <h3>{{ __('messages.landing.pricing.personal.title') }}</h3>
+                        <p>{{ __('messages.landing.pricing.personal.description') }}</p>
                     </div>
-                    <ul class="pricing-features">
+                    <div class="pricing-price-dark">
+                        <span class="currency">€</span>
+                        <span class="amount">*</span>
+                        <span class="period">/mo</span>
+                    </div>
+                    <ul class="pricing-features-dark">
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.unlimited_categories') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.expense_tracking') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.goal_setting') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.basic_reports') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.mobile_access') }}
                         </li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            {{ __('messages.landing.pricing.personal.features.email_support') }}
-                        </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-outline">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/app/register" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
-                
-                <div class="pricing-card featured">
-                    <h3>{{ __('messages.landing.pricing.premium.title') }}</h3>
-                    <p class="pricing-description">{{ __('messages.landing.pricing.premium.description') }}</p>
-                    <div class="price">
-                        <span class="price-currency">€</span>**<span class="price-period">/mo</span>
+
+                <!-- Premium Plan (Featured) -->
+                <div class="pricing-card-dark featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header-dark">
+                        <h3>{{ __('messages.landing.pricing.premium.title') }}</h3>
+                        <p>{{ __('messages.landing.pricing.premium.description') }}</p>
                     </div>
-                    <ul class="pricing-features">
+                    <div class="pricing-price-dark">
+                        <span class="currency">€</span>
+                        <span class="amount">**</span>
+                        <span class="period">/mo</span>
+                    </div>
+                    <ul class="pricing-features-dark">
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.premium.features.everything_personal') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.premium.features.receipt_scanning') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.premium.features.advanced_analytics') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.premium.features.custom_categories') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            {{ __('messages.landing.pricing.premium.features.export_data') }}
-                        </li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.premium.features.priority_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-primary">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/app/register" class="btn-pricing-dark featured">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
-                
-                <div class="pricing-card">
-                    <h3>{{ __('messages.landing.pricing.business.title') }}</h3>
-                    <p class="pricing-description">{{ __('messages.landing.pricing.business.description') }}</p>
-                    <div class="price">
-                        <span class="price-currency">€</span>***<span class="price-period">/mo</span>
+
+                <!-- Business Plan -->
+                <div class="pricing-card-dark">
+                    <div class="pricing-header-dark">
+                        <h3>{{ __('messages.landing.pricing.business.title') }}</h3>
+                        <p>{{ __('messages.landing.pricing.business.description') }}</p>
                     </div>
-                    <ul class="pricing-features">
+                    <div class="pricing-price-dark">
+                        <span class="currency">€</span>
+                        <span class="amount">***</span>
+                        <span class="period">/mo</span>
+                    </div>
+                    <ul class="pricing-features-dark">
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.business.features.everything_premium') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.business.features.multiple_users') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.business.features.team_collaboration') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.business.features.role_permissions') }}
                         </li>
                         <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            {{ __('messages.landing.pricing.business.features.api_access') }}
-                        </li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.business.features.dedicated_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn btn-outline">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/app/register" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="app-showcase">
+    <!-- Testimonials Section -->
+    <section class="testimonials-dark" id="testimonials">
         <div class="container">
-            <div class="app-wrapper">
-                <div class="app-content">
-                    <div class="section-tag">{{ __('messages.landing.mobile_app.tag') }}</div>
-                    <h1>{{ __('messages.landing.mobile_app.coming_soon') }}</h1>
-                    <h2>{{ __('messages.landing.mobile_app.title') }}</h2>
-                    <p>{{ __('messages.landing.mobile_app.description') }}</p>
-                    
-                    <div class="app-buttons">
-                        <a href="#" class="app-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
-                            </svg>
-                            <div class="app-button-content">
-                                <span>{{ __('messages.landing.mobile_app.coming_soon_on') }}</span>
-                                <span>{{ __('messages.landing.mobile_app.app_store') }}</span>
-                            </div>
-                        </a>
-                        
-                        <a href="#" class="app-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="3 3 21 12 3 21 3 3"></polygon>
-                            </svg>
-                            <div class="app-button-content">
-                                <span>{{ __('messages.landing.mobile_app.coming_soon_on') }}</span>
-                                <span>{{ __('messages.landing.mobile_app.google_play') }}</span>
-                            </div>
-                        </a>
+            <div class="section-header-dark">
+                <span class="section-tag-dark">{{ __('messages.landing.testimonials.tag') }}</span>
+                <h2>{{ __('messages.landing.testimonials.title') }}</h2>
+                <p>{{ __('messages.landing.testimonials.description') }}</p>
+            </div>
+
+            <div class="testimonials-grid-dark">
+                <div class="testimonial-card-dark">
+                    <p>"x"</p>
+                    <div class="testimonial-author-dark">
+                        <div class="author-avatar">x</div>
+                        <div>
+                            <h4>x</h4>
+                            <span>x</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="app-showcase-image">
-                    <div class="app-circles">
-                        <div class="circle circle-1"></div>
-                        <div class="circle circle-2"></div>
-                        <div class="circle circle-3"></div>
+
+                <div class="testimonial-card-dark">
+                    <p>"x"</p>
+                    <div class="testimonial-author-dark">
+                        <div class="author-avatar">x</div>
+                        <div>
+                            <h4>x</h4>
+                            <span>x</span>
+                        </div>
                     </div>
-                    
-                    <div class="phone-mockup">
-                        <div class="phone-screen">
-                            <div class="screen-content">
-                                <div class="app-header">
-                                    <div class="app-header-logo">Planance</div>
-                                </div>
-                                
-                                <div class="wireframe-elements">
-                                    <div class="wireframe-box box-sm"></div>
-                                    <div class="wireframe-box box-md"></div>
-                                    <div class="wireframe-box box-lg"></div>
-                                    <div class="wireframe-box box-sm"></div>
-                                    <div class="wireframe-box box-md"></div>
-                                </div>
-                                
-                                <div class="dev-indicator">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v4M12 18v4M4.93 4.93L7.76 7.76M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
-                                    </svg>
-                                    <h3>{{ __('messages.landing.mobile_app.under_development') }}</h3>
-                                    <p>{{ __('messages.landing.mobile_app.working_hard') }}</p>
-                                    <div class="dev-progress">
-                                        <div class="dev-progress-bar"></div>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+
+                <div class="testimonial-card-dark">
+                    <p>"x"</p>
+                    <div class="testimonial-author-dark">
+                        <div class="author-avatar">x</div>
+                        <div>
+                            <h4>x</h4>
+                            <span>x</span>
                         </div>
                     </div>
                 </div>
@@ -599,59 +415,60 @@
         </div>
     </section>
 
-    <section class="faq" id="faq">
+    <!-- FAQ Section -->
+    <section class="faq-dark" id="faq">
         <div class="container">
-            <div class="section-title">
-                <div class="section-tag">{{ __('messages.landing.faq.tag') }}</div>
+            <div class="section-header-dark">
+                <span class="section-tag-dark">{{ __('messages.landing.faq.tag') }}</span>
                 <h2>{{ __('messages.landing.faq.title') }}</h2>
                 <p>{{ __('messages.landing.faq.description') }}</p>
             </div>
-            
-            <div class="faq-wrapper">
-                <div class="faq-item active">
-                    <div class="faq-question">
-                        {{ __('messages.landing.faq.security.question') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
+
+            <div class="faq-list-dark">
+                <div class="faq-item-dark active">
+                    <button class="faq-question-dark">
+                        <span>{{ __('messages.landing.faq.security.question') }}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </div>
-                    <div class="faq-answer">
+                    </button>
+                    <div class="faq-answer-dark">
                         <p>{{ __('messages.landing.faq.security.answer') }}</p>
                     </div>
                 </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        {{ __('messages.landing.faq.sharing.question') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
+
+                <div class="faq-item-dark">
+                    <button class="faq-question-dark">
+                        <span>{{ __('messages.landing.faq.sharing.question') }}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </div>
-                    <div class="faq-answer">
+                    </button>
+                    <div class="faq-answer-dark">
                         <p>{{ __('messages.landing.faq.sharing.answer') }}</p>
                     </div>
                 </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        {{ __('messages.landing.faq.trial.question') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
+
+                <div class="faq-item-dark">
+                    <button class="faq-question-dark">
+                        <span>{{ __('messages.landing.faq.trial.question') }}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </div>
-                    <div class="faq-answer">
+                    </button>
+                    <div class="faq-answer-dark">
                         <p>{{ __('messages.landing.faq.trial.answer') }}</p>
                     </div>
                 </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        {{ __('messages.landing.faq.support.question') }}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
+
+                <div class="faq-item-dark">
+                    <button class="faq-question-dark">
+                        <span>{{ __('messages.landing.faq.support.question') }}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </div>
-                    <div class="faq-answer">
+                    </button>
+                    <div class="faq-answer-dark">
                         <p>{{ __('messages.landing.faq.support.answer') }}</p>
                     </div>
                 </div>
@@ -659,198 +476,78 @@
         </div>
     </section>
 
-    <section class="cta">
-        <div class="cta-shape-1"></div>
-        <div class="cta-shape-2"></div>
+    <!-- CTA Section -->
+    <section class="cta-dark">
         <div class="container">
-            <div class="cta-content">
+            <div class="cta-content-dark">
                 <h2>{{ __('messages.landing.cta.title') }}</h2>
                 <p>{{ __('messages.landing.cta.description') }}</p>
-                <a href="/app/register" class="btn">{{ __('messages.landing.cta.start_trial') }}</a>
+                <a href="/app/register" class="btn-cta-primary">
+                    {{ __('messages.landing.cta.start_trial') }}
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4.16663 10H15.8333M15.8333 10L9.99996 4.16669M15.8333 10L9.99996 15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
 
-    <footer>
+    <!-- Footer -->
+    <footer class="footer-dark">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-about">
-                    <div class="footer-logo">
-                        <div class="footer-logo-img">P</div>
-                        Planance
+            <div class="footer-content-dark">
+                <div class="footer-brand">
+                    <div class="footer-logo-dark">
+                        <img src="{{ asset('images/PlananceText.png') }}" alt="Planance" class="logo-text-image">
                     </div>
                     <p>{{ __('messages.landing.footer.description') }}</p>
-                    <div class="social-links">
+                    <div class="social-links-dark">
                         <a href="#" aria-label="Facebook">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33c-3.28,0-5.37,1.93-5.37,5.48v1.48H6.16v4h2.64V23.5h5.7V11.46h3.53l.7-4Z"/>
                             </svg>
                         </a>
                         <a href="#" aria-label="Twitter">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M23.32,6.44a.5.5,0,0,0-.2-.87l-.79-.19A.49.49,0,0,1,22,4.67L21.75,4a.5.5,0,0,0-.58-.35l-1.74.4a.5.5,0,0,1-.44-.08l-.58-.43a3,3,0,0,0-4,.46l-2.07,2.09a3,3,0,0,0-.89,2.11v.63a.49.49,0,0,1-.48.5C8.47,9.4,5.54,7.86,2.46,4.31a.5.5,0,0,0-.83.21A10.58,10.58,0,0,0,4.2,13.12a.5.5,0,0,1-.39.81H2.95a.5.5,0,0,0-.41.76l.07.1A7.62,7.62,0,0,0,7.36,18a.5.5,0,0,1,.1.82A12.49,12.49,0,0,1,.91,21a.5.5,0,0,0-.25.87,16,16,0,0,0,8.42,2.36c8.28,0,13.9-6.51,13.9-13.91,0-.2,0-.41,0-.62a9.41,9.41,0,0,0,2.26-2.42.5.5,0,0,0-.66-.73l-1.56.9a.5.5,0,0,1-.73-.16Z"/>
                             </svg>
                         </a>
                         <a href="#" aria-label="LinkedIn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M5,3.5A1.5,1.5,0,1,1,3.5,2,1.5,1.5,0,0,1,5,3.5ZM5,5H2V19H5Zm6.32,0H8.25V19h3.07V13c0-2.89,3.35-3.1,3.35,0v6h3.07V12.38c0-4.87-5.55-4.69-6.42-2.31V5Z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Instagram">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M17.34,5.46h0a1.2,1.2,0,1,0,1.2,1.2A1.2,1.2,0,0,0,17.34,5.46Zm4.6,2.42a7.59,7.59,0,0,0-.46-2.43,4.94,4.94,0,0,0-1.16-1.77,4.7,4.7,0,0,0-1.77-1.15,7.3,7.3,0,0,0-2.43-.47C15.06,2,14.72,2,12,2s-3.06,0-4.12.06a7.3,7.3,0,0,0-2.43.47A4.78,4.78,0,0,0,3.68,3.68,4.7,4.7,0,0,0,2.53,5.45a7.3,7.3,0,0,0-.47,2.43C2,8.94,2,9.28,2,12s0,3.06.06,4.12a7.3,7.3,0,0,0,.47,2.43,4.7,4.7,0,0,0,1.15,1.77,4.78,4.78,0,0,0,1.77,1.15,7.3,7.3,0,0,0,2.43.47C8.94,22,9.28,22,12,22s3.06,0,4.12-.06a7.3,7.3,0,0,0,2.43-.47,4.7,4.7,0,0,0,1.77-1.15,4.85,4.85,0,0,0,1.16-1.77,7.59,7.59,0,0,0,.46-2.43c0-1.06.06-1.4.06-4.12S22,8.94,21.94,7.88ZM20.14,16a5.61,5.61,0,0,1-.34,1.86,3.06,3.06,0,0,1-.75,1.15,3.19,3.19,0,0,1-1.15.75,5.61,5.61,0,0,1-1.86.34c-1,.05-1.37.06-4,.06s-3,0-4-.06A5.73,5.73,0,0,1,6.1,19.8,3.27,3.27,0,0,1,5,19.05a3,3,0,0,1-.74-1.15A5.54,5.54,0,0,1,3.86,16c0-1-.06-1.37-.06-4s0-3,.06-4A5.54,5.54,0,0,1,4.21,6.1,3,3,0,0,1,5,5,3.14,3.14,0,0,1,6.1,4.2,5.73,5.73,0,0,1,8,3.86c1,0,1.37-.06,4-.06s3,0,4,.06a5.61,5.61,0,0,1,1.86.34A3.06,3.06,0,0,1,19.05,5,3.06,3.06,0,0,1,19.8,6.1,5.61,5.61,0,0,1,20.14,8c.05,1,.06,1.37.06,4S20.19,15,20.14,16ZM12,6.87A5.13,5.13,0,1,0,17.14,12,5.12,5.12,0,0,0,12,6.87Zm0,8.46A3.33,3.33,0,1,1,15.33,12,3.33,3.33,0,0,1,12,15.33Z"/>
                             </svg>
                         </a>
                     </div>
                 </div>
-                
-                <div class="footer-links">
+
+                <div class="footer-links-dark">
                     <h4>{{ __('messages.landing.footer.company') }}</h4>
-                    <ul>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.about') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.careers') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.blog') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.press') }}
-                            </a>
-                        </li>
-                    </ul>
+                    <a href="#">{{ __('messages.landing.footer.links.about') }}</a>
+                    <a href="#">{{ __('messages.landing.footer.links.careers') }}</a>
+                    <a href="#">{{ __('messages.landing.footer.links.blog') }}</a>
                 </div>
-                
-                <div class="footer-links">
+
+                <div class="footer-links-dark">
                     <h4>{{ __('messages.landing.footer.products') }}</h4>
-                    <ul>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.personal_finance') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.business_solutions') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.financial_education') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.api_docs') }}
-                            </a>
-                        </li>
-                    </ul>
+                    <a href="#">{{ __('messages.landing.footer.links.personal_finance') }}</a>
+                    <a href="#">{{ __('messages.landing.footer.links.business_solutions') }}</a>
+                    <a href="#">{{ __('messages.landing.footer.links.api_docs') }}</a>
                 </div>
-                
-                <div class="footer-links">
+
+                <div class="footer-links-dark">
                     <h4>{{ __('messages.landing.footer.support') }}</h4>
-                    <ul>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.help_center') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.contact') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.faq') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                                {{ __('messages.landing.footer.links.security') }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="newsletter">
-                    <h4>{{ __('messages.landing.footer.newsletter.title') }}</h4>
-                    <p>{{ __('messages.landing.footer.newsletter.description') }}</p>
-                    <form class="newsletter-form">
-                        <input type="email" class="newsletter-input" placeholder="{{ __('messages.landing.footer.newsletter.placeholder') }}">
-                        <button type="submit" class="newsletter-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </button>
-                    </form>
-                    <p class="newsletter-note">{{ __('messages.landing.footer.newsletter.privacy_note') }}</p>
+                    <a href="#">{{ __('messages.landing.footer.links.help_center') }}</a>
+                    <a href="#">{{ __('messages.landing.footer.links.contact') }}</a>
+                    <a href="#faq">{{ __('messages.landing.footer.links.faq') }}</a>
                 </div>
             </div>
-            
-            <div class="copyright">
-                {{ __('messages.landing.footer.copyright') }}
+
+            <div class="footer-bottom-dark">
+                <p>{{ __('messages.landing.footer.copyright') }}</p>
             </div>
         </div>
     </footer>
-<script src="{{ asset('js/planance.js') }}"></script>
+
+    <script src="{{ asset('js/planance.js') }}"></script>
 </body>
 </html>
