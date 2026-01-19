@@ -8,8 +8,10 @@ use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Http\Middleware\Authenticate;
+use App\Livewire\BrowserSessions;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use App\Filament\Widgets\UserBalanceWidget;
+use Livewire\Livewire;
 use App\Filament\Widgets\FinancialGoalPieChart;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -28,6 +30,11 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AppPanelProvider extends PanelProvider
 {
+    public function boot(): void
+    {
+        Livewire::component('browser_sessions', BrowserSessions::class);
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -82,6 +89,10 @@ class AppPanelProvider extends PanelProvider
                         shouldRegisterUserMenu: true,
                         hasAvatars: true
                     )
+                    ->enableTwoFactorAuthentication(true, false)
+                    ->myProfileComponents([
+                        'browser_sessions' => BrowserSessions::class,
+                    ])
             ]);
     }
 }
