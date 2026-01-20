@@ -266,6 +266,7 @@
 @script
     <script>
         const el = document.getElementById('messages');
+        const textarea = document.querySelector('#chat-input');
 
         window.addEventListener('sendmessage', event => {
             setTimeout(() => {
@@ -293,7 +294,6 @@
         document.getElementById('add-quote-button').addEventListener('click', function() {
             const selectedTextIndicator = document.getElementById('selected-text-indicator');
             const selectedText = selectedTextIndicator.dataset.selectedText;
-            var textarea = document.querySelector('#chat-input');
             if (selectedText) {
                 const quotedText = selectedText.split('\n').map(line => `> ${line}`).join('\n');
                 @this.set('question', @this.get('question') + `\n${quotedText}\n`).then(() => {
@@ -310,23 +310,25 @@
         });
 
         document.addEventListener('livewire:initialized', function () {
-            el.scrollTop = el.scrollHeight;
-            textarea.focus();
-            el.style.paddingBottom = `${textarea.scrollHeight}px`;
-
-            if ({{ $pageWatcherEnabled }}) {
-                function updateQuestionContext() {
-                    const element = document.querySelector("{{ $pageWatcherSelector }}");
-                    if (element) {
-                        const context = element.innerText;
-                        const value = context + "\nPage URL: " + window.location.href;
-                        @this.set('questionContext', value);
-                    }
-                }
-
-                updateQuestionContext();
-                setInterval(updateQuestionContext, 5000); 
+            if (el && textarea) {
+                el.scrollTop = el.scrollHeight;
+                textarea.focus();
+                el.style.paddingBottom = `${textarea.scrollHeight}px`;
             }
+
+            @if(isset($pageWatcherEnabled) && $pageWatcherEnabled)
+            function updateQuestionContext() {
+                const element = document.querySelector("{{ $pageWatcherSelector ?? '.fi-page' }}");
+                if (element) {
+                    const context = element.innerText;
+                    const value = context + "\nPage URL: " + window.location.href;
+                    @this.set('questionContext', value);
+                }
+            }
+
+            updateQuestionContext();
+            setInterval(updateQuestionContext, 5000); 
+            @endif
         });
     </script>
 @endscript
