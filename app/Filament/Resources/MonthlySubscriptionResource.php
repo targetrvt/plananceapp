@@ -26,8 +26,29 @@ class MonthlySubscriptionResource extends Resource
     protected static ?string $model = MonthlySubscription::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationLabel = null;
+    protected static ?string $navigationGroup = null;
     protected static ?int $navigationSort = 3;
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('monthly-subscription.navigation.label');
+    }
+    
+    public static function getPluralModelLabel(): string
+    {
+        return __('monthly-subscription.navigation.label');
+    }
+    
+    public static function getModelLabel(): string
+    {
+        return __('monthly-subscription.navigation.label');
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationBadge(): ?string
@@ -46,29 +67,30 @@ class MonthlySubscriptionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Subscription Details')
-                    ->description('Enter the basic information about this subscription')
+                Forms\Components\Section::make(__('monthly-subscription.form.subscription_details.section'))
+                    ->description(__('monthly-subscription.form.subscription_details.description'))
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Subscription Name')
-                            ->placeholder('Netflix, Spotify, etc.')
+                            ->label(__('monthly-subscription.form.subscription_details.name.label'))
+                            ->placeholder(__('monthly-subscription.form.subscription_details.name.placeholder'))
                             ->columnSpan(['sm' => 1, 'md' => 2]),
                             
                         Forms\Components\Select::make('category')
+                            ->label(__('monthly-subscription.form.subscription_details.category.label'))
                             ->options([
-                                'streaming' => 'Streaming Services',
-                                'software' => 'Software & Apps',
-                                'cloud' => 'Cloud Storage',
-                                'membership' => 'Memberships',
-                                'utilities' => 'Utilities',
-                                'phone' => 'Phone & Internet',
-                                'education' => 'Education',
-                                'health' => 'Health & Wellness',
-                                'gaming' => 'Gaming',
-                                'news' => 'News & Magazines',
-                                'other' => 'Other',
+                                'streaming' => __('messages.dashboard.subscriptions.categories.streaming'),
+                                'software' => __('messages.dashboard.subscriptions.categories.software'),
+                                'cloud' => __('messages.dashboard.subscriptions.categories.cloud'),
+                                'membership' => __('messages.dashboard.subscriptions.categories.membership'),
+                                'utilities' => __('messages.dashboard.subscriptions.categories.utilities'),
+                                'phone' => __('messages.dashboard.subscriptions.categories.phone'),
+                                'education' => __('messages.dashboard.subscriptions.categories.education'),
+                                'health' => __('messages.dashboard.subscriptions.categories.health'),
+                                'gaming' => __('messages.dashboard.subscriptions.categories.gaming'),
+                                'news' => __('messages.dashboard.subscriptions.categories.news'),
+                                'other' => __('messages.dashboard.subscriptions.categories.other'),
                             ])
                             ->searchable()
                             ->required()
@@ -77,14 +99,15 @@ class MonthlySubscriptionResource extends Resource
                             ->columnSpan(['sm' => 1, 'md' => 2]),
                             
                         Forms\Components\Textarea::make('description')
+                            ->label(__('monthly-subscription.form.subscription_details.description.label'))
                             ->maxLength(255)
                             ->columnSpan('full')
-                            ->placeholder('Additional details about this subscription'),
+                            ->placeholder(__('monthly-subscription.form.subscription_details.description.placeholder')),
                     ])
                     ->columns(4),
                     
-                Forms\Components\Section::make('Billing Information')
-                    ->description('Manage payment details and billing schedule')
+                Forms\Components\Section::make(__('monthly-subscription.form.billing_information.section'))
+                    ->description(__('monthly-subscription.form.billing_information.description'))
                     ->schema([
                         Forms\Components\Grid::make()
                             ->schema([
@@ -92,16 +115,17 @@ class MonthlySubscriptionResource extends Resource
                                     ->required()
                                     ->numeric()
                                     ->prefix('EUR')
-                                    ->label('Billing Amount')
-                                    ->helperText('The amount charged for this billing cycle')
-                                    ->placeholder('0.00'),
+                                    ->label(__('monthly-subscription.form.billing_information.amount.label'))
+                                    ->helperText(__('monthly-subscription.form.billing_information.amount.helper'))
+                                    ->placeholder(__('monthly-subscription.form.billing_information.amount.placeholder')),
                                     
                                 Forms\Components\Select::make('billing_cycle')
+                                    ->label(__('monthly-subscription.form.billing_information.billing_cycle.label'))
                                     ->options([
-                                        'monthly' => 'Monthly',
-                                        'quarterly' => 'Quarterly (Every 3 Months)',
-                                        'biannual' => 'Biannual (Every 6 Months)',
-                                        'annual' => 'Annual (Yearly)',
+                                        'monthly' => __('monthly-subscription.form.billing_information.billing_cycle.options.monthly'),
+                                        'quarterly' => __('monthly-subscription.form.billing_information.billing_cycle.options.quarterly'),
+                                        'biannual' => __('monthly-subscription.form.billing_information.billing_cycle.options.biannual'),
+                                        'annual' => __('monthly-subscription.form.billing_information.billing_cycle.options.annual'),
                                     ])
                                     ->default('monthly')
                                     ->required()
@@ -122,7 +146,7 @@ class MonthlySubscriptionResource extends Resource
                                         
                                         $monthly = $amount / $divisor;
                                         
-                                        return "Monthly equivalent: €" . number_format($monthly, 2);
+                                        return __('monthly-subscription.form.billing_information.billing_cycle.helper', ['amount' => number_format($monthly, 2)]);
                                     }),
                             ]),
                             
@@ -130,14 +154,15 @@ class MonthlySubscriptionResource extends Resource
                             ->schema([
                                 Forms\Components\DatePicker::make('billing_date')
                                     ->required()
-                                    ->label('Next Billing Date')
-                                    ->helperText('When is the next payment due?')
+                                    ->label(__('monthly-subscription.form.billing_information.billing_date.label'))
+                                    ->helperText(__('monthly-subscription.form.billing_information.billing_date.helper'))
                                     ->default(now()),
                                     
                                 Forms\Components\Select::make('status')
+                                    ->label(__('monthly-subscription.form.billing_information.status.label'))
                                     ->options([
-                                        'paid' => 'Paid',
-                                        'unpaid' => 'Unpaid',
+                                        'paid' => __('monthly-subscription.form.billing_information.status.options.paid'),
+                                        'unpaid' => __('monthly-subscription.form.billing_information.status.options.unpaid'),
                                     ])
                                     ->default('unpaid')
                                     ->required()
@@ -150,7 +175,7 @@ class MonthlySubscriptionResource extends Resource
                             ]),
                             
                         Forms\Components\DatePicker::make('last_paid_date')
-                            ->label('Last Payment Date')
+                            ->label(__('monthly-subscription.form.billing_information.last_paid_date.label'))
                             ->visible(fn ($get) => $get('status') === 'paid')
                             ->before(function (callable $get) {
                                 $billingDate = $get('billing_date');
@@ -158,33 +183,33 @@ class MonthlySubscriptionResource extends Resource
                             }),
                     ]),
                     
-                Forms\Components\Section::make('Advanced Options')
+                Forms\Components\Section::make(__('monthly-subscription.form.advanced_options.section'))
                     ->schema([
                         Forms\Components\Grid::make()
                             ->schema([
                                 Forms\Components\Toggle::make('is_active')
-                                    ->label('Active Subscription')
+                                    ->label(__('monthly-subscription.form.advanced_options.is_active.label'))
                                     ->default(true)
-                                    ->helperText('Inactive subscriptions won\'t appear in reports')
+                                    ->helperText(__('monthly-subscription.form.advanced_options.is_active.helper'))
                                     ->onColor('success')
                                     ->offColor('danger'),
                                     
                                 Forms\Components\Toggle::make('auto_create_transaction')
-                                    ->label('Auto-create Transaction')
-                                    ->helperText('Automatically create a transaction when payment is due')
+                                    ->label(__('monthly-subscription.form.advanced_options.auto_create_transaction.label'))
+                                    ->helperText(__('monthly-subscription.form.advanced_options.auto_create_transaction.helper'))
                                     ->default(false),
                             ]),
                             
                         Forms\Components\Grid::make()
                             ->schema([
                                 Forms\Components\DatePicker::make('start_date')
-                                    ->label('Start Date')
+                                    ->label(__('monthly-subscription.form.advanced_options.start_date.label'))
                                     ->default(now())
-                                    ->helperText('When did this subscription begin?'),
+                                    ->helperText(__('monthly-subscription.form.advanced_options.start_date.helper')),
                                     
                                 Forms\Components\DatePicker::make('end_date')
-                                    ->label('End Date')
-                                    ->helperText('Optional: Leave empty for ongoing subscriptions')
+                                    ->label(__('monthly-subscription.form.advanced_options.end_date.label'))
+                                    ->helperText(__('monthly-subscription.form.advanced_options.end_date.helper'))
                                     ->after('start_date'),
                             ]),
                     ])
@@ -227,11 +252,11 @@ class MonthlySubscriptionResource extends Resource
                         
                         $monthly = $record->amount / $divisor;
                         
-                        return '€' . number_format($monthly, 2) . '/mo';
+                        return __('monthly-subscription.table.amount.monthly_equivalent', ['amount' => number_format($monthly, 2)]);
                     }),
                     
                     Tables\Columns\TextColumn::make('billing_date')
-                    ->label('Next Payment')
+                    ->label(__('monthly-subscription.table.billing_date.label'))
                     ->date()
                     ->sortable()
                     ->description(function (MonthlySubscription $record): string {
@@ -240,11 +265,11 @@ class MonthlySubscriptionResource extends Resource
                         $daysLeft = (int) $today->diffInDays($billingDate, false); // Cast to integer
                         
                         if ($daysLeft < 0) {
-                            return 'Overdue!';
+                            return __('monthly-subscription.table.billing_date.overdue');
                         } else if ($daysLeft === 0) {
-                            return 'Due today!';
+                            return __('monthly-subscription.table.billing_date.due_today');
                         } else {
-                            return $daysLeft . ' days left';
+                            return __('monthly-subscription.table.billing_date.days_left', ['days' => $daysLeft]);
                         }
                     })
                     ->color(function (MonthlySubscription $record): string {
@@ -262,9 +287,10 @@ class MonthlySubscriptionResource extends Resource
                     }),
                     
                 Tables\Columns\TextColumn::make('category')
+                    ->label(__('monthly-subscription.table.category.label'))
                     ->badge()
                     ->searchable()
-                    ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state)))
+                    ->formatStateUsing(fn (string $state): string => __('messages.dashboard.subscriptions.categories.' . $state))
                     ->colors([
                         'primary' => 'streaming',
                         'secondary' => 'software',
@@ -277,11 +303,11 @@ class MonthlySubscriptionResource extends Resource
                     
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
-                    ->label('Active')
+                    ->label(__('monthly-subscription.table.is_active.label'))
                     ->toggleable(),
                     
                 Tables\Columns\IconColumn::make('status')
-                    ->label('Paid')
+                    ->label(__('monthly-subscription.table.status.label'))
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
@@ -290,48 +316,49 @@ class MonthlySubscriptionResource extends Resource
                     ->getStateUsing(fn (MonthlySubscription $record): bool => $record->status === 'paid'),
                     
                 Tables\Columns\TextColumn::make('billing_cycle')
-                    ->label('Cycle')
+                    ->label(__('monthly-subscription.table.billing_cycle.label'))
                     ->toggleable()
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => __('monthly-subscription.form.billing_information.billing_cycle.options.' . $state)),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
+                    ->label(__('monthly-subscription.filter.category.label'))
                     ->options([
-                        'streaming' => 'Streaming Services',
-                        'software' => 'Software & Apps',
-                        'cloud' => 'Cloud Storage',
-                        'membership' => 'Memberships',
-                        'utilities' => 'Utilities',
-                        'phone' => 'Phone & Internet',
-                        'education' => 'Education',
-                        'health' => 'Health & Wellness',
-                        'gaming' => 'Gaming',
-                        'news' => 'News & Magazines',
-                        'other' => 'Other',
+                        'streaming' => __('messages.dashboard.subscriptions.categories.streaming'),
+                        'software' => __('messages.dashboard.subscriptions.categories.software'),
+                        'cloud' => __('messages.dashboard.subscriptions.categories.cloud'),
+                        'membership' => __('messages.dashboard.subscriptions.categories.membership'),
+                        'utilities' => __('messages.dashboard.subscriptions.categories.utilities'),
+                        'phone' => __('messages.dashboard.subscriptions.categories.phone'),
+                        'education' => __('messages.dashboard.subscriptions.categories.education'),
+                        'health' => __('messages.dashboard.subscriptions.categories.health'),
+                        'gaming' => __('messages.dashboard.subscriptions.categories.gaming'),
+                        'news' => __('messages.dashboard.subscriptions.categories.news'),
+                        'other' => __('messages.dashboard.subscriptions.categories.other'),
                     ])
-                    ->indicator('Category'),
+                    ->indicator(__('monthly-subscription.filter.category.indicator')),
                     
                 Tables\Filters\Filter::make('active')
                     ->query(fn (Builder $query): Builder => $query->where('is_active', true))
-                    ->label('Active Subscriptions')
+                    ->label(__('monthly-subscription.filter.active.label'))
                     ->toggle()
                     ->default(),
                     
                 Tables\Filters\SelectFilter::make('status')
+                    ->label(__('monthly-subscription.filter.status.label'))
                     ->options([
-                        'paid' => 'Paid',
-                        'unpaid' => 'Unpaid',
+                        'paid' => __('monthly-subscription.filter.status.options.paid'),
+                        'unpaid' => __('monthly-subscription.filter.status.options.unpaid'),
                     ])
-                    ->label('Payment Status')
-                    ->indicator('Status'),
+                    ->indicator(__('monthly-subscription.filter.status.indicator')),
                     
                 Tables\Filters\Filter::make('upcoming')
-                    ->label('Due in 30 days')
+                    ->label(__('monthly-subscription.filter.upcoming.label'))
                     ->query(function (Builder $query): Builder {
                         return $query->where('billing_date', '<=', now()->addDays(30));
                     })
                     ->toggle()
-                    ->indicator('Due Soon'),
+                    ->indicator(__('monthly-subscription.filter.upcoming.indicator')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -339,7 +366,7 @@ class MonthlySubscriptionResource extends Resource
                         ->icon('heroicon-o-pencil'),
                         
                     Tables\Actions\Action::make('togglePaid')
-                        ->label(fn (MonthlySubscription $record): string => $record->status === 'paid' ? 'Mark Unpaid' : 'Mark Paid')
+                        ->label(fn (MonthlySubscription $record): string => $record->status === 'paid' ? __('monthly-subscription.actions.toggle_paid.mark_unpaid') : __('monthly-subscription.actions.toggle_paid.mark_paid'))
                         ->icon(fn (MonthlySubscription $record): string => $record->status === 'paid' ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
                         ->color(fn (MonthlySubscription $record): string => $record->status === 'paid' ? 'danger' : 'success')
                         ->action(function (MonthlySubscription $record): void {
@@ -367,13 +394,14 @@ class MonthlySubscriptionResource extends Resource
                             
                             Notification::make()
                                 ->title($record->status === 'unpaid' ? 
-                                    'Payment recorded! Next payment: ' . Carbon::parse($record->billing_date)->format('M d, Y') : 
-                                    'Subscription marked as unpaid')
+                                    __('monthly-subscription.notifications.payment_recorded', ['date' => Carbon::parse($record->billing_date)->format('M d, Y')]) : 
+                                    __('monthly-subscription.notifications.marked_unpaid'))
                                 ->success()
                                 ->send();
                         }),
                         
                     Tables\Actions\Action::make('duplicate')
+                        ->label(__('monthly-subscription.actions.duplicate.label'))
                         ->icon('heroicon-o-document-duplicate')
                         ->color('gray')
                         ->action(function (MonthlySubscription $record): void {
@@ -382,7 +410,7 @@ class MonthlySubscriptionResource extends Resource
                             $newSubscription->save();
                             
                             Notification::make()
-                                ->title('Subscription duplicated')
+                                ->title(__('monthly-subscription.notifications.duplicated'))
                                 ->success()
                                 ->send();
                         }),
@@ -396,7 +424,7 @@ class MonthlySubscriptionResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     
                     Tables\Actions\BulkAction::make('markAsPaid')
-                        ->label('Mark as Paid')
+                        ->label(__('monthly-subscription.actions.toggle_paid.mark_paid'))
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->action(function (Collection $records): void {
@@ -407,14 +435,14 @@ class MonthlySubscriptionResource extends Resource
                             }
                             
                             Notification::make()
-                                ->title('Subscriptions marked as paid')
+                                ->title(__('monthly-subscription.notifications.marked_paid'))
                                 ->success()
                                 ->send();
                         })
                         ->deselectRecordsAfterCompletion(),
                         
                     Tables\Actions\BulkAction::make('markAsUnpaid')
-                        ->label('Mark as Unpaid')
+                        ->label(__('monthly-subscription.actions.toggle_paid.mark_unpaid'))
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->action(function (Collection $records): void {
@@ -424,14 +452,14 @@ class MonthlySubscriptionResource extends Resource
                             }
                             
                             Notification::make()
-                                ->title('Subscriptions marked as unpaid')
+                                ->title(__('monthly-subscription.notifications.marked_unpaid_bulk'))
                                 ->success()
                                 ->send();
                         })
                         ->deselectRecordsAfterCompletion(),
                         
                     Tables\Actions\BulkAction::make('setInactive')
-                        ->label('Set Inactive')
+                        ->label(__('monthly-subscription.actions.toggle_paid.mark_unpaid'))
                         ->icon('heroicon-o-eye-slash')
                         ->color('gray')
                         ->action(function (Collection $records): void {
@@ -441,14 +469,14 @@ class MonthlySubscriptionResource extends Resource
                             }
                             
                             Notification::make()
-                                ->title('Subscriptions set as inactive')
+                                ->title(__('monthly-subscription.notifications.set_inactive'))
                                 ->success()
                                 ->send();
                         })
                         ->deselectRecordsAfterCompletion(),
                         
                     Tables\Actions\BulkAction::make('setActive')
-                        ->label('Set Active')
+                        ->label(__('monthly-subscription.actions.toggle_paid.mark_paid'))
                         ->icon('heroicon-o-eye')
                         ->color('gray')
                         ->action(function (Collection $records): void {
@@ -458,7 +486,7 @@ class MonthlySubscriptionResource extends Resource
                             }
                             
                             Notification::make()
-                                ->title('Subscriptions set as active')
+                                ->title(__('monthly-subscription.notifications.set_active'))
                                 ->success()
                                 ->send();
                         })
@@ -467,12 +495,12 @@ class MonthlySubscriptionResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\Action::make('calculate_total')
-                    ->label('Monthly Total')
+                    ->label(__('monthly-subscription.actions.calculate_total.label'))
                     ->icon('heroicon-o-calculator')
                     ->color('primary')
                     ->action(function () {
                     })
-                    ->modalHeading('Subscription Cost Summary')
+                    ->modalHeading(__('monthly-subscription.actions.calculate_total.modal_heading'))
                     ->modalWidth(MaxWidth::ExtraSmall)
                     ->modalContent(function () {
                         $subscriptions = MonthlySubscription::query()
@@ -501,19 +529,19 @@ class MonthlySubscriptionResource extends Resource
                         ]);
                     })
                     ->modalSubmitAction(false)
-                    ->modalCancelAction(fn ($action) => $action->label('Close')),
+                    ->modalCancelAction(fn ($action) => $action->label(__('monthly-subscription.actions.calculate_total.close'))),
                     
                 Tables\Actions\CreateAction::make()
-                    ->label('Add Subscription')
+                    ->label(__('monthly-subscription.actions.add_subscription.label'))
                     ->icon('heroicon-o-plus')
                     ->color('primary'),
             ])
             ->emptyStateIcon('heroicon-o-credit-card')
-            ->emptyStateHeading('No subscriptions yet')
-            ->emptyStateDescription('Start tracking your recurring payments by adding your first subscription.')
+            ->emptyStateHeading(__('monthly-subscription.empty_state.heading'))
+            ->emptyStateDescription(__('monthly-subscription.empty_state.description'))
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Add Subscription')
+                    ->label(__('monthly-subscription.actions.add_subscription.label'))
                     ->icon('heroicon-o-plus'),
             ])
             ->paginated([10, 25, 50, 100]);

@@ -30,18 +30,18 @@ class UserBalanceWidget extends BaseWidget
             ->sum('amount');
         
         return [
-            Stat::make('Current Balance', number_format($userBalance->balance, 2) . ' €')
-                ->description('Your available funds')
+            Stat::make(__('widgets.user_balance.current_balance.label'), number_format($userBalance->balance, 2) . ' €')
+                ->description(__('widgets.user_balance.current_balance.description'))
                 ->descriptionIcon('heroicon-m-currency-euro')
                 ->color('primary'),
                 
-            Stat::make('Total Income', number_format($income, 2) . ' €')
-                ->description('All time income')
+            Stat::make(__('widgets.user_balance.total_income.label'), number_format($income, 2) . ' €')
+                ->description(__('widgets.user_balance.total_income.description'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
                 
-            Stat::make('Total Expenses', number_format($expenses, 2) . ' €')
-                ->description('All time expenses')
+            Stat::make(__('widgets.user_balance.total_expenses.label'), number_format($expenses, 2) . ' €')
+                ->description(__('widgets.user_balance.total_expenses.description'))
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
         ];

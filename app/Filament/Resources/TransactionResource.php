@@ -17,22 +17,43 @@ class TransactionResource extends Resource
     protected static ?string $model = Transaction::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationLabel = null;
+    protected static ?string $navigationGroup = null;
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('transaction.navigation.label');
+    }
+    
+    public static function getPluralModelLabel(): string
+    {
+        return __('transaction.navigation.label');
+    }
+    
+    public static function getModelLabel(): string
+    {
+        return __('transaction.navigation.label');
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
     
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Receipt Upload')
+                Forms\Components\Section::make(__('transaction.form.receipt_upload.section'))
                     ->schema([
                         Forms\Components\FileUpload::make('receipt_image')
-                            ->label('Upload Receipt')
+                            ->label(__('transaction.form.receipt_upload.upload_receipt.label'))
                             ->image()
                             ->imageEditor()
                             ->disk('public')
                             ->directory('receipts')
                             ->visibility('public')
-                            ->helperText('Upload a receipt image to automatically extract transaction details')
+                            ->helperText(__('transaction.form.receipt_upload.upload_receipt.helper'))
                             ->live()
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
                                 if (!$state) return;
@@ -82,49 +103,51 @@ class TransactionResource extends Resource
                             })
                             ->columnSpanFull(),
                     ]),
-                Forms\Components\Section::make('Transaction Details')
+                Forms\Components\Section::make(__('transaction.form.transaction_details.section'))
                     ->schema([
                         Forms\Components\Select::make('type')
+                            ->label(__('transaction.form.transaction_details.type.label'))
                             ->options([
-                                'income' => 'Income',
-                                'expense' => 'Expense',
+                                'income' => __('transaction.form.transaction_details.type.options.income'),
+                                'expense' => __('transaction.form.transaction_details.type.options.expense'),
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('amount')
+                            ->label(__('transaction.form.transaction_details.amount.label'))
                             ->required()
                             ->numeric()
                             ->prefix('EUR'),
                         Forms\Components\DatePicker::make('date')
+                            ->label(__('transaction.form.transaction_details.date.label'))
                             ->required()
                             ->default(now()),
                         Forms\Components\Select::make('category')
+                            ->label(__('transaction.form.transaction_details.category.label'))
                             ->options([
-                            // Income categories
-                            'salary' => 'Salary',
-                            'investment' => 'Investment',
-                            'gift' => 'Gift',
-                            'refund' => 'Refund',
-                            'other_income' => 'Other Income',
-                            
-                            // Expense categories
-                            'food' => 'Food & Dining',
-                            'shopping' => 'Shopping',
-                            'entertainment' => 'Entertainment',
-                            'transportation' => 'Transportation',
-                            'housing' => 'Housing',
-                            'utilities' => 'Utilities',
-                            'health' => 'Health',
-                            'education' => 'Education',
-                            'travel' => 'Travel',
-                            
-                            // Bad expense category - for tracking unhealthy spending
-                            'unhealthy_habits' => 'Unhealthy Habits (Cigarettes, Alcohol, etc.)',
-                            
-                            'other_expense' => 'Other Expense',
-                        ])
+                                // Income categories
+                                'salary' => __('messages.categories.income.salary'),
+                                'investment' => __('messages.categories.income.investment'),
+                                'gift' => __('messages.categories.income.gift'),
+                                'refund' => __('messages.categories.income.refund'),
+                                'other_income' => __('messages.categories.income.other_income'),
+                                
+                                // Expense categories
+                                'food' => __('messages.categories.expense.food'),
+                                'shopping' => __('messages.categories.expense.shopping'),
+                                'entertainment' => __('messages.categories.expense.entertainment'),
+                                'transportation' => __('messages.categories.expense.transportation'),
+                                'housing' => __('messages.categories.expense.housing'),
+                                'utilities' => __('messages.categories.expense.utilities'),
+                                'health' => __('messages.categories.expense.health'),
+                                'education' => __('messages.categories.expense.education'),
+                                'travel' => __('messages.categories.expense.travel'),
+                                'unhealthy_habits' => __('messages.categories.expense.unhealthy_habits'),
+                                'other_expense' => __('messages.categories.expense.other_expense'),
+                            ])
                             ->searchable()
                             ->required(),
                         Forms\Components\Textarea::make('description')
+                            ->label(__('transaction.form.transaction_details.description.label'))
                             ->columnSpanFull(),
                     ]),
                 Forms\Components\Hidden::make('user_id')
@@ -227,18 +250,41 @@ class TransactionResource extends Resource
             ->query(Transaction::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 Tables\Columns\TextColumn::make('date')
+                    ->label(__('transaction.table.date.label'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('type')
+                    ->label(__('transaction.table.type.label'))
                     ->colors([
                         'success' => 'income',
                         'danger' => 'expense',
                     ]),
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('transaction.table.amount.label'))
                     ->money('EUR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category')
+                    ->label(__('transaction.table.category.label'))
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match($state) {
+                        'salary' => __('messages.categories.income.salary'),
+                        'investment' => __('messages.categories.income.investment'),
+                        'gift' => __('messages.categories.income.gift'),
+                        'refund' => __('messages.categories.income.refund'),
+                        'other_income' => __('messages.categories.income.other_income'),
+                        'food' => __('messages.categories.expense.food'),
+                        'shopping' => __('messages.categories.expense.shopping'),
+                        'entertainment' => __('messages.categories.expense.entertainment'),
+                        'transportation' => __('messages.categories.expense.transportation'),
+                        'housing' => __('messages.categories.expense.housing'),
+                        'utilities' => __('messages.categories.expense.utilities'),
+                        'health' => __('messages.categories.expense.health'),
+                        'education' => __('messages.categories.expense.education'),
+                        'travel' => __('messages.categories.expense.travel'),
+                        'unhealthy_habits' => __('messages.categories.expense.unhealthy_habits'),
+                        'other_expense' => __('messages.categories.expense.other_expense'),
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'salary', 'investment', 'gift', 'refund', 'other_income', 
                         'food', 'transportation', 'housing', 'utilities', 
@@ -249,21 +295,23 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
+                    ->label(__('transaction.table.description.label'))
                     ->limit(50)
                     ->searchable()
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
+                    ->label(__('transaction.filter.type.label'))
                     ->options([
-                        'income' => 'Income',
-                        'expense' => 'Expense',
+                        'income' => __('transaction.filter.type.options.income'),
+                        'expense' => __('transaction.filter.type.options.expense'),
                     ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('view_receipt')
-                    ->label('View Receipt')
+                    ->label(__('transaction.actions.view_receipt.label'))
                     ->icon('heroicon-o-document-magnifying-glass')
                     ->url(fn (Transaction $record) => $record->receipt_image 
                         ? asset('storage/' . $record->receipt_image) 

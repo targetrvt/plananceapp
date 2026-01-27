@@ -177,7 +177,7 @@
             <x-filament::section class="stat-card primary">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Spending</h2>
+                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.stats.monthly_spending.label') }}</h2>
                         <div class="mt-1 flex items-baseline">
                             <div class="relative">
                                 <p class="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -197,7 +197,7 @@
                 </div>
                 <div class="mt-6">
                     <div class="text-xs text-gray-500 dark:text-gray-400">
-                        <span>Annual equivalent:</span>
+                        <span>{{ __('monthly-subscriptions-dashboard.stats.monthly_spending.description') }}</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300">€{{ number_format($this->getTotalAnnualAmount(), 2) }}</span>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
             <x-filament::section class="stat-card secondary">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Subscriptions</h2>
+                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.stats.active_subscriptions.label') }}</h2>
                         <div class="mt-1 flex items-baseline">
                             <div class="relative">
                                 <p class="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -227,7 +227,7 @@
                 </div>
                 <div class="mt-6">
                     <div class="text-xs text-gray-500 dark:text-gray-400">
-                        <span>Average monthly cost:</span>
+                        <span>{{ __('monthly-subscriptions-dashboard.stats.active_subscriptions.description') }}</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300">
                             €{{ $this->getSubscriptionCount() ? number_format($this->getTotalMonthlyAmount() / $this->getSubscriptionCount(), 2) : '0.00' }}
                         </span>
@@ -239,7 +239,7 @@
             <x-filament::section class="stat-card tertiary">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Upcoming Payments</h2>
+                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.stats.upcoming_payments.label') }}</h2>
                         <div class="mt-1 flex items-baseline">
                             <div class="relative">
                                 <p class="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -260,7 +260,7 @@
                 </div>
                 <div class="mt-6">
                     <div class="text-xs text-gray-500 dark:text-gray-400">
-                        <span>Total upcoming amount:</span>
+                        <span>{{ __('monthly-subscriptions-dashboard.stats.upcoming_payments.description') }}</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300">
                             €{{ number_format($this->getUpcomingPayments()->sum('amount'), 2) }}
                         </span>
@@ -273,7 +273,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Advanced Donut Chart for Category Breakdown -->
             <x-filament::section>
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Subscription Categories</h2>
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.subscription_categories') }}</h2>
                 
                 @if(count($this->getCategoryBreakdown()) > 0)
                     <div class="chart-container aspect-square sm:aspect-auto min-h-60">
@@ -296,14 +296,14 @@
                     </div>
                 @else
                     <div class="p-8 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
-                        <p class="text-gray-500 dark:text-gray-400">No active subscriptions found</p>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.empty_states.no_active_subscriptions') }}</p>
                     </div>
                 @endif
             </x-filament::section>
             
             <!-- Enhanced Bar Chart for Subscription Costs -->
             <x-filament::section>
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Top Subscriptions</h2>
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.top_subscriptions') }}</h2>
                 
                 @if($this->getSubscriptionCount() > 0)
                     <div class="chart-container min-h-64">
@@ -311,7 +311,7 @@
                     </div>
                 @else
                     <div class="p-8 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
-                        <p class="text-gray-500 dark:text-gray-400">No active subscriptions found</p>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.empty_states.no_active_subscriptions') }}</p>
                     </div>
                 @endif
             </x-filament::section>
@@ -319,7 +319,7 @@
 
         <!-- Enhanced Payment Timeline Chart -->
         <x-filament::section>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Payment Timeline</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.payment_timeline') }}</h2>
             
             @if($this->getSubscriptionCount() > 0)
                 <div class="chart-container min-h-72">
@@ -334,7 +334,7 @@
 
         <!-- New: Payment Calendar Heatmap -->
         <x-filament::section>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Payment Calendar</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.payment_calendar') }}</h2>
             
             @if($this->getSubscriptionCount() > 0)
                 <div class="relative">
@@ -342,23 +342,23 @@
                     <div id="calendarTooltip" class="tooltip"></div>
                     
                     <div class="flex justify-between items-center mt-6 mb-4">
-                        <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Subscription Density</div>
+                        <div class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('monthly-subscriptions-dashboard.calendar.subscription_density') }}</div>
                         <div class="flex space-x-2 items-center">
                             <div class="flex space-x-1 items-center">
                                 <div class="w-3 h-3 rounded" style="background-color: rgba(79, 70, 229, 0.1);"></div>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">Low</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.calendar.low') }}</span>
                             </div>
                             <div class="flex space-x-1 items-center">
                                 <div class="w-3 h-3 rounded" style="background-color: rgba(79, 70, 229, 0.3);"></div>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">Medium</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.calendar.medium') }}</span>
                             </div>
                             <div class="flex space-x-1 items-center">
                                 <div class="w-3 h-3 rounded" style="background-color: rgba(79, 70, 229, 0.6);"></div>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">High</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.calendar.high') }}</span>
                             </div>
                             <div class="flex space-x-1 items-center">
                                 <div class="w-3 h-3 rounded" style="background-color: rgba(79, 70, 229, 0.9);"></div>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">Very High</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.calendar.very_high') }}</span>
                             </div>
                         </div>
                     </div>
@@ -373,9 +373,9 @@
         <!-- Upcoming Payments Section - Enhanced Design -->
         <x-filament::section>
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Upcoming Payments</h2>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                    Next 30 days
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('monthly-subscriptions-dashboard.sections.upcoming_payments') }}</h2>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                    {{ __('monthly-subscriptions-dashboard.calendar.next_30_days') }}
                 </span>
             </div>
             
@@ -485,11 +485,11 @@
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-0.5 inline" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                     </svg>
-                                                    {{ $subscription->days_left }} days left
+                                                    {{ __('monthly-subscriptions-dashboard.payment_card.days_left', ['count' => $subscription->days_left]) }}
                                                 </span>
                                             @else
                                                 <span class="days-indicator ml-2 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                    {{ $subscription->days_left }} days left
+                                                    {{ __('monthly-subscriptions-dashboard.payment_card.days_left', ['count' => $subscription->days_left]) }}
                                                 </span>
                                             @endif
                                         </div>
@@ -500,7 +500,7 @@
                                         €{{ number_format($subscription->amount, 2) }}
                                     </div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize">
-                                        {{ $subscription->billing_cycle }}
+                                        {{ __('monthly-subscriptions-dashboard.billing_cycles.' . $subscription->billing_cycle) }}
                                     </div>
                                 </div>
                             </div>
@@ -519,7 +519,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                     </svg>
-                                    Edit
+                                    {{ __('monthly-subscriptions-dashboard.actions.edit') }}
                                 </a>
                                 <a 
                                     href="#" 
@@ -529,7 +529,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                                     </svg>
-                                    Mark as Paid
+                                    {{ __('monthly-subscriptions-dashboard.actions.mark_as_paid') }}
                                 </a>
                             </div>
                         </div>
@@ -542,8 +542,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
-                    <h3 class="mt-3 text-lg font-medium text-gray-900 dark:text-white">No upcoming payments</h3>
-                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">You're all set for the next 30 days!</p>
+                    <h3 class="mt-3 text-lg font-medium text-gray-900 dark:text-white">{{ __('monthly-subscriptions-dashboard.empty_states.no_upcoming_payments') }}</h3>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('monthly-subscriptions-dashboard.empty_states.all_set_message') }}</p>
                     <div class="mt-6">
                         <a 
                             href="{{ route('filament.app.resources.monthly-subscriptions.create') }}"
@@ -552,7 +552,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
                             </svg>
-                            Add Subscription
+                            {{ __('monthly-subscriptions-dashboard.actions.add_subscription.label') }}
                         </a>
                     </div>
                 </div>
@@ -562,6 +562,9 @@
 
     @push('scripts')
     <script>
+        // Pass translations from PHP to JavaScript
+        const translations = @json($this->getTranslationsForJs());
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Donut Chart Initialization
             if (document.getElementById('categoryDonutChart')) {
@@ -708,7 +711,7 @@
                     
                     ctx.font = '14px Arial';
                     ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#d1d5db' : '#6b7280';
-                    ctx.fillText('Total Monthly', centerX, centerY - 15);
+                    ctx.fillText(translations.charts.total_monthly, centerX, centerY - 15);
                     
                     ctx.font = 'bold 20px Arial';
                     ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#ffffff' : '#111827';
@@ -746,7 +749,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Monthly Cost (€)',
+                        label: translations.charts.monthly_cost,
                         data: values,
                         backgroundColor: gradients,
                         borderColor: colors,
@@ -783,11 +786,11 @@
                             displayColors: false,
                             callbacks: {
                                 label: function(context) {
-                                    return `€${context.raw.toFixed(2)} per month`;
+                                    return `€${context.raw.toFixed(2)} ${translations.charts.per_month}`;
                                 },
                                 afterLabel: function(context) {
                                     const index = context.dataIndex;
-                                    return `Category: ${categories[index].charAt(0).toUpperCase() + categories[index].slice(1).replace('_', ' ')}`;
+                                    return `${translations.charts.category} ${categories[index].charAt(0).toUpperCase() + categories[index].slice(1).replace('_', ' ')}`;
                                 }
                             }
                         }
@@ -931,7 +934,7 @@
                             pointHoverBorderWidth: 2
                         },
                         {
-                            label: 'Average Monthly Cost',
+                            label: translations.charts.average_monthly_cost,
                             data: averageData,
                             borderColor: 'rgba(239, 68, 68, 0.7)',
                             borderWidth: 2,
@@ -972,11 +975,11 @@
                                         const percentage = ((diff / monthlyTotal) * 100).toFixed(1);
                                         
                                         if (diff > 0) {
-                                            return `${percentage}% above average`;
+                                            return translations.charts.above_average.replace(':percentage', percentage);
                                         } else if (diff < 0) {
-                                            return `${Math.abs(percentage)}% below average`;
+                                            return translations.charts.below_average.replace(':percentage', Math.abs(percentage));
                                         } else {
-                                            return 'Equal to average';
+                                            return translations.charts.equal_to_average;
                                         }
                                     }
                                     return '';
@@ -1070,7 +1073,7 @@
     
     const todayButton = document.createElement('button');
     todayButton.className = 'px-3 py-1 text-sm rounded-md text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500';
-    todayButton.textContent = 'Today';
+    todayButton.textContent = translations.calendar.today;
     todayButton.addEventListener('click', () => {
         viewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         updateCalendar();
@@ -1298,7 +1301,7 @@
                 if (dayData.subscriptions.length > 0) {
                     tooltipContent += `
                         <div class="font-medium text-green-400 text-sm">€${dayData.amount.toFixed(2)}</div>
-                        <div class="text-xs mt-2 font-medium text-gray-300">Subscriptions:</div>
+                        <div class="text-xs mt-2 font-medium text-gray-300">${translations.charts.subscriptions}</div>
                         <div class="space-y-1 mt-1 max-h-40 overflow-y-auto">
                     `;
                     
@@ -1316,7 +1319,7 @@
                     
                     tooltipContent += `</div>`;
                 } else {
-                    tooltipContent += `<div class="text-xs mt-1 text-gray-400">No payments scheduled</div>`;
+                    tooltipContent += `<div class="text-xs mt-1 text-gray-400">${translations.modal.no_payments_scheduled}</div>`;
                 }
                 
                 tooltip.innerHTML = tooltipContent;
@@ -1427,7 +1430,8 @@
             
             const subscriptionsTitle = document.createElement('h4');
             subscriptionsTitle.className = 'text-sm font-medium text-gray-500 dark:text-gray-400 mb-2';
-            subscriptionsTitle.textContent = `${dayData.subscriptions.length} subscription${dayData.subscriptions.length !== 1 ? 's' : ''}`;
+            const subscriptionText = dayData.subscriptions.length === 1 ? translations.charts.subscription : translations.charts.subscriptions_plural;
+            subscriptionsTitle.textContent = `${dayData.subscriptions.length} ${subscriptionText}`;
             
             const subscriptionsList = document.createElement('div');
             subscriptionsList.className = 'space-y-3';
@@ -1517,7 +1521,7 @@
             
             const closeModalButton = document.createElement('button');
             closeModalButton.className = 'px-4 py-2 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400';
-            closeModalButton.textContent = 'Close';
+            closeModalButton.textContent = translations.modal.close;
             closeModalButton.addEventListener('click', () => {
                 modalBackdrop.style.opacity = '0';
                 modalContainer.style.transform = 'scale(0.95)';
@@ -1645,7 +1649,7 @@
     if (legendContainer) {
         legendContainer.innerHTML = `
             <div class="flex justify-between items-center mt-6 mb-4">
-                <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Payment Calendar Legend</div>
+                <div class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('monthly-subscriptions-dashboard.calendar.payment_calendar_legend') }}</div>
                 <div class="flex space-x-4 items-center">
                     <div class="flex items-center">
                         <div class="w-3 h-3 rounded-full mr-1.5" style="background-color: rgba(239, 68, 68, 0.2);"></div>

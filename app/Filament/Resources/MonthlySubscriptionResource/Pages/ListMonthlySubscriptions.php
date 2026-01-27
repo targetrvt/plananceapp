@@ -13,7 +13,8 @@ class ListMonthlySubscriptions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label(__('monthly-subscription.actions.create.label')),
         ];
     }
 }

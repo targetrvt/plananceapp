@@ -13,7 +13,8 @@ class ListUserBalances extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label(__('user-balance.actions.create.label')),
         ];
     }
 }
