@@ -11,11 +11,26 @@ use Illuminate\Support\Carbon;
 class MonthlySubscriptionsDashboard extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
-    protected static ?string $navigationLabel = 'Subscriptions Dashboard';
-    protected static ?string $title = 'Subscriptions Dashboard';
+    protected static ?string $navigationLabel = null;
+    protected static ?string $title = null;
     protected static ?string $slug = 'subscriptions-dashboard';
-    protected static ?string $navigationGroup = 'Overview';
+    protected static ?string $navigationGroup = null;
     protected static ?int $navigationSort = 3;
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('monthly-subscriptions-dashboard.navigation.label');
+    }
+    
+    public function getTitle(): string
+    {
+        return __('monthly-subscriptions-dashboard.title');
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Overview'; // Must match the group name registered in AppPanelProvider
+    }
     
     protected static string $view = 'filament.pages.monthly-subscriptions-dashboard';
     
@@ -230,13 +245,13 @@ class MonthlySubscriptionsDashboard extends Page
     {
         return [
             Action::make('add_subscription')
-                ->label('Add Subscription')
+                ->label(__('monthly-subscriptions-dashboard.actions.add_subscription.label'))
                 ->url(route('filament.app.resources.monthly-subscriptions.create'))
                 ->icon('heroicon-o-plus')
                 ->color('primary'),
                 
             Action::make('view_all')
-                ->label('Manage Subscriptions')
+                ->label(__('monthly-subscriptions-dashboard.actions.view_all.label'))
                 ->url(route('filament.app.resources.monthly-subscriptions.index'))
                 ->icon('heroicon-o-rectangle-stack')
                 ->color('gray'),
@@ -257,6 +272,34 @@ class MonthlySubscriptionsDashboard extends Page
             'chartjs-plugin-datalabels' => 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0',
             'moment-js' => 'https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js',
             'subscription-dashboard' => asset('js/subscription-dashboard.js'),
+        ];
+    }
+    
+    public function getTranslationsForJs(): array
+    {
+        return [
+            'charts' => [
+                'monthly_payments' => __('monthly-subscriptions-dashboard.charts.monthly_payments'),
+                'average_monthly_cost' => __('monthly-subscriptions-dashboard.charts.average_monthly_cost'),
+                'monthly_cost' => __('monthly-subscriptions-dashboard.charts.monthly_cost'),
+                'per_month' => __('monthly-subscriptions-dashboard.charts.per_month'),
+                'category' => __('monthly-subscriptions-dashboard.charts.category'),
+                'total_monthly' => __('monthly-subscriptions-dashboard.charts.total_monthly'),
+                'above_average' => __('monthly-subscriptions-dashboard.charts.above_average'),
+                'below_average' => __('monthly-subscriptions-dashboard.charts.below_average'),
+                'equal_to_average' => __('monthly-subscriptions-dashboard.charts.equal_to_average'),
+                'subscriptions' => __('monthly-subscriptions-dashboard.charts.subscriptions'),
+                'subscription' => __('monthly-subscriptions-dashboard.charts.subscription'),
+                'subscriptions_plural' => __('monthly-subscriptions-dashboard.charts.subscriptions_plural'),
+            ],
+            'calendar' => [
+                'today' => __('monthly-subscriptions-dashboard.calendar.today'),
+                'subscription_density' => __('monthly-subscriptions-dashboard.calendar.subscription_density'),
+            ],
+            'modal' => [
+                'close' => __('monthly-subscriptions-dashboard.modal.close'),
+                'no_payments_scheduled' => __('monthly-subscriptions-dashboard.modal.no_payments_scheduled'),
+            ],
         ];
     }
 }

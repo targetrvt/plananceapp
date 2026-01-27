@@ -10,9 +10,19 @@ use Illuminate\Support\Facades\DB;
 
 class ExpenseTrendsWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Expense Trends';
-    protected static ?string $description = 'Your monthly expense overview for the past 6 months. Click on a data point to see details.';
+    protected static ?string $heading = null;
+    protected static ?string $description = null;
     protected static ?int $sort = 3;
+    
+    public function getHeading(): ?string
+    {
+        return __('widgets.expense_trends.heading');
+    }
+    
+    public function getDescription(): ?string
+    {
+        return __('widgets.expense_trends.description');
+    }
     protected static ?string $maxHeight = '350px';
 
     protected function getData(): array
@@ -43,7 +53,7 @@ class ExpenseTrendsWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Monthly Expenses',
+                    'label' => __('widgets.expense_trends.monthly_expenses'),
                     'data' => $expenseData,
                     'backgroundColor' => 'rgba(99, 102, 241, 0.1)',
                     'borderColor' => 'rgb(99, 102, 241)',
@@ -61,7 +71,7 @@ class ExpenseTrendsWidget extends ChartWidget
                     'pointHoverBorderWidth' => 3,
                 ],
                 [
-                    'label' => 'Average',
+                    'label' => __('widgets.expense_trends.average'),
                     'data' => array_fill(0, count($months), round($average, 2)),
                     'borderColor' => 'rgba(156, 163, 175, 0.5)',
                     'borderWidth' => 2,
@@ -214,22 +224,22 @@ class ExpenseTrendsWidget extends ChartWidget
             });
 
         $bodyLines = [];
-        $bodyLines[] = "Total Expenses: **€" . number_format($total, 2) . "**";
-        $bodyLines[] = "Transactions: **" . $transactionCount . "**";
+        $bodyLines[] = __('widgets.expense_trends.notification.total_expenses', ['amount' => number_format($total, 2)]);
+        $bodyLines[] = __('widgets.expense_trends.notification.transactions', ['count' => $transactionCount]);
         
         if ($topCategories->isNotEmpty()) {
             $bodyLines[] = "";
-            $bodyLines[] = "Top Categories:";
+            $bodyLines[] = __('widgets.expense_trends.notification.top_categories');
             foreach ($topCategories as $idx => $cat) {
                 $bodyLines[] = ($idx + 1) . ". " . $cat['category'] . ": €" . number_format($cat['amount'], 2);
             }
         } else {
             $bodyLines[] = "";
-            $bodyLines[] = "No expenses recorded for this month.";
+            $bodyLines[] = __('widgets.expense_trends.notification.no_expenses');
         }
         
         Notification::make()
-            ->title($monthDate->format('F Y') . ' Expense Details')
+            ->title(__('widgets.expense_trends.notification.title', ['month' => $monthDate->format('F Y')]))
             ->body(implode("\n", $bodyLines))
             ->info()
             ->persistent()

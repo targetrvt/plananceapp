@@ -20,8 +20,28 @@ class BudgetResource extends Resource
 
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationLabel = null;
+    protected static ?string $navigationGroup = null;
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('budget.navigation.label');
+    }
+    
+    public static function getPluralModelLabel(): string
+    {
+        return __('budget.navigation.label');
+    }
+    
+    public static function getModelLabel(): string
+    {
+        return __('budget.navigation.label');
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
 
     public static function form(Form $form): Form
     {
@@ -29,19 +49,19 @@ class BudgetResource extends Resource
             ->schema([
                 // Define your form fields here
                 Forms\Components\TextInput::make('name')
-                    ->label('Budget Name')
+                    ->label(__('budget.form.name.label'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('amount')
-                    ->label('Amount')
+                    ->label(__('budget.form.amount.label'))
                     ->numeric()
                     ->prefix('EUR')
                     ->required(),
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label(__('budget.form.start_date.label'))
                     ->required(),
                 Forms\Components\DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label(__('budget.form.end_date.label'))
                     ->required(),
                 Forms\Components\Hidden::make('user_id')
                     ->default(auth()->id())
@@ -56,20 +76,21 @@ class BudgetResource extends Resource
             ->columns([
                 // Define your table columns here
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Budget Name')
+                    ->label(__('budget.table.name.label'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('budget.table.amount.label'))
                     ->numeric()
                     ->money('EUR')
                     ->default(0)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
-                    ->label('Start Date')
+                    ->label(__('budget.table.start_date.label'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
-                    ->label('End Date')
+                    ->label(__('budget.table.end_date.label'))
                     ->date()
                     ->sortable(),
             ])

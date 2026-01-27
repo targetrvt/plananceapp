@@ -15,9 +15,29 @@ class UserBalanceResource extends Resource
     protected static ?string $model = UserBalance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationGroup = 'Management';
-    protected static ?string $navigationLabel = 'My Balance';
+    protected static ?string $navigationGroup = null;
+    protected static ?string $navigationLabel = null;
     protected static ?int $navigationSort = -3;
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('user-balance.navigation.label');
+    }
+    
+    public static function getPluralModelLabel(): string
+    {
+        return __('user-balance.navigation.label');
+    }
+    
+    public static function getModelLabel(): string
+    {
+        return __('user-balance.navigation.label');
+    }
     
     public static function getNavigationBadge(): ?string
     {
@@ -33,11 +53,11 @@ class UserBalanceResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('balance')
-                    ->label('Your Balance')
+                    ->label(__('user-balance.form.balance.label'))
                     ->required()
                     ->numeric()
                     ->prefix('EUR')
-                    ->helperText('Enter your current financial balance'),
+                    ->helperText(__('user-balance.form.balance.helper')),
                 Forms\Components\Hidden::make('user_id')
                     ->default(auth()->id())
                     ->required(),
@@ -52,10 +72,11 @@ class UserBalanceResource extends Resource
             ->query(UserBalance::query()->where('user_id', auth()->id()))
             ->columns([
                 Tables\Columns\TextColumn::make('balance')
+                    ->label(__('user-balance.table.balance.label'))
                     ->money('EUR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Last Updated')
+                    ->label(__('user-balance.table.updated_at.label'))
                     ->dateTime()
                     ->sortable(),
             ])

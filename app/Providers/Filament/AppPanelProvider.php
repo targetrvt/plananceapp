@@ -53,6 +53,8 @@ class AppPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
             ])
             ->font('Poppins')
+            ->brandLogo(asset('images/Planancelogo.png'))
+            ->brandLogoHeight('4rem')
             ->navigationGroups([
                 'Overview',
                 'Management',

@@ -1,4 +1,4 @@
-<x-filament-breezy::grid-section md=2 :title="__('Browser Sessions')" :description="__('Manage and log out your active sessions on other browsers and devices.')">
+<x-filament-breezy::grid-section md=2 :title="__('profile.browser_sessions.title')" :description="__('profile.browser_sessions.description')">
     <x-filament::card>
         <div class="space-y-6">
             @if(count($sessions) > 0)
@@ -20,13 +20,13 @@
                                     </div>
                                     <div>
                                         <div class="font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $session['browser'] }} on {{ $session['platform'] }}
+                                            {{ $session['browser'] }} {{ __('on') }} {{ $session['platform'] }}
                                             @if($session['is_current_device'])
-                                                <span class="ml-2 text-xs font-normal text-primary-600 dark:text-primary-400">({{ __('This device') }})</span>
+                                                <span class="ml-2 text-xs font-normal text-primary-600 dark:text-primary-400">({{ __('profile.browser_sessions.this_device') }})</span>
                                             @endif
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $session['ip_address'] }} • {{ __('Last active') }}: {{ \Carbon\Carbon::createFromTimestamp($session['last_activity'])->diffForHumans() }}
+                                            {{ $session['ip_address'] }} • {{ __('profile.browser_sessions.last_active') }}: {{ \Carbon\Carbon::createFromTimestamp($session['last_activity'])->diffForHumans() }}
                                         </div>
                                     </div>
                                 </div>
@@ -37,13 +37,13 @@
 
                 <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        {{ __('If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.') }}
+                        {{ __('profile.browser_sessions.logout_other_sessions_description') }}
                     </p>
                     {{ $this->logoutOtherSessionsAction }}
                 </div>
             @else
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('No active sessions found.') }}
+                    {{ __('profile.browser_sessions.no_active_sessions') }}
                 </p>
             @endif
         </div>

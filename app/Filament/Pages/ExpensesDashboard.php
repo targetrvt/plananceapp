@@ -24,11 +24,26 @@ use Filament\Pages\Actions\Action as PageAction;
 class ExpensesDashboard extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $navigationLabel = 'Expenses Dashboard';
-    protected static ?string $title = 'Expenses Dashboard';
+    protected static ?string $navigationLabel = null;
+    protected static ?string $title = null;
     protected static ?string $slug = 'expenses-dashboard';
-    protected static ?string $navigationGroup = 'Overview';
+    protected static ?string $navigationGroup = null;
     protected static ?int $navigationSort = 2;
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('expenses-dashboard.navigation.label');
+    }
+    
+    public function getTitle(): string
+    {
+        return __('expenses-dashboard.title');
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Overview'; // Must match the group name registered in AppPanelProvider
+    }
     
     protected static string $view = 'filament.pages.expenses-dashboard';
     
@@ -167,7 +182,7 @@ class ExpensesDashboard extends Page
             $oldEndDate !== $this->endDate
         ) {
             Notification::make()
-                ->title('Filters reset to defaults')
+                ->title(__('expenses-dashboard.notifications.filters_reset'))
                 ->success()
                 ->send();
                 
@@ -178,41 +193,45 @@ class ExpensesDashboard extends Page
     public function getExpenseFormSchema(): array
     {
         return [
-            Section::make('New Expense')
+            Section::make(__('expenses-dashboard.form.new_expense.section'))
                 ->schema([
                     Hidden::make('type')
                         ->default('expense'),
                     
                     TextInput::make('amount')
+                        ->label(__('expenses-dashboard.form.new_expense.amount.label'))
                         ->required()
                         ->numeric()
                         ->prefix('EUR')
-                        ->placeholder('0.00'),
+                        ->placeholder(__('expenses-dashboard.form.new_expense.amount.placeholder')),
                     
                     DatePicker::make('date')
+                        ->label(__('expenses-dashboard.form.new_expense.date.label'))
                         ->required()
                         ->default(now()),
                     
                     Select::make('category')
+                        ->label(__('expenses-dashboard.form.new_expense.category.label'))
                         ->options([
-                            'food' => 'Food & Dining',
-                            'shopping' => 'Shopping',
-                            'entertainment' => 'Entertainment',
-                            'transportation' => 'Transportation',
-                            'housing' => 'Housing',
-                            'utilities' => 'Utilities',
-                            'health' => 'Health',
-                            'education' => 'Education',
-                            'travel' => 'Travel',
-                            'unhealthy_habits' => 'Unhealthy Habits',
-                            'other_expense' => 'Other Expense',
+                            'food' => __('messages.categories.expense.food'),
+                            'shopping' => __('messages.categories.expense.shopping'),
+                            'entertainment' => __('messages.categories.expense.entertainment'),
+                            'transportation' => __('messages.categories.expense.transportation'),
+                            'housing' => __('messages.categories.expense.housing'),
+                            'utilities' => __('messages.categories.expense.utilities'),
+                            'health' => __('messages.categories.expense.health'),
+                            'education' => __('messages.categories.expense.education'),
+                            'travel' => __('messages.categories.expense.travel'),
+                            'unhealthy_habits' => __('messages.categories.expense.unhealthy_habits'),
+                            'other_expense' => __('messages.categories.expense.other_expense'),
                         ])
                         ->searchable()
                         ->required(),
                     
                     TextInput::make('description')
+                        ->label(__('expenses-dashboard.form.new_expense.description.label'))
                         ->maxLength(255)
-                        ->placeholder('Expense description')
+                        ->placeholder(__('expenses-dashboard.form.new_expense.description.placeholder'))
                 ])
         ];
     }
@@ -220,14 +239,14 @@ class ExpensesDashboard extends Page
     protected function getQuickExpenseAction(): Action
     {
         return Action::make('quickAddExpense')
-            ->label('Quick Add')
+            ->label(__('expenses-dashboard.actions.quick_add.label'))
             ->color('success')
             ->icon('heroicon-m-plus-circle')
             ->form($this->getExpenseFormSchema())
             ->modalWidth('md')
-            ->modalHeading('Add New Expense')
-            ->modalDescription('Quickly add a new expense to your records.')
-            ->modalSubmitActionLabel('Save Expense')
+            ->modalHeading(__('expenses-dashboard.actions.quick_add.modal_heading'))
+            ->modalDescription(__('expenses-dashboard.actions.quick_add.modal_description'))
+            ->modalSubmitActionLabel(__('expenses-dashboard.actions.quick_add.submit_label'))
             ->action(function (array $data) {
                 $data['user_id'] = auth()->id();
                 $transaction = Transaction::create($data);
@@ -235,7 +254,7 @@ class ExpensesDashboard extends Page
                 $this->updateUserBalance($data['amount']);
                 
                 Notification::make()
-                    ->title('Expense added successfully')
+                    ->title(__('expenses-dashboard.notifications.expense_added'))
                     ->success()
                     ->send();
                 
@@ -260,29 +279,29 @@ class ExpensesDashboard extends Page
             ActionGroup::make([
                 $this->getQuickExpenseAction(),
                 Action::make('addExpense')
-                    ->label('Add Expense')
+                    ->label(__('expenses-dashboard.actions.add_expense.label'))
                     ->url(fn (): string => url('/app/transactions/create'))
                     ->color('primary')
                     ->icon('heroicon-m-plus-circle'),
-            ])->label('Add Expense')
+            ])->label(__('expenses-dashboard.actions.add_expense.label'))
               ->color('success')
               ->icon('heroicon-m-plus-circle'),
                 
             Action::make('filter')
-                ->label('Filter')
+                ->label(__('expenses-dashboard.actions.filter.label'))
                 ->icon('heroicon-m-funnel')
                 ->iconPosition(IconPosition::After)
                 ->form([
                     Section::make()
                         ->schema([
                             Select::make('timeframe')
-                                ->label('Timeframe')
+                                ->label(__('expenses-dashboard.actions.filter.timeframe.label'))
                                 ->options([
-                                    'week' => 'This Week',
-                                    'month' => 'This Month',
-                                    'quarter' => 'This Quarter',
-                                    'year' => 'This Year',
-                                    'custom' => 'Custom Range',
+                                    'week' => __('messages.dashboard.expenses.period_labels.week'),
+                                    'month' => __('messages.dashboard.expenses.period_labels.month'),
+                                    'quarter' => __('messages.dashboard.expenses.period_labels.quarter'),
+                                    'year' => __('messages.dashboard.expenses.period_labels.year'),
+                                    'custom' => __('messages.dashboard.expenses.period_labels.custom'),
                                 ])
                                 ->default(fn() => $this->timeframe)
                                 ->reactive()
@@ -305,18 +324,18 @@ class ExpensesDashboard extends Page
                                 }),
                             
                             DatePicker::make('startDate')
-                                ->label('Start Date')
+                                ->label(__('expenses-dashboard.actions.filter.start_date.label'))
                                 ->default(fn() => $this->startDate)
                                 ->visible(fn (callable $get) => $get('timeframe') === 'custom'),
                                 
                             DatePicker::make('endDate')
-                                ->label('End Date')
+                                ->label(__('expenses-dashboard.actions.filter.end_date.label'))
                                 ->default(fn() => $this->endDate)
                                 ->visible(fn (callable $get) => $get('timeframe') === 'custom')
                                 ->afterOrEqual('startDate'),
-                                
+                            
                             Select::make('category')
-                                ->label('Category')
+                                ->label(__('expenses-dashboard.actions.filter.category.label'))
                                 ->options(function() {
                                     $categories = Transaction::where('user_id', auth()->id())
                                         ->where('type', 'expense')
@@ -325,7 +344,7 @@ class ExpensesDashboard extends Page
                                         ->pluck('category', 'category')
                                         ->toArray();
                                         
-                                    return ['all' => 'All Categories'] + $categories;
+                                    return ['all' => __('messages.dashboard.expenses.filter.all_categories')] + $categories;
                                 })
                                 ->default(fn() => $this->category),
                         ])
@@ -353,7 +372,7 @@ class ExpensesDashboard extends Page
                         $oldEndDate !== $this->endDate
                     ) {
                         Notification::make()
-                            ->title('Filters applied successfully')
+                            ->title(__('expenses-dashboard.notifications.filters_applied'))
                             ->success()
                             ->send();
                             
@@ -369,10 +388,10 @@ class ExpensesDashboard extends Page
                     'x-bind:class' => "isFiltered ? 'filter-active' : ''"
                 ])
                 ->modalWidth('md')
-                ->modalHeading('Filter Dashboard')
+                ->modalHeading(__('expenses-dashboard.actions.filter.modal_heading'))
                 ->extraModalFooterActions(fn(Action $action) => [
                     Action::make('resetFilters')
-                        ->label('Reset Filters')
+                        ->label(__('expenses-dashboard.actions.filter.reset.label'))
                         ->color('gray')
                         ->action(function () use ($action) {
                             $this->resetFilters();
@@ -548,13 +567,13 @@ class ExpensesDashboard extends Page
         return $infolist
             ->schema([
                 TextEntry::make('date')
-                    ->label('Date')
+                    ->label(__('expenses-dashboard.infolist.date.label'))
                     ->date(),
                 TextEntry::make('amount')
-                    ->label('Amount')
+                    ->label(__('expenses-dashboard.infolist.amount.label'))
                     ->money('EUR'),
                 TextEntry::make('category')
-                    ->label('Category')
+                    ->label(__('expenses-dashboard.infolist.category.label'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'food', 'transportation', 'housing', 'utilities', 'health', 'education', 'travel' => 'success',
@@ -563,7 +582,7 @@ class ExpensesDashboard extends Page
                         default => 'gray',
                     }),
                 TextEntry::make('description')
-                    ->label('Description'),
+                    ->label(__('expenses-dashboard.infolist.description.label')),
             ])
             ->columns(4);
     }

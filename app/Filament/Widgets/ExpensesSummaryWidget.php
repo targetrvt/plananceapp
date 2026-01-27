@@ -55,10 +55,10 @@ class ExpensesSummaryWidget extends BaseWidget
         $topCategory = $topCategoryResults->sortByDesc('total')->first();
             
         return [
-            Stat::make('Monthly Expenses', "€" . number_format($monthlyExpenses, 2))
+            Stat::make(__('widgets.expenses_summary.monthly_expenses.label'), "€" . number_format($monthlyExpenses, 2))
                 ->description($monthlyComparison >= 0 
-                    ? number_format(abs($monthlyComparison), 1) . '% increase from last month' 
-                    : number_format(abs($monthlyComparison), 1) . '% decrease from last month')
+                    ? __('widgets.expenses_summary.monthly_expenses.increase', ['percentage' => number_format(abs($monthlyComparison), 1)])
+                    : __('widgets.expenses_summary.monthly_expenses.decrease', ['percentage' => number_format(abs($monthlyComparison), 1)]))
                 ->descriptionIcon($monthlyComparison >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($monthlyComparison >= 0 ? 'danger' : 'success')
                 ->chart([
@@ -66,17 +66,17 @@ class ExpensesSummaryWidget extends BaseWidget
                     $monthlyExpenses / 100
                 ]),
             
-            Stat::make('Yesterday\'s Expenses', "€" . number_format($yesterdayExpenses, 2))
-                ->description('on ' . $yesterday->format('D, M j'))
+            Stat::make(__('widgets.expenses_summary.yesterday_expenses.label'), "€" . number_format($yesterdayExpenses, 2))
+                ->description(__('widgets.expenses_summary.yesterday_expenses.description', ['date' => $yesterday->format('D, M j')]))
                 ->descriptionIcon('heroicon-m-calendar')
                 ->color('primary'),
             
-            Stat::make('Top Expense Category', $topCategory 
-                ? ucwords(str_replace('_', ' ', $topCategory->category))
-                : 'No expenses')
+            Stat::make(__('widgets.expenses_summary.top_category.label'), $topCategory 
+                ? __('messages.categories.expense.' . $topCategory->category)
+                : __('widgets.expenses_summary.top_category.no_expenses'))
                 ->description($topCategory 
                     ? "€" . number_format($topCategory->total, 2)
-                    : 'This month')
+                    : __('widgets.expenses_summary.top_category.description'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('warning'),
         ];

@@ -102,16 +102,16 @@ class BrowserSessions extends Component implements HasActions, HasForms
     public function logoutOtherSessionsAction(): Action
     {
         return Action::make('logoutOtherSessions')
-            ->label(__('Log Out Other Browser Sessions'))
+            ->label(__('profile.browser_sessions.logout_other_sessions'))
             ->requiresConfirmation()
             ->form([
                 TextInput::make('password')
-                    ->label(__('Password'))
+                    ->label(__('filament-breezy::default.fields.password'))
                     ->password()
                     ->required()
                     ->rules(['required', function ($attribute, $value, $fail) {
                         if (!Hash::check($value, $this->user->password)) {
-                            $fail(__('The provided password is incorrect.'));
+                            $fail(__('profile.browser_sessions.password_incorrect'));
                         }
                     }]),
             ])
@@ -125,7 +125,7 @@ class BrowserSessions extends Component implements HasActions, HasForms
         if (!Hash::check($password, $this->user->password)) {
             Notification::make()
                 ->danger()
-                ->title(__('The provided password is incorrect.'))
+                ->title(__('profile.browser_sessions.password_incorrect'))
                 ->send();
             return;
         }
@@ -142,7 +142,7 @@ class BrowserSessions extends Component implements HasActions, HasForms
 
         Notification::make()
             ->success()
-            ->title(__('Other browser sessions have been logged out.'))
+            ->title(__('profile.browser_sessions.other_sessions_logged_out'))
             ->send();
     }
 
