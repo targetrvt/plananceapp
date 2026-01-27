@@ -15,6 +15,9 @@ return [
     */
     'openai' => [
         'api_key' => env('OPENAI_API_KEY'),
+        'organization' => env('OPENAI_ORGANIZATION'),
+        'assistant_id' => env('OPENAI_ASSISTANT_ID'),
+        'receipt_assistant_id' => env('OPENAI_RECEIPT_ASSISTANT_ID'),
     ],
     
     'postmark' => [
