@@ -84,6 +84,7 @@ return [
         ],
         'billing_date' => [
             'label' => 'Nākamais maksājums',
+            'paid' => 'Samaksāts',
             'overdue' => 'Nokavēts!',
             'due_today' => 'Jāmaksā šodien!',
             'days_left' => ':days dienas atlikušas',

@@ -150,8 +150,7 @@ class ExpensesDashboard extends Page
         $this->currentYear = Carbon::now()->year;
         
         $this->setDateRangeFromTimeframe();
-
-        $this->redirect(request()->header('Referer'));
+        $this->dispatch('refreshCharts');
     }
     
     public function resetToCurrentPeriod()

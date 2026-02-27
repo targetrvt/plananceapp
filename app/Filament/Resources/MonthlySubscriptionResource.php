@@ -197,7 +197,7 @@ class MonthlySubscriptionResource extends Resource
                                 Forms\Components\Toggle::make('auto_create_transaction')
                                     ->label(__('monthly-subscription.form.advanced_options.auto_create_transaction.label'))
                                     ->helperText(__('monthly-subscription.form.advanced_options.auto_create_transaction.helper'))
-                                    ->default(false),
+                                    ->default(true),
                             ]),
                             
                         Forms\Components\Grid::make()
@@ -260,6 +260,9 @@ class MonthlySubscriptionResource extends Resource
                     ->date()
                     ->sortable()
                     ->description(function (MonthlySubscription $record): string {
+                        if ($record->status === 'paid') {
+                            return __('monthly-subscription.table.billing_date.paid');
+                        }
                         $billingDate = Carbon::parse($record->billing_date);
                         $today = Carbon::today(); // Use today() instead of now() for consistent day comparison
                         $daysLeft = (int) $today->diffInDays($billingDate, false); // Cast to integer
@@ -273,6 +276,9 @@ class MonthlySubscriptionResource extends Resource
                         }
                     })
                     ->color(function (MonthlySubscription $record): string {
+                        if ($record->status === 'paid') {
+                            return 'success';
+                        }
                         $billingDate = Carbon::parse($record->billing_date);
                         $today = Carbon::today();
                         $daysLeft = (int) $today->diffInDays($billingDate, false);
