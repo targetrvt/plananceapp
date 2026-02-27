@@ -3,6 +3,7 @@
     <style>
         canvas { max-height: 300px; }
         @media (min-width: 1024px) { canvas { max-height: 280px; } }
+        .payment-timeline-section canvas { max-height: none; }
         
         .chart-container {
             position: relative;
@@ -118,21 +119,79 @@
         }
         
         .calendar-heatmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            min-height: 320px;
+        }
+        
+        .calendar-heatmap .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
+            gap: 6px;
+            min-height: 280px;
+        }
+        
+        .calendar-heatmap .calendar-grid .calendar-day,
+        .calendar-heatmap .calendar-grid .calendar-day-empty {
+            min-width: 36px;
+            min-height: 44px;
+            aspect-ratio: 1;
         }
         
         .calendar-day {
             width: 100%;
             aspect-ratio: 1;
-            border-radius: 3px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.1s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         
         .calendar-day:hover {
-            transform: scale(1.2);
+            transform: scale(1.05);
+        }
+        
+        .calendar-day-empty {
+            border-radius: 6px;
+        }
+        
+        .payment-calendar-wrapper {
+            min-width: 0;
+        }
+        
+        .calendar-heatmap .calendar-grid .text-center.text-xs {
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-day-inner {
+            min-height: 0;
+        }
+        
+        .calendar-day-num {
+            flex-shrink: 0;
+            text-align: center;
+            width: 100%;
+            font-size: 1.125rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .calendar-day-inner .calendar-day-num {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (min-width: 640px) {
+            .calendar-heatmap .calendar-grid .calendar-day,
+            .calendar-heatmap .calendar-grid .calendar-day-empty {
+                min-width: 44px;
+                min-height: 48px;
+            }
         }
         
         .tooltip {
@@ -160,6 +219,28 @@
             50% {
                 opacity: 0.6;
             }
+        }
+        
+        /* Payment timeline chart – elevated card look */
+        .payment-timeline-section .chart-container {
+            min-height: 320px;
+            padding: 1.25rem 1rem 1rem;
+            background: linear-gradient(145deg, rgba(255,255,255,0.6) 0%, rgba(248,250,252,0.4) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .dark .payment-timeline-section .chart-container {
+            background: linear-gradient(145deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.6) 100%);
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .payment-timeline-section .chart-container:hover {
+            transform: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .dark .payment-timeline-section .chart-container:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
     </style>
     @endpush
@@ -318,12 +399,12 @@
         </div>
 
         <!-- Enhanced Payment Timeline Chart -->
-        <x-filament::section>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.payment_timeline') }}</h2>
+        <x-filament::section class="payment-timeline-section">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('monthly-subscriptions-dashboard.sections.payment_timeline') }}</h2>
             
             @if($this->getSubscriptionCount() > 0)
-                <div class="chart-container min-h-72">
-                    <canvas id="paymentTimelineChart" class="w-full"></canvas>
+                <div class="chart-container">
+                    <canvas id="paymentTimelineChart" class="w-full" style="display: block; box-sizing: border-box;"></canvas>
                 </div>
             @else
                 <div class="p-8 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
@@ -337,8 +418,8 @@
             <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ __('monthly-subscriptions-dashboard.sections.payment_calendar') }}</h2>
             
             @if($this->getSubscriptionCount() > 0)
-                <div class="relative">
-                    <div id="paymentCalendar" class="calendar-heatmap min-h-48 w-full mb-2"></div>
+                <div class="relative payment-calendar-wrapper">
+                    <div id="paymentCalendar" class="calendar-heatmap w-full mb-2"></div>
                     <div id="calendarTooltip" class="tooltip"></div>
                     
                     <div class="flex justify-between items-center mt-6 mb-4">
@@ -839,6 +920,7 @@
 
         function initPaymentTimelineChart() {
             const ctx = document.getElementById('paymentTimelineChart').getContext('2d');
+            const isDark = document.documentElement.classList.contains('dark');
             
             // Generate monthly data
             const subscriptions = @json($this->getAllActiveSubscriptions());
@@ -864,12 +946,10 @@
                 
                 // Handle different billing cycles
                 if (sub.billing_cycle === 'monthly') {
-                    // Every month has a payment
                     for (let i = 0; i < 12; i++) {
                         monthlyPayments[i] += amount;
                     }
                 } else if (sub.billing_cycle === 'quarterly') {
-                    // Every 3 months
                     const monthDiff = (billingDate.getMonth() - currentDate.getMonth() + 12) % 3;
                     for (let i = 0; i < 12; i++) {
                         if ((i + monthDiff) % 3 === 0) {
@@ -877,7 +957,6 @@
                         }
                     }
                 } else if (sub.billing_cycle === 'biannual') {
-                    // Every 6 months
                     const monthDiff = (billingDate.getMonth() - currentDate.getMonth() + 12) % 6;
                     for (let i = 0; i < 12; i++) {
                         if ((i + monthDiff) % 6 === 0) {
@@ -885,16 +964,18 @@
                         }
                     }
                 } else if (sub.billing_cycle === 'annual') {
-                    // Once a year
                     const monthDiff = (billingDate.getMonth() - currentDate.getMonth() + 12) % 12;
                     monthlyPayments[monthDiff] += amount;
                 }
             });
             
-            // Create an array of average monthly values
             const averageData = Array(12).fill(monthlyTotal);
             
-            // Create chart with advanced styling
+            // Colors: teal/emerald gradient for main line (works in light & dark)
+            const lineColor = isDark ? 'rgba(45, 212, 191, 1)' : 'rgba(20, 184, 166, 1)';
+            const avgLineColor = isDark ? 'rgba(251, 146, 60, 0.85)' : 'rgba(249, 115, 22, 0.9)';
+            const tickColor = isDark ? '#94a3b8' : '#64748b';
+            
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -908,72 +989,75 @@
                                 above: function(context) {
                                     const chart = context.chart;
                                     const { ctx, chartArea } = chart;
-                                    
-                                    if (!chartArea) {
-                                        return null;
-                                    }
-                                    
-                                    // Create gradient
+                                    if (!chartArea) return null;
                                     const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                                    gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
-                                    gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
-                                    
+                                    if (isDark) {
+                                        gradient.addColorStop(0, 'rgba(45, 212, 191, 0.35)');
+                                        gradient.addColorStop(0.6, 'rgba(45, 212, 191, 0.08)');
+                                        gradient.addColorStop(1, 'rgba(45, 212, 191, 0)');
+                                    } else {
+                                        gradient.addColorStop(0, 'rgba(20, 184, 166, 0.4)');
+                                        gradient.addColorStop(0.5, 'rgba(20, 184, 166, 0.12)');
+                                        gradient.addColorStop(1, 'rgba(20, 184, 166, 0)');
+                                    }
                                     return gradient;
                                 }
                             },
-                            borderColor: 'rgba(79, 70, 229, 1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            pointRadius: 6,
-                            pointBackgroundColor: 'rgba(79, 70, 229, 1)',
-                            pointBorderColor: '#fff',
+                            borderColor: lineColor,
+                            borderWidth: 2.5,
+                            tension: 0.35,
+                            pointRadius: 5,
+                            pointBackgroundColor: lineColor,
+                            pointBorderColor: isDark ? '#0f172a' : '#fff',
                             pointBorderWidth: 2,
-                            pointHoverRadius: 8,
-                            pointHoverBackgroundColor: 'rgba(79, 70, 229, 1)',
-                            pointHoverBorderColor: '#fff',
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: lineColor,
+                            pointHoverBorderColor: isDark ? '#0f172a' : '#fff',
                             pointHoverBorderWidth: 2
                         },
                         {
                             label: translations.charts.average_monthly_cost,
                             data: averageData,
-                            borderColor: 'rgba(239, 68, 68, 0.7)',
+                            borderColor: avgLineColor,
                             borderWidth: 2,
-                            borderDash: [5, 5],
+                            borderDash: [6, 4],
                             fill: false,
                             tension: 0,
-                            pointRadius: 0
+                            pointRadius: 0,
+                            pointHoverRadius: 0
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 8, right: 12, bottom: 4, left: 4 }
+                    },
                     interaction: {
                         mode: 'index',
                         intersect: false
                     },
                     plugins: {
                         tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            bodyFont: {
-                                size: 13
-                            },
-                            padding: 12,
-                            cornerRadius: 8,
+                            backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(30, 41, 59, 0.95)',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#e2e8f0',
+                            borderColor: isDark ? 'rgba(71, 85, 105, 0.6)' : 'rgba(148, 163, 184, 0.4)',
+                            borderWidth: 1,
+                            titleFont: { size: 13, weight: '600' },
+                            bodyFont: { size: 12 },
+                            padding: 14,
+                            cornerRadius: 10,
                             caretSize: 6,
                             callbacks: {
                                 label: function(context) {
                                     return `${context.dataset.label}: €${context.raw.toFixed(2)}`;
                                 },
                                 afterLabel: function(context) {
-                                    if (context.datasetIndex === 0) {
+                                    if (context.datasetIndex === 0 && monthlyTotal > 0) {
                                         const diff = context.raw - monthlyTotal;
                                         const percentage = ((diff / monthlyTotal) * 100).toFixed(1);
-                                        
                                         if (diff > 0) {
                                             return translations.charts.above_average.replace(':percentage', percentage);
                                         } else if (diff < 0) {
@@ -987,11 +1071,15 @@
                             }
                         },
                         legend: {
+                            position: 'top',
+                            align: 'end',
                             labels: {
-                                padding: 20,
-                                boxWidth: 12,
+                                padding: 16,
+                                boxWidth: 14,
                                 usePointStyle: true,
-                                pointStyle: 'circle'
+                                pointStyle: 'circle',
+                                color: tickColor,
+                                font: { size: 12, weight: '500' }
                             }
                         }
                     },
@@ -999,28 +1087,31 @@
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: function(context) {
-                                    return document.documentElement.classList.contains('dark') 
-                                        ? 'rgba(255, 255, 255, 0.05)' 
-                                        : 'rgba(0, 0, 0, 0.05)';
-                                }
+                                color: isDark ? 'rgba(148, 163, 184, 0.08)' : 'rgba(100, 116, 139, 0.12)',
+                                drawTicks: false
                             },
+                            border: { display: false },
                             ticks: {
                                 callback: function(value) { return '€' + value; },
-                                padding: 10
+                                color: tickColor,
+                                padding: 12,
+                                font: { size: 11 }
                             }
                         },
                         x: {
-                            grid: {
-                                display: false
-                            },
+                            grid: { display: false },
+                            border: { display: false },
                             ticks: {
-                                padding: 10
+                                color: tickColor,
+                                padding: 12,
+                                maxRotation: 45,
+                                minRotation: 0,
+                                font: { size: 11 }
                             }
                         }
                     },
                     animation: {
-                        duration: 2000,
+                        duration: 1200,
                         easing: 'easeOutQuart'
                     }
                 }
@@ -1057,7 +1148,7 @@
         <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
     </svg>`;
     prevButton.addEventListener('click', () => {
-        viewDate.setMonth(viewDate.getMonth() - 1);
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
         updateCalendar();
     });
     
@@ -1067,20 +1158,11 @@
         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
     </svg>`;
     nextButton.addEventListener('click', () => {
-        viewDate.setMonth(viewDate.getMonth() + 1);
-        updateCalendar();
-    });
-    
-    const todayButton = document.createElement('button');
-    todayButton.className = 'px-3 py-1 text-sm rounded-md text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500';
-    todayButton.textContent = translations.calendar.today;
-    todayButton.addEventListener('click', () => {
-        viewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
         updateCalendar();
     });
     
     navButtons.appendChild(prevButton);
-    navButtons.appendChild(todayButton);
     navButtons.appendChild(nextButton);
     
     navContainer.appendChild(monthDisplay);
@@ -1088,59 +1170,59 @@
     
     calendarContainer.appendChild(navContainer);
     
-    // Create calendar grid container
+    // Create calendar grid container (layout from CSS)
     const calendarGrid = document.createElement('div');
     calendarGrid.className = 'calendar-grid';
-    
-    // Apply CSS grid styling
-    calendarGrid.style.display = 'grid';
-    calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
-    calendarGrid.style.gap = '2px';
-    
     calendarContainer.appendChild(calendarGrid);
+    
+    // Format date as YYYY-MM-DD in local timezone (avoid UTC rollover)
+    function toLocalDateKey(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+    
+    // Advance date by one month (handles e.g. Jan 31 -> Feb 28)
+    function addMonths(date, months) {
+        const d = new Date(date.getFullYear(), date.getMonth() + months, date.getDate());
+        if (d.getDate() !== date.getDate()) {
+            d.setDate(0); // last day of previous month
+        }
+        return d;
+    }
     
     // Calculate payment days and amounts
     function calculatePaymentData() {
         const paymentData = {};
+        const startDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+        const endDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 3, 1);
         
         subscriptions.forEach(sub => {
-            const billingDate = new Date(sub.billing_date);
             const amount = parseFloat(sub.amount);
+            const parts = String(sub.billing_date || '').split(/[-T]/);
+            const y = parseInt(parts[0], 10), m = parseInt(parts[1], 10) - 1, d = parseInt(parts[2], 10);
+            let nextPaymentDate = (y && !isNaN(m) && d) ? new Date(y, m, d) : new Date(sub.billing_date);
+            if (isNaN(nextPaymentDate.getTime())) return;
             
-            // Handle different billing cycles and calculate next payments
-            let nextPaymentDate = new Date(billingDate);
-            
-            // If the first payment date is before the start date, 
-            // advance to the next payment in the cycle
-            const startDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
-            startDate.setMonth(startDate.getMonth() - 1); // Look one month back to catch recurring payments
-            
+            // Advance until we are at or after startDate
             while (nextPaymentDate < startDate) {
                 if (sub.billing_cycle === 'monthly') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+                    nextPaymentDate = addMonths(nextPaymentDate, 1);
                 } else if (sub.billing_cycle === 'quarterly') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 3);
+                    nextPaymentDate = addMonths(nextPaymentDate, 3);
                 } else if (sub.billing_cycle === 'biannual') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 6);
+                    nextPaymentDate = addMonths(nextPaymentDate, 6);
                 } else if (sub.billing_cycle === 'annual') {
-                    nextPaymentDate.setFullYear(nextPaymentDate.getFullYear() + 1);
+                    nextPaymentDate = addMonths(nextPaymentDate, 12);
                 }
             }
             
-            // Add upcoming payments within the next 3 months
-            let endDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
-            endDate.setMonth(endDate.getMonth() + 3); // Show 3 months of data
-            
             while (nextPaymentDate < endDate) {
-                const dateKey = nextPaymentDate.toISOString().split('T')[0];
-                
+                const dateKey = toLocalDateKey(nextPaymentDate);
                 if (!paymentData[dateKey]) {
-                    paymentData[dateKey] = {
-                        amount: 0,
-                        subscriptions: []
-                    };
+                    paymentData[dateKey] = { amount: 0, subscriptions: [] };
                 }
-                
                 paymentData[dateKey].amount += amount;
                 paymentData[dateKey].subscriptions.push({
                     name: sub.name,
@@ -1148,15 +1230,14 @@
                     category: sub.category
                 });
                 
-                // Calculate next payment date based on billing cycle
                 if (sub.billing_cycle === 'monthly') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+                    nextPaymentDate = addMonths(nextPaymentDate, 1);
                 } else if (sub.billing_cycle === 'quarterly') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 3);
+                    nextPaymentDate = addMonths(nextPaymentDate, 3);
                 } else if (sub.billing_cycle === 'biannual') {
-                    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 6);
+                    nextPaymentDate = addMonths(nextPaymentDate, 6);
                 } else if (sub.billing_cycle === 'annual') {
-                    nextPaymentDate.setFullYear(nextPaymentDate.getFullYear() + 1);
+                    nextPaymentDate = addMonths(nextPaymentDate, 12);
                 }
             }
         });
@@ -1196,11 +1277,11 @@
         
         // Add empty cells for days before the start of the month
         for (let i = 0; i < startingDayOfWeek; i++) {
-            const emptyDay = document.createElement('div');
+                const emptyDay = document.createElement('div');
             emptyDay.className = 'calendar-day-empty';
             emptyDay.style.aspectRatio = '1';
-            emptyDay.style.backgroundColor = 'rgba(229, 231, 235, 0.2)';
-            emptyDay.style.borderRadius = '4px';
+            emptyDay.style.backgroundColor = 'rgba(229, 231, 235, 0.25)';
+            emptyDay.style.borderRadius = '6px';
             calendarGrid.appendChild(emptyDay);
         }
         
@@ -1210,17 +1291,17 @@
         // Create a day cell for each day in the month
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
-            const dateKey = date.toISOString().split('T')[0];
+            const dateKey = toLocalDateKey(date);
             const dayData = paymentData[dateKey] || { amount: 0, subscriptions: [] };
             
             // Create day element
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day relative';
             dayElement.style.aspectRatio = '1';
-            dayElement.style.padding = '2px';
+            dayElement.style.padding = '4px';
             dayElement.style.overflow = 'hidden';
-            dayElement.style.borderRadius = '4px';
-            dayElement.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            dayElement.style.borderRadius = '6px';
+            dayElement.style.transition = 'transform 0.15s ease, box-shadow 0.15s ease';
             dayElement.style.cursor = 'pointer';
             
             // Determine if it's today
@@ -1228,7 +1309,7 @@
             
             // Create inner content container
             const innerContainer = document.createElement('div');
-            innerContainer.className = 'w-full h-full rounded-sm flex flex-col p-1 relative';
+            innerContainer.className = 'calendar-day-inner w-full h-full rounded flex flex-col items-center justify-start p-1.5 relative';
             innerContainer.style.border = isToday ? '2px solid #ef4444' : '1px solid rgba(229, 231, 235, 0.5)';
             innerContainer.style.backgroundColor = dayData.amount > 0 ? 
                 getCategoryColorGradient(dayData.subscriptions) : 
@@ -1244,7 +1325,7 @@
             
             // Add day number
             const dayNumber = document.createElement('div');
-            dayNumber.className = 'text-xs font-medium';
+            dayNumber.className = 'calendar-day-num w-full';
             dayNumber.style.color = isToday ? '#ef4444' : (dayData.amount > 0 ? '#1f2937' : '#6b7280');
             if (document.documentElement.classList.contains('dark')) {
                 dayNumber.style.color = isToday ? '#ef4444' : (dayData.amount > 0 ? '#f3f4f6' : '#9ca3af');
@@ -1641,35 +1722,6 @@
         tooltip.className = 'tooltip fixed z-50 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg pointer-events-none opacity-0 transition-opacity w-64';
         tooltip.style.backdropFilter = 'blur(8px)';
         tooltip.style.border = '1px solid rgba(75, 85, 99, 0.4)';
-    }
-    
-    // Update calendar legend
-    const legendContainer = document.querySelector('[style*="Subscription Density"]')?.closest('div')?.parentElement;
-    
-    if (legendContainer) {
-        legendContainer.innerHTML = `
-            <div class="flex justify-between items-center mt-6 mb-4">
-                <div class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('monthly-subscriptions-dashboard.calendar.payment_calendar_legend') }}</div>
-                <div class="flex space-x-4 items-center">
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full mr-1.5" style="background-color: rgba(239, 68, 68, 0.2);"></div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Streaming</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full mr-1.5" style="background-color: rgba(59, 130, 246, 0.2);"></div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Software</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full mr-1.5" style="background-color: rgba(79, 70, 229, 0.2);"></div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Cloud</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full mr-1.5" style="background-color: rgba(16, 185, 129, 0.2);"></div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Other</span>
-                    </div>
-                </div>
-            </div>
-        `;
     }
 }
 

@@ -84,6 +84,7 @@ return [
         ],
         'billing_date' => [
             'label' => 'Next Payment',
+            'paid' => 'Paid',
             'overdue' => 'Overdue!',
             'due_today' => 'Due today!',
             'days_left' => ':days days left',
