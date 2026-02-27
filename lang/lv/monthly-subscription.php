@@ -8,7 +8,7 @@ return [
     'form' => [
         'subscription_details' => [
             'section' => 'Abonementa detaļas',
-            'description' => 'Ievadiet pamatinformāciju par šo abonementu',
+            'section_description' => 'Ievadiet pamatinformāciju par šo abonementu',
             'name' => [
                 'label' => 'Abonementa nosaukums',
                 'placeholder' => 'Netflix, Spotify, utt.',

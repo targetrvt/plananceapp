@@ -8,7 +8,7 @@ return [
     'form' => [
         'subscription_details' => [
             'section' => 'Subscription Details',
-            'description' => 'Enter the basic information about this subscription',
+            'section_description' => 'Enter the basic information about this subscription',
             'name' => [
                 'label' => 'Subscription Name',
                 'placeholder' => 'Netflix, Spotify, etc.',

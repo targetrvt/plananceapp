@@ -68,7 +68,7 @@ class MonthlySubscriptionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make(__('monthly-subscription.form.subscription_details.section'))
-                    ->description(__('monthly-subscription.form.subscription_details.description'))
+                    ->description(__('monthly-subscription.form.subscription_details.section_description'))
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
