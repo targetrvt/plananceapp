@@ -21,14 +21,14 @@ document.addEventListener('alpine:init', () => {
             chartsInitialized: false,
             
             lightColors: [
-                '#4F46E5', '#3B82F6', '#06B6D4', '#10B981', '#F59E0B', 
-                '#8B5CF6', '#EC4899', '#EF4444', '#6366F1', '#0EA5E9',
-                '#14B8A6', '#84CC16', '#D946EF', '#F43F5E', '#FACC15'
+                '#dc2626', '#ea580c', '#ef4444', '#f97316', '#e11d48',
+                '#c2410c', '#f43f5e', '#b91c1c', '#f87171', '#fb923c',
+                '#ea580c', '#dc2626', '#f97316', '#ef4444', '#fdba74'
             ],
             darkColors: [
-                '#818CF8', '#60A5FA', '#22D3EE', '#34D399', '#FBBF24', 
-                '#A78BFA', '#F472B6', '#FB7185', '#A5B4FC', '#38BDF8',
-                '#2DD4BF', '#A3E635', '#E879F9', '#FB7185', '#FDE047'
+                '#f87171', '#fb923c', '#f97316', '#ef4444', '#f43f5e',
+                '#fca5a5', '#fdba74', '#fb7185', '#f87171', '#fb923c',
+                '#f97316', '#fca5a5', '#fdba74', '#ef4444', '#f87171'
             ],
             
             init() {
@@ -273,9 +273,9 @@ document.addEventListener('alpine:init', () => {
                     try { this.dailyChart.dispose(); } catch {}
                 }
                 
-                const lineColor = this.darkMode ? '#10b981' : '#059669';
-                const areaColorTop = this.darkMode ? 'rgba(16, 185, 129, 0.5)' : 'rgba(5, 150, 105, 0.5)';
-                const areaColorBottom = this.darkMode ? 'rgba(16, 185, 129, 0.05)' : 'rgba(5, 150, 105, 0.05)';
+                const lineColor = this.darkMode ? '#f87171' : '#dc2626';
+                const areaColorTop = this.darkMode ? 'rgba(248, 113, 113, 0.5)' : 'rgba(220, 38, 38, 0.5)';
+                const areaColorBottom = this.darkMode ? 'rgba(248, 113, 113, 0.05)' : 'rgba(220, 38, 38, 0.05)';
                 const axisLineColor = this.darkMode ? '#374151' : '#e5e7eb';
                 const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
                 const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
@@ -390,8 +390,8 @@ document.addEventListener('alpine:init', () => {
                     try { this.monthlyChart.dispose(); } catch {}
                 }
                 
-                const barColor = this.darkMode ? '#60a5fa' : '#3b82f6';
-                const barHoverColor = this.darkMode ? '#93c5fd' : '#2563eb';
+                const barColor = this.darkMode ? '#f87171' : '#dc2626';
+                const barHoverColor = this.darkMode ? '#fca5a5' : '#b91c1c';
                 const axisLineColor = this.darkMode ? '#374151' : '#e5e7eb';
                 const axisLabelColor = this.darkMode ? '#d1d5db' : '#6b7280';
                 const splitLineColor = this.darkMode ? '#1f2937' : '#f3f4f6';
