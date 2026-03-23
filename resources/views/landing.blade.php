@@ -226,6 +226,12 @@
                 <p>{{ __('messages.landing.pricing.description') }}</p>
             </div>
 
+            @if (session('checkout_error'))
+                <div style="margin: 0 auto 1.5rem auto; max-width: 720px; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(127, 29, 29, 0.18); color: #fecaca; border-radius: 0.75rem; padding: 0.875rem 1rem; text-align: center;">
+                    Unable to start Stripe checkout for this plan. Please contact support or try again.
+                </div>
+            @endif
+
             <div class="pricing-grid-dark">
                 <!-- Personal Plan -->
                 <div class="pricing-card-dark">
@@ -235,8 +241,7 @@
                     </div>
                     <div class="pricing-price-dark">
                         <span class="currency">€</span>
-                        <span class="amount">*</span>
-                        <span class="period">/mo</span>
+                        <span class="amount">Free</span>
                     </div>
                     <ul class="pricing-features-dark">
                         <li>
@@ -270,7 +275,7 @@
                             {{ __('messages.landing.pricing.personal.features.mobile_access') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/stripe/checkout/personal" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
 
                 <!-- Premium Plan (Featured) -->
@@ -282,7 +287,7 @@
                     </div>
                     <div class="pricing-price-dark">
                         <span class="currency">€</span>
-                        <span class="amount">**</span>
+                        <span class="amount">9.99</span>
                         <span class="period">/mo</span>
                     </div>
                     <ul class="pricing-features-dark">
@@ -317,7 +322,7 @@
                             {{ __('messages.landing.pricing.premium.features.priority_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn-pricing-dark featured">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/stripe/checkout/premium" class="btn-pricing-dark featured">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
 
                 <!-- Business Plan -->
@@ -328,7 +333,7 @@
                     </div>
                     <div class="pricing-price-dark">
                         <span class="currency">€</span>
-                        <span class="amount">***</span>
+                        <span class="amount">19.99</span>
                         <span class="period">/mo</span>
                     </div>
                     <ul class="pricing-features-dark">
@@ -363,7 +368,7 @@
                             {{ __('messages.landing.pricing.business.features.dedicated_support') }}
                         </li>
                     </ul>
-                    <a href="/app/register" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <a href="/stripe/checkout/business" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
                 </div>
             </div>
         </div>

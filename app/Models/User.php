@@ -25,6 +25,12 @@ class User extends Authenticatable implements HasAvatar
         'email',
         'password',
         'avatar_url', // Add avatar_url to mass assignable attributes
+        // Stripe pricing (app-level subscription demo)
+        'plan',
+        'stripe_customer_id',
+        'stripe_subscription_id',
+        'stripe_status',
+        'stripe_current_period_end',
     ];
 
     /**
@@ -47,6 +53,7 @@ class User extends Authenticatable implements HasAvatar
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'stripe_current_period_end' => 'date',
         ];
     }
 
