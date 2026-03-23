@@ -19,6 +19,16 @@ return [
         'assistant_id' => env('OPENAI_ASSISTANT_ID'),
         'receipt_assistant_id' => env('OPENAI_RECEIPT_ASSISTANT_ID'),
     ],
+
+    'stripe' => [
+        'secret' => env('STRIPE_KEY_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'prices' => [
+            'personal' => env('STRIPE_PRICE_PERSONAL'),
+            'premium' => env('STRIPE_PRICE_PREMIUM'),
+            'business' => env('STRIPE_PRICE_BUSINESS'),
+        ],
+    ],
     
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
