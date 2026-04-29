@@ -18,6 +18,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('start_date'); // Start date
             $table->date('end_date'); // End date
+            $table->timestamp('warning_90_sent_at')->nullable();
+            $table->timestamp('alert_100_in_app_sent_at')->nullable();
+            $table->timestamp('alert_100_email_sent_at')->nullable();
             $table->timestamps(); // Timestamps (created_at and updated_at)
         });
     }

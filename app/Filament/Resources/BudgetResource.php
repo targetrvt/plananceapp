@@ -93,6 +93,27 @@ class BudgetResource extends Resource
                     ->label(__('budget.table.end_date.label'))
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('spent')
+                    ->label('Spent')
+                    ->money('EUR')
+                    ->state(function (Budget $record): float {
+                        return $record->spentAmount();
+                    }),
+                Tables\Columns\TextColumn::make('usage')
+                    ->label('Usage')
+                    ->badge()
+                    ->state(function (Budget $record): string {
+                        return round($record->usagePercentage()) . '%';
+                    })
+                    ->color(function (string $state): string {
+                        $percentage = (int) str_replace('%', '', $state);
+
+                        return match (true) {
+                            $percentage >= 100 => 'danger',
+                            $percentage >= 90 => 'warning',
+                            default => 'success',
+                        };
+                    }),
             ])
             // ->filters([
             //     // Define your filters here

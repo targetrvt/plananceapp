@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('locale', 5)->default('en');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('avatar_url')->nullable();
@@ -25,6 +26,8 @@ return new class extends Migration
             $table->string('stripe_subscription_id')->nullable();
             $table->string('stripe_status', 50)->nullable();
             $table->date('stripe_current_period_end')->nullable();
+            $table->boolean('notify_budget_warnings')->default(true);
+            $table->boolean('notify_budget_limit_email')->default(true);
 
             $table->rememberToken();
             $table->timestamps();

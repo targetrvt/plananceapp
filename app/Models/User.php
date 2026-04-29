@@ -5,12 +5,14 @@ namespace App\Models;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 
-class User extends Authenticatable implements HasAvatar
+class User extends Authenticatable implements HasAvatar, MustVerifyEmail, HasLocalePreference
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, HasPanelShield, TwoFactorAuthenticatable;
@@ -23,6 +25,7 @@ class User extends Authenticatable implements HasAvatar
     protected $fillable = [
         'name',
         'email',
+        'locale',
         'password',
         'avatar_url', // Add avatar_url to mass assignable attributes
         // Stripe pricing (app-level subscription demo)
@@ -31,6 +34,8 @@ class User extends Authenticatable implements HasAvatar
         'stripe_subscription_id',
         'stripe_status',
         'stripe_current_period_end',
+        'notify_budget_warnings',
+        'notify_budget_limit_email',
     ];
 
     /**
@@ -54,7 +59,14 @@ class User extends Authenticatable implements HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'stripe_current_period_end' => 'date',
+            'notify_budget_warnings' => 'boolean',
+            'notify_budget_limit_email' => 'boolean',
         ];
+    }
+
+    public function preferredLocale(): string
+    {
+        return $this->locale ?: app()->getLocale();
     }
 
     /**
