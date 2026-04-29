@@ -13,5 +13,24 @@ return [
         'password_incorrect' => 'The provided password is incorrect.',
         'other_sessions_logged_out' => 'Other browser sessions have been logged out.',
     ],
+    'email_notifications' => [
+        'section_title' => 'Email notifications',
+        'section_description' => 'Manage verification and notifications.',
+        'email_verified' => 'Email verified',
+        'verify_email' => 'Verify Email',
+        'open_notifications' => 'Notifications',
+        'budget_warnings' => [
+            'title' => 'Budget warnings',
+            'description' => 'Show in-app notification when budget reaches 90%.',
+        ],
+        'budget_limit_email' => [
+            'title' => 'Budget limit email',
+            'description' => 'Send email when budget reaches 100%.',
+        ],
+        'on' => 'On',
+        'off' => 'Off',
+        'saved' => 'Settings saved.',
+        'save_settings' => 'Save settings',
+    ],
 ];
 

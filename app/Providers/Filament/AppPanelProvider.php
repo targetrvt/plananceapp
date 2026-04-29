@@ -6,6 +6,8 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
+use App\Filament\Pages\Auth\Register;
+use App\Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use Filament\Support\Colors\Color;
 use Filament\Http\Middleware\Authenticate;
 use App\Livewire\BrowserSessions;
@@ -43,7 +45,9 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->login()
             ->passwordReset()
-            ->registration()
+            ->registration(Register::class)
+            ->emailVerification(EmailVerificationPrompt::class)
+            ->databaseNotifications()
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileNotificationSettingsController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Stripe\StripeCheckoutController;
 use App\Http\Controllers\Stripe\StripeWebhookController;
@@ -21,3 +22,6 @@ Route::get('/stripe/checkout/{plan}', [StripeCheckoutController::class, 'checkou
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
     ->name('stripe.webhook')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::middleware('auth')->post('/app/my-profile/email-noticications', [ProfileNotificationSettingsController::class, 'update'])
+    ->name('profile.email-noticications.update');
