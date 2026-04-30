@@ -119,5 +119,54 @@
                 </form>
             </x-filament::card>
         </x-filament-breezy::grid-section>
+
+        <x-filament-breezy::grid-section
+            md="2"
+            :title="__('profile.account_deactivation.section_title')"
+            :description="__('profile.account_deactivation.section_description')"
+        >
+            <x-filament::card>
+                <form method="POST" action="{{ route('profile.deactivate') }}" class="space-y-4" x-data="{ password: '' }">
+                    @csrf
+
+                    <div class="rounded-xl border border-danger-300/70 bg-danger-50 p-4 dark:border-danger-400/50 dark:bg-danger-500/10">
+                        <p class="text-sm font-medium text-danger-700 dark:text-danger-300">
+                            {{ __('profile.account_deactivation.warning_title') }}
+                        </p>
+                        <p class="mt-1 text-xs text-danger-700/90 dark:text-danger-200/90">
+                            {{ __('profile.account_deactivation.warning_description') }}
+                        </p>
+                    </div>
+
+                    <x-filament::input.wrapper>
+                        <x-filament::input
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            x-model="password"
+                            placeholder="{{ __('profile.account_deactivation.password_placeholder') }}"
+                        />
+                    </x-filament::input.wrapper>
+
+                    @error('password')
+                        <p class="text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                    @enderror
+
+                    <div class="flex justify-end">
+                        <x-filament::button
+                            type="submit"
+                            color="danger"
+                            size="sm"
+                            x-bind:disabled="password.trim().length === 0"
+                            x-bind:class="password.trim().length === 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                            x-on:click.prevent="if (confirm('{{ __('profile.account_deactivation.confirm_message') }}')) $el.closest('form').submit()"
+                        >
+                            {{ __('profile.account_deactivation.submit') }}
+                        </x-filament::button>
+                    </div>
+                </form>
+            </x-filament::card>
+        </x-filament-breezy::grid-section>
     </div>
 </x-filament::page>

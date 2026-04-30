@@ -32,5 +32,14 @@ return [
         'saved' => 'Iestatījumi saglabāti.',
         'save_settings' => 'Saglabāt iestatījumus',
     ],
+    'account_deactivation' => [
+        'section_title' => 'Konta deaktivizācija',
+        'section_description' => 'Pagaidu piekļuves atspējošana šim kontam.',
+        'warning_title' => 'Šī darbība jūs nekavējoties izrakstīs.',
+        'warning_description' => 'Jūs vairs nevarēsiet pieteikties ar pašreizējo e-pastu un paroli, ja vien administrators neatjaunos kontu.',
+        'password_placeholder' => 'Ievadiet paroli, lai turpinātu',
+        'confirm_message' => 'Vai tiešām vēlaties deaktivizēt savu kontu?',
+        'submit' => 'Deaktivizēt kontu',
+    ],
 ];
 
