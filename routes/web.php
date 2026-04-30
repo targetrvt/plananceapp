@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DeactivateAccountController;
 use App\Http\Controllers\ProfileNotificationSettingsController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Stripe\StripeCheckoutController;
@@ -25,3 +26,6 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
 
 Route::middleware('auth')->post('/app/my-profile/email-noticications', [ProfileNotificationSettingsController::class, 'update'])
     ->name('profile.email-noticications.update');
+
+Route::middleware('auth')->post('/app/my-profile/deactivate-account', [DeactivateAccountController::class, 'store'])
+    ->name('profile.deactivate');

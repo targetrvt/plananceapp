@@ -32,5 +32,14 @@ return [
         'saved' => 'Settings saved.',
         'save_settings' => 'Save settings',
     ],
+    'account_deactivation' => [
+        'section_title' => 'Account deactivation',
+        'section_description' => 'Temporarily disable access to this account.',
+        'warning_title' => 'This action signs you out immediately.',
+        'warning_description' => 'You will no longer be able to log in with your current email and password unless an admin restores the account.',
+        'password_placeholder' => 'Enter your password to continue',
+        'confirm_message' => 'Are you sure you want to deactivate your account?',
+        'submit' => 'Deactivate account',
+    ],
 ];
 
