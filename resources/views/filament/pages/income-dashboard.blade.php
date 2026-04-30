@@ -50,7 +50,6 @@
     >
     <div class="dashboard-header flex justify-between items-center flex-wrap gap-4 mb-6">
         <div>
-            <p class="dashboard-tagline text-sm">{{ __('messages.dashboard.income.tagline') }}</p>
             <div class="dashboard-period flex items-center gap-2 mt-1">
                 @if($this->timeframe === 'month' || $this->timeframe === 'quarter' || $this->timeframe === 'year')
                     <button type="button" wire:click="previousPeriod" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
