@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\GlobalSearch\AppGlobalSearchProvider;
 use App\Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use App\Filament\Pages\Auth\Register;
 use App\Livewire\BrowserSessions;
@@ -59,6 +60,7 @@ class AppPanelProvider extends PanelProvider
                 __('filament.navigation.groups.Pricing'),
             ])
             ->favicon(url('images/Planancelogomini.png'))
+            ->globalSearch(AppGlobalSearchProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')

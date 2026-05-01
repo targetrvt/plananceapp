@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
 use Filament\Forms;
@@ -10,12 +11,17 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class TransactionResource extends Resource
 {
+    use ScopesGlobalSearchToCurrentUser;
+
     protected static ?string $model = Transaction::class;
+
+    protected static ?string $recordTitleAttribute = 'description';
 
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
 
@@ -41,6 +47,38 @@ class TransactionResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['description', 'category', 'type', 'amount'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        if (! $record instanceof Transaction) {
+            return [];
+        }
+
+        return array_filter([
+            __('transaction.table.date.label') => $record->date
+                ? \Illuminate\Support\Carbon::parse($record->date)->toFormattedDateString()
+                : '',
+            __('transaction.table.amount.label') => number_format((float) $record->amount, 2).' EUR',
+            __('transaction.table.type.label') => $record->type
+                ? __(
+                    $record->type === 'income'
+                        ? 'transaction.filter.type.options.income'
+                        : 'transaction.filter.type.options.expense'
+                )
+                : '',
+        ]);
     }
 
     public static function form(Form $form): Form

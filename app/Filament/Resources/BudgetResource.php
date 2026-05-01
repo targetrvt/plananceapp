@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BudgetResource\Pages;
+use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
 use App\Models\Budget;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,7 +14,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class BudgetResource extends Resource
 {
+    use ScopesGlobalSearchToCurrentUser;
+
     protected static ?string $model = Budget::class;
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
 

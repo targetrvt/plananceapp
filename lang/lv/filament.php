@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'global_search' => [
+        'pages' => 'Lapas',
+    ],
+
     'navigation' => [
         'groups' => [
             'Overview' => 'Pārskats',

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
 use App\Filament\Resources\FinancialGoalResource\Pages;
 use App\Models\FinancialGoal;
 use Filament\Forms;
@@ -12,7 +13,11 @@ use Filament\Tables\Table;
 
 class FinancialGoalResource extends Resource
 {
+    use ScopesGlobalSearchToCurrentUser;
+
     protected static ?string $model = FinancialGoal::class;
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
@@ -38,6 +43,14 @@ class FinancialGoalResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return 'Management'; // Must match the group name registered in AppPanelProvider
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'notes'];
     }
 
     public static function form(Form $form): Form
