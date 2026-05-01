@@ -7,6 +7,7 @@ use App\Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use App\Filament\Pages\Auth\Register;
 use App\Http\Middleware\RedirectPremiumUsersFromFreePanel;
 use App\Livewire\BrowserSessions;
+use App\Support\SafeFilamentPublicBackground;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -23,7 +24,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Livewire\Livewire;
 use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
-use Swis\Filament\Backgrounds\ImageProviders\MyImages;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -81,10 +81,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentBackgroundsPlugin::make()
-                    ->imageProvider(
-                        MyImages::make()
-                            ->directory('images/background')
-                    ),
+                    ->imageProvider(SafeFilamentPublicBackground::make()),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,
