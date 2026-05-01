@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FinancialGoalResource\Pages;
-use App\Filament\Resources\FinancialGoalResource\RelationManagers;
 use App\Models\FinancialGoal;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,25 +14,27 @@ class FinancialGoalResource extends Resource
 {
     protected static ?string $model = FinancialGoal::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
+
     protected static ?string $navigationLabel = null;
+
     protected static ?string $navigationGroup = null;
-    
+
     public static function getNavigationLabel(): string
     {
         return __('financial-goal.navigation.label');
     }
-    
+
     public static function getPluralModelLabel(): string
     {
         return __('financial-goal.navigation.label');
     }
-    
+
     public static function getModelLabel(): string
     {
         return __('financial-goal.navigation.label');
     }
-    
+
     public static function getNavigationGroup(): ?string
     {
         return 'Management'; // Must match the group name registered in AppPanelProvider
@@ -81,7 +82,7 @@ class FinancialGoalResource extends Resource
                     ->label(__('financial-goal.table.current_amount.label'))
                     ->money('EUR')
                     ->sortable(),
-                    Tables\Columns\TextColumn::make('target_amount')
+                Tables\Columns\TextColumn::make('target_amount')
                     ->label(__('financial-goal.table.target_amount.label'))
                     ->money('EUR')
                     ->sortable(),
@@ -91,7 +92,8 @@ class FinancialGoalResource extends Resource
                         if ($record->target_amount == 0) {
                             return '0%'; // Avoid division by zero
                         }
-                        return round(($record->current_amount / $record->target_amount) * 100, 2) . '%';
+
+                        return round(($record->current_amount / $record->target_amount) * 100, 2).'%';
                     }),
                 Tables\Columns\TextColumn::make('target_date')
                     ->label(__('financial-goal.table.target_date.label'))
@@ -109,11 +111,11 @@ class FinancialGoalResource extends Resource
                         return $query
                             ->when(
                                 $data['from'],
-                                fn($query) => $query->whereDate('target_date', '>=', $data['from'])
+                                fn ($query) => $query->whereDate('target_date', '>=', $data['from'])
                             )
                             ->when(
                                 $data['until'],
-                                fn($query) => $query->whereDate('target_date', '<=', $data['until'])
+                                fn ($query) => $query->whereDate('target_date', '<=', $data['until'])
                             );
                     }),
             ])

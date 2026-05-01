@@ -490,6 +490,7 @@ return [
             'fees' => 'Commission Fees',
             'other' => 'Other Expenses',
             'other_expense' => 'Other Expenses',
+            'savings' => 'Savings (goal)',
         ],
     ],
 
@@ -627,6 +628,7 @@ return [
                 'fees' => 'Commission Fees',
                 'other' => 'Other Expenses',
                 'other_expense' => 'Other Expenses',
+                'savings' => 'Savings (goal)',
             ],
         ],
     ],

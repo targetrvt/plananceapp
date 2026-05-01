@@ -490,6 +490,7 @@ return [
             'fees' => 'Komisijas maksas',
             'other' => 'Citi izdevumi',
             'other_expense' => 'Citi izdevumi',
+            'savings' => 'Uzkrājums (mērķis)',
         ],
     ],
 
@@ -627,6 +628,7 @@ return [
                 'fees' => 'Komisijas maksas',
                 'other' => 'Citi izdevumi',
                 'other_expense' => 'Citi izdevumi',
+                'savings' => 'Uzkrājums (mērķis)',
             ],
         ],
     ],

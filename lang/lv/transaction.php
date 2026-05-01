@@ -34,6 +34,9 @@ return [
             'description' => [
                 'label' => 'Apraksts',
             ],
+            'financial_goal' => [
+                'label' => 'Mērķis',
+            ],
         ],
     ],
     'table' => [
@@ -71,4 +74,3 @@ return [
         ],
     ],
 ];
-
