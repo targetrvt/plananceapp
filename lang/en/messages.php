@@ -553,6 +553,11 @@ return [
         'subtitle' => 'Opening your workspace…',
     ],
 
+    'finance_ai_tips' => [
+        'error_title' => 'Could not generate AI tips',
+        'error_body' => 'Check your OpenAI API configuration or try again in a moment.',
+    ],
+
     'actions' => [
         'create' => 'Create',
         'edit' => 'Edit',

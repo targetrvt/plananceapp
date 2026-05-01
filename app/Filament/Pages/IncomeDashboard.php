@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Pages\Concerns\InteractsWithPremiumFinanceAiTips;
 use App\Filament\Resources\TransactionResource;
 use App\Models\Transaction;
 use Filament\Actions\Action;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\DB;
 
 class IncomeDashboard extends Page
 {
+    use InteractsWithPremiumFinanceAiTips;
+
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $navigationLabel = null;
@@ -91,6 +94,7 @@ class IncomeDashboard extends Page
         }
 
         $this->dataUpdated = true;
+        $this->resetPremiumFinanceAiTips();
     }
 
     public function previousPeriod()
@@ -113,6 +117,7 @@ class IncomeDashboard extends Page
             $this->startDate = $date->format('Y-m-d');
             $this->endDate = $date->addDays(6)->format('Y-m-d');
             $this->dataUpdated = true;
+            $this->resetPremiumFinanceAiTips();
             $this->dispatch('refreshCharts');
 
             return;
@@ -142,6 +147,7 @@ class IncomeDashboard extends Page
             $this->startDate = $date->format('Y-m-d');
             $this->endDate = $date->addDays(6)->format('Y-m-d');
             $this->dataUpdated = true;
+            $this->resetPremiumFinanceAiTips();
             $this->dispatch('refreshCharts');
 
             return;
@@ -365,6 +371,8 @@ class IncomeDashboard extends Page
                     }
 
                     $this->category = $data['category'] ?? 'all';
+
+                    $this->resetPremiumFinanceAiTips();
 
                     if (
                         $oldTimeframe !== $this->timeframe ||
