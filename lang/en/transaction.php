@@ -34,6 +34,9 @@ return [
             'description' => [
                 'label' => 'Description',
             ],
+            'financial_goal' => [
+                'label' => 'Goal',
+            ],
         ],
     ],
     'table' => [
@@ -71,4 +74,3 @@ return [
         ],
     ],
 ];
-

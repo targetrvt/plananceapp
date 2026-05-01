@@ -17,12 +17,8 @@ class UserBalanceResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationGroup = null;
     protected static ?string $navigationLabel = null;
-    protected static ?int $navigationSort = -3;
+    protected static ?int $navigationSort = 1;
     
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Management'; // Must match the group name registered in AppPanelProvider
-    }
     
     public static function getNavigationLabel(): string
     {

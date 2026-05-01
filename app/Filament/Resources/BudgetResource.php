@@ -2,42 +2,40 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Budget;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BudgetResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\BudgetResource\RelationManagers;
+use App\Models\Budget;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class BudgetResource extends Resource
 {
-
     protected static ?string $model = Budget::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-wallet';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = null;
+
     protected static ?string $navigationGroup = null;
-    
+
     public static function getNavigationLabel(): string
     {
         return __('budget.navigation.label');
     }
-    
+
     public static function getPluralModelLabel(): string
     {
         return __('budget.navigation.label');
     }
-    
+
     public static function getModelLabel(): string
     {
         return __('budget.navigation.label');
     }
-    
+
     public static function getNavigationGroup(): ?string
     {
         return 'Management'; // Must match the group name registered in AppPanelProvider
@@ -65,14 +63,14 @@ class BudgetResource extends Resource
                     ->required(),
                 Forms\Components\Hidden::make('user_id')
                     ->default(auth()->id())
-                    ->required() 
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->query(Budget::query()->where('user_id', auth()->id())) // Filter by user_id
+            ->query(Budget::query()->where('user_id', auth()->id())) // Filter by user_id
             ->columns([
                 // Define your table columns here
                 Tables\Columns\TextColumn::make('name')
@@ -103,7 +101,7 @@ class BudgetResource extends Resource
                     ->label('Usage')
                     ->badge()
                     ->state(function (Budget $record): string {
-                        return round($record->usagePercentage()) . '%';
+                        return round($record->usagePercentage()).'%';
                     })
                     ->color(function (string $state): string {
                         $percentage = (int) str_replace('%', '', $state);
