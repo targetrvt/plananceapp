@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Jeffgreco13\FilamentBreezy\Livewire\PersonalInfo;
+use Jeffgreco13\FilamentBreezy\Livewire\TwoFactorAuthentication;
+use Jeffgreco13\FilamentBreezy\Livewire\UpdatePassword;
 use Livewire\Livewire;
 use TomatoPHP\FilamentUsers\Resources\UserResource\Form\UserForm;
 use TomatoPHP\FilamentUsers\Resources\UserResource\Table\UserActions;
@@ -262,5 +265,13 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Livewire::component('fi-chatgpt-agent', CustomChatgptAgent::class);
+
+        /*
+         * Filament Breezy registers these aliases only when a panel boots (SetUpPanel).
+         * Livewire POST /livewire/update runs without Filament, so hydrate must resolve aliases globally.
+         */
+        Livewire::component('personal_info', PersonalInfo::class);
+        Livewire::component('update_password', UpdatePassword::class);
+        Livewire::component('two_factor_authentication', TwoFactorAuthentication::class);
     }
 }
