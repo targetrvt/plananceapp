@@ -104,7 +104,12 @@ class TransactionResource extends Resource
                                 'application/octet-stream',
                             ])
                             ->rule('extensions:jpg,jpeg,png,gif,webp,bmp,heic,heif')
-                            ->maxSize(51200)
+                            ->maxSize(8192)
+                            // Browser-side resize (FilePond image-resize/transform) keeps uploads small for strict PHP/nginx limits.
+                            ->imageResizeMode('contain')
+                            ->imageResizeTargetWidth('1680')
+                            ->imageResizeTargetHeight('1680')
+                            ->imageResizeUpscale(false)
                             ->imageEditor()
                             ->disk('local')
                             ->directory(TransactionReceiptFilesystem::PRIVATE_DIRECTORY)

@@ -7,7 +7,7 @@ return [
     | Temporary File Uploads (subset — merged with Livewire defaults)
     |--------------------------------------------------------------------------
     |
-    | Raised above Livewire default (~12 MB) for larger phone photos.
+    | Livewire max (kilobytes) should be >= Filament FileUpload maxSize for the same field.
     |
     | If uploads fail even on small (~2 MB) images, PHP defaults are usually the
     | cause: upload_max_filesize/post_max_size of 2M leave no room once multipart
@@ -17,7 +17,7 @@ return [
 
     'temporary_file_upload' => [
         'disk' => null,
-        'rules' => ['required', 'file', 'max:51200'],
+        'rules' => ['required', 'file', 'max:8192'],
         'directory' => null,
         'middleware' => null,
         'preview_mimes' => [
