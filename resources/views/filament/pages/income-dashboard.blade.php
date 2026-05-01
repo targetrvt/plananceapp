@@ -274,6 +274,9 @@
                         <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.income.tips.title') }}</h3>
                         @if ($this->canShowPremiumFinanceAiTips())
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('income-dashboard.ai_tips.card_description') }}</p>
+                            @if ($this->showsPremiumAiAccessGateNotice())
+                                <p class="mt-2 text-xs text-amber-800 dark:text-amber-200">{{ __('messages.ai_access.dashboard_notice', ['email' => $this->premiumAiAccessGateEmail()]) }}</p>
+                            @endif
                         @endif
                     </div>
                     @if ($this->canShowPremiumFinanceAiTips())
@@ -282,7 +285,8 @@
                             wire:click="generatePremiumIncomeAiTips"
                             wire:loading.attr="disabled"
                             wire:target="generatePremiumIncomeAiTips"
-                            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            @disabled(! $this->canGeneratePremiumFinanceAiTips())
+                            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus:ring-offset-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <x-heroicon-o-bolt class="h-4 w-4" />
                             <span wire:loading.remove wire:target="generatePremiumIncomeAiTips">{{ __('income-dashboard.ai_tips.generate') }}</span>
@@ -305,6 +309,8 @@
                                     <div class="tip-desc whitespace-pre-wrap text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{{ $premiumFinanceAiTipsContent }}</div>
                                 </div>
                             </div>
+                        @elseif ($this->showsPremiumAiAccessGateNotice())
+                            <p class="text-xs text-amber-800 dark:text-amber-200">{{ __('messages.ai_access.dashboard_notice', ['email' => $this->premiumAiAccessGateEmail()]) }}</p>
                         @else
                             <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('income-dashboard.ai_tips.empty_hint') }}</p>
                         @endif

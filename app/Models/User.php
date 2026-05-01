@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\AiAccessDeniedException;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
@@ -10,6 +11,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
@@ -33,6 +35,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
         'avatar_url', // Add avatar_url to mass assignable attributes
         // Stripe pricing (app-level subscription demo)
         'plan',
+        'premium_granted_by_admin',
+        'ai_access',
         'stripe_customer_id',
         'stripe_subscription_id',
         'stripe_status',
@@ -64,6 +68,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
             'password' => 'hashed',
             'stripe_current_period_end' => 'date',
             'stripe_cancel_at_period_end' => 'boolean',
+            'premium_granted_by_admin' => 'boolean',
+            'ai_access' => 'boolean',
             'notify_budget_warnings' => 'boolean',
             'notify_budget_limit_email' => 'boolean',
         ];
@@ -72,6 +78,32 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
     public function preferredLocale(): string
     {
         return $this->locale ?: app()->getLocale();
+    }
+
+    public function aiUsageLogs(): HasMany
+    {
+        return $this->hasMany(AiUsageLog::class);
+    }
+
+    public function hasAiAccess(): bool
+    {
+        return (bool) $this->ai_access;
+    }
+
+    /**
+     * AI is opt-in even for Premium (rolling deploy control).
+     *
+     * @throws AiAccessDeniedException
+     */
+    public function ensureHasAiAccess(?string $denialMessage = null): void
+    {
+        if ($this->hasAiAccess()) {
+            return;
+        }
+
+        throw new AiAccessDeniedException($denialMessage ?? __('messages.ai_access.denied_default', [
+            'email' => (string) config('planance.contact_ai_email'),
+        ]));
     }
 
     /**
@@ -90,10 +122,34 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocale
     }
 
     /**
-     * Active paid Premium subscription (Stripe).
+     * Active Premium (Stripe subscription or admin-granted complimentary access).
      */
     public function hasPremiumSubscription(): bool
     {
+        if (strtolower((string) $this->plan) !== 'premium') {
+            return false;
+        }
+
+        if ($this->premium_granted_by_admin) {
+            return true;
+        }
+
+        if (! is_string($this->stripe_subscription_id) || $this->stripe_subscription_id === '') {
+            return false;
+        }
+
+        $status = strtolower((string) ($this->stripe_status ?? ''));
+
+        return in_array($status, ['active', 'trialing'], true);
+    }
+
+    /** Stripe-billed Premium (excludes complimentary admin access). */
+    public function hasStripeManagedPremiumSubscription(): bool
+    {
+        if ($this->premium_granted_by_admin) {
+            return false;
+        }
+
         if (strtolower((string) $this->plan) !== 'premium') {
             return false;
         }

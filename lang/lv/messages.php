@@ -553,6 +553,14 @@ return [
         'subtitle' => 'Atveram Premium darba zonu…',
     ],
 
+    'ai_access' => [
+        'denied_title' => 'AI nav iespējots šajā kontā',
+        'denied_default' => 'Jūsu kontam vēl nav iespējotas AI funkcijas. Lūdzu, rakstiet uz :email, lai pieprasītu piekļuvi.',
+        'chat_blocked' => 'Planance AI čats jūsu kontā nav pieejams. Rakstiet uz :email, lai pieprasītu AI piekļuvi.',
+        'pdf_import_blocked' => 'PDF importēšanai nepieciešams AI, bet tas jūsu kontā nav iespējots. Rakstiet uz :email, lai pieprasītu piekļuvi.',
+        'dashboard_notice' => 'Premium AI padomi jūsu kontā nav iespējoti. Rakstiet uz :email, lai pieprasītu AI piekļuvi.',
+    ],
+
     'finance_ai_tips' => [
         'error_title' => 'Neizdevās ģenerēt AI padomus',
         'error_body' => 'Pārbaudiet OpenAI API konfigurāciju vai mēģiniet vēlreiz pēc brīža.',

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Concerns;
 
+use App\Exceptions\AiAccessDeniedException;
 use App\Services\Finance\DashboardFinanceAiTipsService;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
@@ -27,6 +28,28 @@ trait InteractsWithPremiumFinanceAiTips
     public function shouldShowDefaultFinanceTips(): bool
     {
         return Filament::getCurrentPanel()?->getId() !== 'premium';
+    }
+
+    /**
+     * Premium AI tips/buttons after subscription & explicit AI permission.
+     */
+    public function canGeneratePremiumFinanceAiTips(): bool
+    {
+        return $this->canShowPremiumFinanceAiTips()
+            && (bool) auth()->user()?->hasAiAccess();
+    }
+
+    /** Show contact email notice (Premium but AI not opted in). */
+    public function showsPremiumAiAccessGateNotice(): bool
+    {
+        return $this->canShowPremiumFinanceAiTips()
+            && auth()->check()
+            && ! auth()->user()->hasAiAccess();
+    }
+
+    public function premiumAiAccessGateEmail(): string
+    {
+        return (string) config('planance.contact_ai_email');
     }
 
     public function generatePremiumIncomeAiTips(): void
@@ -62,6 +85,10 @@ trait InteractsWithPremiumFinanceAiTips
             abort(403);
         }
 
+        if (! $this->canGeneratePremiumFinanceAiTips()) {
+            return;
+        }
+
         $this->premiumFinanceAiTipsLoading = true;
         $this->premiumFinanceAiTipsContent = null;
 
@@ -90,6 +117,14 @@ trait InteractsWithPremiumFinanceAiTips
                 $tipsUiTitle,
                 $tipsUiScopeDescription,
             );
+        } catch (AiAccessDeniedException $e) {
+            Notification::make()
+                ->title(__('messages.ai_access.denied_title'))
+                ->body($e->getMessage())
+                ->warning()
+                ->send();
+
+            $this->premiumFinanceAiTipsContent = null;
         } catch (\Throwable $e) {
             Notification::make()
                 ->title(__('messages.finance_ai_tips.error_title'))

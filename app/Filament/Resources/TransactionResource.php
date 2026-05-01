@@ -2,15 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use App\Exceptions\AiAccessDeniedException;
 use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
 use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\TransactionResource\Pages;
+use App\Models\AiUsageLog;
 use App\Models\Transaction;
+use App\Services\Ai\AiUsageRecorder;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -145,6 +149,12 @@ class TransactionResource extends Resource
                                             $set('category', $extractedData['type'] === 'income' ? 'other_income' : 'other_expense');
                                         }
                                     }
+                                } catch (AiAccessDeniedException $e) {
+                                    Notification::make()
+                                        ->title(__('messages.ai_access.denied_title'))
+                                        ->body($e->getMessage())
+                                        ->warning()
+                                        ->send();
                                 } catch (\Exception $e) {
                                     // Log the error
                                     \Log::error('Receipt processing error: '.$e->getMessage());
@@ -152,7 +162,7 @@ class TransactionResource extends Resource
                             })
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn (): bool => auth()->user()?->hasPremiumSubscription() ?? false),
+                    ->visible(fn (): bool => (bool) (auth()->user()?->hasPremiumSubscription() && auth()->user()?->hasAiAccess())),
                 Forms\Components\Section::make(__('transaction.form.transaction_details.section'))
                     ->schema([
                         Forms\Components\Select::make('type')
@@ -228,6 +238,8 @@ class TransactionResource extends Resource
             return [];
         }
 
+        auth()->user()->ensureHasAiAccess();
+
         // Read image file and convert to base64
         $imageData = base64_encode(file_get_contents($imagePath));
 
@@ -267,6 +279,13 @@ class TransactionResource extends Resource
         ]);
 
         if ($response->successful()) {
+            app(AiUsageRecorder::class)->recordFromHttpResponse(
+                auth()->id(),
+                AiUsageLog::FEATURE_RECEIPT_SCAN,
+                'gpt-4o-mini',
+                $response,
+            );
+
             $content = $response->json('choices.0.message.content');
 
             // Better JSON extraction and validation

@@ -28,6 +28,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'plan' => 'personal',
+            'ai_access' => false,
             'password' => static::$password ??= Hash::make('password'),
             'avatar_url' => $this->faker->imageUrl(100, 100, 'people'),
             'remember_token' => Str::random(10),

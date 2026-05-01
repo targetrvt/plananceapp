@@ -2,7 +2,10 @@
 
 namespace App\Services\Finance;
 
+use App\Models\AiUsageLog;
 use App\Models\Transaction;
+use App\Models\User;
+use App\Services\Ai\AiUsageRecorder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +30,8 @@ class DashboardFinanceAiTipsService
         string $tipsUiTitle,
         string $tipsUiScopeDescription,
     ): string {
+        User::query()->findOrFail($userId)->ensureHasAiAccess();
+
         $apiKey = config('services.openai.api_key');
         if (! is_string($apiKey) || $apiKey === '') {
             throw new RuntimeException('OpenAI is not configured.');
@@ -85,6 +90,13 @@ class DashboardFinanceAiTipsService
         if (! is_string($content) || trim($content) === '') {
             throw new RuntimeException('Empty AI response.');
         }
+
+        app(AiUsageRecorder::class)->recordFromHttpResponse(
+            $userId,
+            AiUsageLog::FEATURE_FINANCE_TIPS,
+            self::MODEL,
+            $response,
+        );
 
         return trim($content);
     }
