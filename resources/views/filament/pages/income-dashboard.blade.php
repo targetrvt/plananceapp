@@ -200,7 +200,7 @@
             <div class="trans-header flex justify-between items-center mb-4">
                 <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.income.transactions.recent') }}</h3>
                 @if(count($recentTransactions) > 0)
-                    <a href="{{ url('/app/transactions') }}" class="trans-link flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                    <a href="{{ \App\Filament\Resources\TransactionResource::getUrl('index') }}" class="trans-link flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
                         {{ __('messages.dashboard.income.transactions.view_all') }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-1"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg>
                     </a>
@@ -236,7 +236,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="empty-icon w-12 h-12 text-gray-400 dark:text-gray-600 mb-4"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                     <h3 class="empty-title text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('messages.dashboard.income.transactions.no_transactions') }}</h3>
                     <p class="empty-text text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('messages.dashboard.income.transactions.no_transactions_desc') }}</p>
-                    <a href="{{ url('/app/transactions/create') }}" class="empty-button inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">{{ __('messages.dashboard.income.transactions.add_income') }}</a>
+                    <a href="{{ \App\Filament\Resources\TransactionResource::getUrl('create') }}" class="empty-button inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">{{ __('messages.dashboard.income.transactions.add_income') }}</a>
                 </div>
             @endif
         </div>

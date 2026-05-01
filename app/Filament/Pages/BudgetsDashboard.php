@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\BudgetResource;
 use App\Models\Budget;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
@@ -9,10 +10,15 @@ use Filament\Pages\Page;
 class BudgetsDashboard extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
+
     protected static ?string $navigationLabel = null;
+
     protected static ?string $title = null;
+
     protected static ?string $slug = 'budgets-dashboard';
+
     protected static ?string $navigationGroup = null;
+
     protected static ?int $navigationSort = 4;
 
     protected static string $view = 'filament.pages.budgets-dashboard';
@@ -88,12 +94,12 @@ class BudgetsDashboard extends Page
         return [
             Action::make('create_budget')
                 ->label(__('budgets-dashboard.actions.create_budget.label'))
-                ->url(route('filament.app.resources.budgets.create'))
+                ->url(BudgetResource::getUrl('create'))
                 ->icon('heroicon-o-plus')
                 ->color('primary'),
             Action::make('manage_budgets')
                 ->label(__('budgets-dashboard.actions.manage_budgets.label'))
-                ->url(route('filament.app.resources.budgets.index'))
+                ->url(BudgetResource::getUrl('index'))
                 ->icon('heroicon-o-rectangle-stack')
                 ->color('gray'),
         ];

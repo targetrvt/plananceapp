@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
+use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
 use Filament\Forms;
@@ -18,6 +19,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 class TransactionResource extends Resource
 {
     use ScopesGlobalSearchToCurrentUser;
+    use ScopesResourceQueriesToAuthenticatedUser;
 
     protected static ?string $model = Transaction::class;
 
@@ -147,7 +149,8 @@ class TransactionResource extends Resource
                                 }
                             })
                             ->columnSpanFull(),
-                    ]),
+                    ])
+                    ->visible(fn (): bool => auth()->user()?->hasPremiumSubscription() ?? false),
                 Forms\Components\Section::make(__('transaction.form.transaction_details.section'))
                     ->schema([
                         Forms\Components\Select::make('type')
@@ -219,6 +222,10 @@ class TransactionResource extends Resource
 
     protected static function processReceiptWithAI($imagePath)
     {
+        if (! auth()->user()?->hasPremiumSubscription()) {
+            return [];
+        }
+
         // Read image file and convert to base64
         $imageData = base64_encode(file_get_contents($imagePath));
 
@@ -323,25 +330,36 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('category')
                     ->label(__('transaction.table.category.label'))
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'salary' => __('messages.categories.income.salary'),
-                        'investment' => __('messages.categories.income.investment'),
-                        'gift' => __('messages.categories.income.gift'),
-                        'refund' => __('messages.categories.income.refund'),
-                        'other_income' => __('messages.categories.income.other_income'),
-                        'food' => __('messages.categories.expense.food'),
-                        'shopping' => __('messages.categories.expense.shopping'),
-                        'entertainment' => __('messages.categories.expense.entertainment'),
-                        'transportation' => __('messages.categories.expense.transportation'),
-                        'housing' => __('messages.categories.expense.housing'),
-                        'utilities' => __('messages.categories.expense.utilities'),
-                        'health' => __('messages.categories.expense.health'),
-                        'education' => __('messages.categories.expense.education'),
-                        'travel' => __('messages.categories.expense.travel'),
-                        'unhealthy_habits' => __('messages.categories.expense.unhealthy_habits'),
-                        'other_expense' => __('messages.categories.expense.other_expense'),
-                        'savings' => __('messages.categories.expense.savings'),
-                        default => $state,
+                    ->formatStateUsing(function (?string $state, Model $record): string {
+                        if ($state === null || $state === '') {
+                            return '';
+                        }
+                        $isIncomeWithdrawalFromGoal = $state === 'savings'
+                            && $record instanceof Transaction
+                            && $record->type === 'income';
+
+                        return match ($state) {
+                            'salary' => __('messages.categories.income.salary'),
+                            'investment' => __('messages.categories.income.investment'),
+                            'gift' => __('messages.categories.income.gift'),
+                            'refund' => __('messages.categories.income.refund'),
+                            'other_income' => __('messages.categories.income.other_income'),
+                            'food' => __('messages.categories.expense.food'),
+                            'shopping' => __('messages.categories.expense.shopping'),
+                            'entertainment' => __('messages.categories.expense.entertainment'),
+                            'transportation' => __('messages.categories.expense.transportation'),
+                            'housing' => __('messages.categories.expense.housing'),
+                            'utilities' => __('messages.categories.expense.utilities'),
+                            'health' => __('messages.categories.expense.health'),
+                            'education' => __('messages.categories.expense.education'),
+                            'travel' => __('messages.categories.expense.travel'),
+                            'unhealthy_habits' => __('messages.categories.expense.unhealthy_habits'),
+                            'other_expense' => __('messages.categories.expense.other_expense'),
+                            'savings' => $isIncomeWithdrawalFromGoal
+                                ? __('messages.categories.income.savings')
+                                : __('messages.categories.expense.savings'),
+                            default => $state,
+                        };
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'salary', 'investment', 'gift', 'refund', 'other_income',

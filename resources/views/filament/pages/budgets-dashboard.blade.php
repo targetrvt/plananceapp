@@ -282,7 +282,7 @@
                     <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('budgets-dashboard.empty.title') }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('budgets-dashboard.empty.description') }}</p>
                     <a
-                        href="{{ route('filament.app.resources.budgets.create') }}"
+                        href="{{ \App\Filament\Resources\BudgetResource::getUrl('create') }}"
                         class="inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-500"
                     >
                         {{ __('budgets-dashboard.actions.create_budget.label') }}

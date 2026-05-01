@@ -46,14 +46,34 @@
             />
         @endif
 
+        @if (
+            filament()->auth()->check() &&
+            filament()->hasNavigation() &&
+            ! filament()->hasTopNavigation()
+        )
+            <div class="ms-2 flex shrink-0 items-center gap-1 px-2 py-1.5 lg:hidden">
+                @include('filament.components.active-plan-badge')
+            </div>
+        @endif
+
         @if (filament()->hasTopNavigation() || (! filament()->hasNavigation()))
-            <div class="me-6 hidden lg:flex">
+            <div class="me-6 hidden items-center gap-x-2 lg:flex">
                 @if ($homeUrl = filament()->getHomeUrl())
-                    <a {{ \Filament\Support\generate_href_html($homeUrl) }}>
+                    <a
+                        {{ \Filament\Support\generate_href_html($homeUrl) }}
+                        class="inline-flex shrink-0 pe-1">
                         <x-filament-panels::logo />
                     </a>
                 @else
-                    <x-filament-panels::logo />
+                    <div class="inline-flex shrink-0 pe-1">
+                        <x-filament-panels::logo />
+                    </div>
+                @endif
+
+                @if (filament()->auth()->check())
+                    <div class="flex shrink-0 items-center ps-1">
+                        @include('filament.components.active-plan-badge')
+                    </div>
                 @endif
             </div>
 

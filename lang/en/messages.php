@@ -117,6 +117,7 @@ return [
                 ],
             ],
             'get_started' => 'Get Started',
+            'business_coming_soon_cta' => 'Coming soon',
         ],
         'mobile_app' => [
             'tag' => 'Mobile App',
@@ -461,6 +462,7 @@ return [
             'gift' => 'Gift',
             'refund' => 'Refund',
             'other_income' => 'Other Income',
+            'savings' => 'Goal withdrawal',
         ],
         'expense' => [
             'food' => 'Food & Dining',
@@ -540,6 +542,15 @@ return [
         'cancel_subscription_confirm' => 'Turn off auto-renewal? You keep access until :date, with no further charges after that.',
         'subscription_cancel_scheduled' => 'Auto-renewal is off. You keep access until the end date shown on this page.',
         'subscription_cancel_failed' => 'We could not update your subscription. Please try again or contact support.',
+        'premium_panel_locked_title' => 'Premium workspace',
+        'premium_panel_locked_body' => 'This area requires an active Premium subscription. Choose Premium below or renew your subscription.',
+        'business_plan_coming_soon_title' => 'Business plan coming soon',
+        'business_plan_coming_soon_body' => 'The Business plan isn’t available for purchase yet.',
+    ],
+
+    'premium_panel_entry' => [
+        'title' => 'Welcome to Premium',
+        'subtitle' => 'Opening your workspace…',
     ],
 
     'actions' => [

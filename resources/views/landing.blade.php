@@ -11,6 +11,11 @@
     <link href="{{ asset('css/planance.css') }}" rel="stylesheet">
 </head>
 <body class="dark-theme">
+    @if (session('business_plan_coming_soon'))
+        <div class="container" role="alert" style="margin: 0 auto; padding: 0.75rem 1rem; text-align: center; background: rgba(251, 191, 36, 0.15); color: #fef3c7; border-bottom: 1px solid rgba(251, 191, 36, 0.35);">
+            {{ __('messages.pricing_page.business_plan_coming_soon_body') }}
+        </div>
+    @endif
     <!-- Navigation -->
     <header class="dark-header">
         <div class="container">
@@ -361,7 +366,7 @@
                             {{ __('messages.landing.pricing.business.features.dedicated_support') }}
                         </li>
                     </ul>
-                    <a href="/stripe/checkout/business" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>
+                    <span class="btn-pricing-dark" style="pointer-events:none;opacity:0.65;cursor:not-allowed;display:inline-flex;align-items:center;justify-content:center;">{{ __('messages.landing.pricing.business_coming_soon_cta') }}</span>
                 </div>
             </div>
         </div>

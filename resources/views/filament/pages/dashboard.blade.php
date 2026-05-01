@@ -20,7 +20,7 @@
 
             <div class="mt-4">
                 <a
-                    href="/app/pricing"
+                    href="{{ auth()->user()?->filamentPricingPath() ?? '/app/pricing' }}"
                     class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
                     Manage plan
                 </a>
