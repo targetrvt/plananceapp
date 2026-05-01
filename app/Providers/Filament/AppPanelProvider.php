@@ -22,6 +22,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Livewire\Livewire;
+use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
+use Swis\Filament\Backgrounds\ImageProviders\MyImages;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -78,6 +80,11 @@ class AppPanelProvider extends PanelProvider
                 RedirectPremiumUsersFromFreePanel::class,
             ])
             ->plugins([
+                FilamentBackgroundsPlugin::make()
+                    ->imageProvider(
+                        MyImages::make()
+                            ->directory('images/background')
+                    ),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,

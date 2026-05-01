@@ -67,12 +67,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-            $switch->locales(['lv', 'en']);
-            // Avoid locale_get_display_name() — requires ext-intl, often missing on minimal PHP builds (e.g. some Forge images).
-            $switch->labels([
-                'en' => 'English',
-                'lv' => 'Latviešu',
-            ]);
+            $switch->locales(['lv', 'en']); // Also accepts a closure
         });
 
         VerifyEmail::createUrlUsing(function ($notifiable) {
