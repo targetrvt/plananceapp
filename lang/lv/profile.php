@@ -46,6 +46,6 @@ return [
         'section_description' => 'Skatiet savu pašreizējo plānu un pārvaldiet abonēšanu.',
         'current_plan_label' => 'Pašreizējais plāns',
         'change_or_cancel' => 'Mainīt vai atcelt plānu',
-        'free_plan' => 'Free',
+        'free_plan' => 'Bezmaksas',
     ],
 ];
