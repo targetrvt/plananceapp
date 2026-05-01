@@ -9,6 +9,7 @@ use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\AiUsageLog;
 use App\Models\Transaction;
 use App\Services\Ai\AiUsageRecorder;
+use App\Support\TransactionReceiptFilesystem;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -99,9 +100,9 @@ class TransactionResource extends Resource
                             ->label(__('transaction.form.receipt_upload.upload_receipt.label'))
                             ->image()
                             ->imageEditor()
-                            ->disk('public')
-                            ->directory('receipts')
-                            ->visibility('public')
+                            ->disk('local')
+                            ->directory(TransactionReceiptFilesystem::PRIVATE_DIRECTORY)
+                            ->visibility('private')
                             ->helperText(__('transaction.form.receipt_upload.upload_receipt.helper'))
                             ->live()
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
@@ -111,9 +112,9 @@ class TransactionResource extends Resource
 
                                 $path = $state instanceof TemporaryUploadedFile
                                     ? $state->getRealPath()
-                                    : public_path('storage/'.$state);
+                                    : TransactionReceiptFilesystem::absolutePathForLocalProcessing(is_string($state) ? $state : null);
 
-                                if (! file_exists($path)) {
+                                if (! $path || ! file_exists($path)) {
                                     return;
                                 }
 
@@ -413,7 +414,7 @@ class TransactionResource extends Resource
                     ->label(__('transaction.actions.view_receipt.label'))
                     ->icon('heroicon-o-document-magnifying-glass')
                     ->url(fn (Transaction $record) => $record->receipt_image
-                        ? asset('storage/'.$record->receipt_image)
+                        ? route('transactions.receipt.show', $record)
                         : null)
                     ->openUrlInNewTab()
                     ->visible(fn (Transaction $record) => $record->receipt_image !== null),
