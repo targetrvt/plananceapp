@@ -1,24 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DeactivateAccountController;
-use App\Http\Controllers\ProfileNotificationSettingsController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ProfileNotificationSettingsController;
 use App\Http\Controllers\Stripe\StripeCheckoutController;
 use App\Http\Controllers\Stripe\StripeWebhookController;
+use Illuminate\Support\Facades\Route;
 
 // Home page (landing page)
 Route::get('/', function () {
     return view('landing'); // This will use the landing.blade.php view
 });
 
-// Redirect /home to / 
+// Redirect /home to /
 Route::redirect('/home', '/');
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 // Stripe demo (app-level monthly pricing)
 Route::get('/stripe/checkout/{plan}', [StripeCheckoutController::class, 'checkout'])
     ->name('stripe.checkout');
+
+Route::middleware('auth')->post('/stripe/subscription/resume', [StripeCheckoutController::class, 'resumeSubscription'])
+    ->name('stripe.subscription.resume');
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
     ->name('stripe.webhook')

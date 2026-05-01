@@ -239,9 +239,8 @@
                         <h3>{{ __('messages.landing.pricing.personal.title') }}</h3>
                         <p>{{ __('messages.landing.pricing.personal.description') }}</p>
                     </div>
-                    <div class="pricing-price-dark">
-                        <span class="currency">€</span>
-                        <span class="amount">Free</span>
+                    <div class="pricing-price-dark pricing-price-dark--free">
+                        <span class="amount">{{ __('messages.pricing_page.price_free_display') }}</span>
                     </div>
                     <ul class="pricing-features-dark">
                         <li>
@@ -267,12 +266,6 @@
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
                             {{ __('messages.landing.pricing.personal.features.basic_reports') }}
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ __('messages.landing.pricing.personal.features.mobile_access') }}
                         </li>
                     </ul>
                     <a href="/stripe/checkout/personal" class="btn-pricing-dark">{{ __('messages.landing.pricing.get_started') }}</a>

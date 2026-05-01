@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class UserFactory extends Factory 
+class UserFactory extends Factory
 {
     /**
      * The current password being used by the factory.
@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'plan' => 'personal',
             'password' => static::$password ??= Hash::make('password'),
             'avatar_url' => $this->faker->imageUrl(100, 100, 'people'),
             'remember_token' => Str::random(10),
