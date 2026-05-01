@@ -41,5 +41,11 @@ return [
         'confirm_message' => 'Are you sure you want to deactivate your account?',
         'submit' => 'Deactivate account',
     ],
+    'my_plans' => [
+        'section_title' => 'My plans',
+        'section_description' => 'View your current plan and manage subscription changes.',
+        'current_plan_label' => 'Current plan',
+        'change_or_cancel' => 'Change or cancel plan',
+        'free_plan' => 'Free',
+    ],
 ];
-

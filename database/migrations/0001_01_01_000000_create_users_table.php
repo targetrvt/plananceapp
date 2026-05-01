@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('avatar_url')->nullable();
 
             // App-level pricing (Stripe demo subscription)
-            $table->string('plan', 30)->default('free');
+            $table->string('plan', 30)->default('personal');
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
             $table->string('stripe_status', 50)->nullable();
             $table->date('stripe_current_period_end')->nullable();
+            $table->boolean('stripe_cancel_at_period_end')->default(false);
             $table->boolean('notify_budget_warnings')->default(true);
             $table->boolean('notify_budget_limit_email')->default(true);
 

@@ -168,5 +168,42 @@
                 </form>
             </x-filament::card>
         </x-filament-breezy::grid-section>
+
+        <x-filament-breezy::grid-section
+            md="2"
+            :title="__('profile.my_plans.section_title')"
+            :description="__('profile.my_plans.section_description')"
+        >
+            <x-filament::card>
+                @php
+                    $plan = auth()->user()?->plan ?? 'free';
+                    $planLabel = match ($plan) {
+                        'personal' => __('messages.landing.pricing.personal.title'),
+                        'premium' => __('messages.landing.pricing.premium.title'),
+                        'business' => __('messages.landing.pricing.business.title'),
+                        default => __('profile.my_plans.free_plan'),
+                    };
+                @endphp
+
+                <div class="space-y-4">
+                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-white/10 dark:bg-white/5">
+                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            {{ __('profile.my_plans.current_plan_label') }}
+                        </p>
+                        <p class="mt-1 text-lg font-semibold text-gray-950 dark:text-white">
+                            {{ $planLabel }}
+                        </p>
+                    </div>
+
+                    <x-filament::button
+                        tag="a"
+                        href="{{ url('/app/pricing') }}"
+                        icon="heroicon-o-credit-card"
+                    >
+                        {{ __('profile.my_plans.change_or_cancel') }}
+                    </x-filament::button>
+                </div>
+            </x-filament::card>
+        </x-filament-breezy::grid-section>
     </div>
 </x-filament::page>

@@ -41,5 +41,11 @@ return [
         'confirm_message' => 'Vai tiešām vēlaties deaktivizēt savu kontu?',
         'submit' => 'Deaktivizēt kontu',
     ],
+    'my_plans' => [
+        'section_title' => 'Mani plāni',
+        'section_description' => 'Skatiet savu pašreizējo plānu un pārvaldiet abonēšanu.',
+        'current_plan_label' => 'Pašreizējais plāns',
+        'change_or_cancel' => 'Mainīt vai atcelt plānu',
+        'free_plan' => 'Bezmaksas',
+    ],
 ];
-

@@ -12,14 +12,21 @@ use RuntimeException;
 
 class StripeCheckoutController extends Controller
 {
-    public function __construct(private readonly StripePricingService $stripePricingService)
-    {
-    }
+    public function __construct(private readonly StripePricingService $stripePricingService) {}
 
     public function checkout(string $plan): RedirectResponse
     {
         /** @var User|null $user */
         $user = Auth::user();
+        $plan = strtolower($plan);
+
+        if ($user && $this->shouldBlockDowngradeCheckout($user, $plan)) {
+            return redirect('/app/pricing')->with('checkout_blocked_downgrade', true);
+        }
+
+        if ($user && $this->shouldBlockDuplicatePlanCheckout($user, $plan)) {
+            return redirect('/app/pricing')->with('checkout_blocked_active_plan', true);
+        }
 
         try {
             $url = $this->stripePricingService->createCheckoutSessionUrl($user, $plan);
@@ -38,5 +45,60 @@ class StripeCheckoutController extends Controller
 
         return redirect()->away($url);
     }
-}
 
+    public function resumeSubscription(): RedirectResponse
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if (! $user?->stripe_subscription_id) {
+            return redirect('/app/pricing');
+        }
+
+        try {
+            $this->stripePricingService->resumeSubscription($user);
+        } catch (RuntimeException $e) {
+            Log::warning('Stripe subscription resume failed', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect('/app/pricing')->with('subscription_resume_error', true);
+        }
+
+        return redirect('/app/pricing')->with('subscription_resumed', true);
+    }
+
+    private function shouldBlockDuplicatePlanCheckout(User $user, string $plan): bool
+    {
+        if ($user->plan !== $plan) {
+            return false;
+        }
+
+        if (! is_string($user->stripe_subscription_id) || $user->stripe_subscription_id === '') {
+            return false;
+        }
+
+        $status = (string) ($user->stripe_status ?? '');
+
+        return in_array($status, ['active', 'trialing'], true);
+    }
+
+    private function shouldBlockDowngradeCheckout(User $user, string $plan): bool
+    {
+        $current = strtolower((string) ($user->plan ?? 'free'));
+        if (! in_array($current, ['premium', 'business'], true)) {
+            return false;
+        }
+
+        $ranks = [
+            'personal' => 1,
+            'premium' => 2,
+            'business' => 3,
+        ];
+        $currentRank = $ranks[$current] ?? 0;
+        $targetRank = $ranks[$plan] ?? 0;
+
+        return $targetRank > 0 && $targetRank < $currentRank;
+    }
+}
