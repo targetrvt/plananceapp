@@ -98,7 +98,13 @@ class TransactionResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('receipt_image')
                             ->label(__('transaction.form.receipt_upload.upload_receipt.label'))
-                            ->image()
+                            ->acceptedFileTypes([
+                                // iPhone HEIC/HEIF is often sniffed as application/octet-stream on Linux (fails plain image/*).
+                                'image/*',
+                                'application/octet-stream',
+                            ])
+                            ->rule('extensions:jpg,jpeg,png,gif,webp,bmp,heic,heif')
+                            ->maxSize(51200)
                             ->imageEditor()
                             ->disk('local')
                             ->directory(TransactionReceiptFilesystem::PRIVATE_DIRECTORY)
