@@ -204,6 +204,7 @@ class StripePricingService
         // Fallback: store the session plan, but leave subscription fields empty.
         $user->update([
             'plan' => $plan,
+            'premium_granted_by_admin' => false,
             'stripe_customer_id' => is_string($session->customer) ? $session->customer : null,
             'stripe_subscription_id' => null,
             'stripe_status' => 'active',
@@ -331,6 +332,7 @@ class StripePricingService
 
         $user->update([
             'plan' => $deleted ? 'free' : $plan,
+            'premium_granted_by_admin' => false,
             'stripe_customer_id' => $customerId ?: $user->stripe_customer_id,
             'stripe_subscription_id' => is_string($subscription->id) ? $subscription->id : $user->stripe_subscription_id,
             'stripe_status' => $status,
@@ -383,6 +385,39 @@ class StripePricingService
         }
 
         $this->refreshSubscriptionFromStripe($user);
+    }
+
+    /**
+     * Immediately cancel an active Stripe subscription and drop the account to Personal in-app.
+     * Used when an admin revokes Premium even though billing is still active.
+     */
+    public function cancelSubscriptionImmediately(User $user): void
+    {
+        $subscriptionId = $user->stripe_subscription_id;
+        if (! is_string($subscriptionId) || $subscriptionId === '') {
+            throw new RuntimeException('No Stripe subscription to cancel.');
+        }
+
+        try {
+            $this->stripe->subscriptions->cancel($subscriptionId);
+        } catch (ApiErrorException $e) {
+            throw new RuntimeException('Stripe could not cancel the subscription.', 0, $e);
+        }
+
+        self::applyLocalPremiumRevoke($user->fresh());
+    }
+
+    /** Clear Stripe subscription Premium without calling Stripe (e.g. no API key configured). */
+    public static function applyLocalPremiumRevoke(User $user): void
+    {
+        $user->forceFill([
+            'plan' => 'personal',
+            'premium_granted_by_admin' => false,
+            'stripe_subscription_id' => null,
+            'stripe_status' => 'canceled',
+            'stripe_current_period_end' => null,
+            'stripe_cancel_at_period_end' => false,
+        ])->save();
     }
 
     /**

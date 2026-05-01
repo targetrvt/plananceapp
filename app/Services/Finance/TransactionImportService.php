@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Finance;
 
+use App\Models\AiUsageLog;
 use App\Models\Transaction;
+use App\Models\User;
+use App\Services\Ai\AiUsageRecorder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -46,10 +49,17 @@ class TransactionImportService
             throw new RuntimeException('Import file could not be read.');
         }
 
+        $user = User::query()->findOrFail($userId);
         $extension = strtolower(pathinfo($originalBasename, PATHINFO_EXTENSION));
 
+        if ($extension === 'pdf') {
+            $user->ensureHasAiAccess(__('messages.ai_access.pdf_import_blocked', [
+                'email' => (string) config('planance.contact_ai_email'),
+            ]));
+        }
+
         $parsed = match ($extension) {
-            'pdf' => $this->parsePdfWithAi($absolutePath),
+            'pdf' => $this->parsePdfWithAi($absolutePath, $userId),
             'csv', 'xlsx', 'xls', 'xlsm' => $this->parseSpreadsheet($absolutePath, $extension),
             default => throw new RuntimeException('Unsupported file type. Allowed: CSV, Excel (xlsx, xls), PDF.'),
         };
@@ -322,7 +332,7 @@ class TransactionImportService
     /**
      * @return array<int, TransactionNormalizedRow|null>
      */
-    private function parsePdfWithAi(string $path): array
+    private function parsePdfWithAi(string $path, int $userId): array
     {
         $apiKey = config('services.openai.api_key');
         if (! is_string($apiKey) || $apiKey === '') {
@@ -343,7 +353,7 @@ class TransactionImportService
             throw new RuntimeException(__('transaction.import.messages.pdf_empty_text'));
         }
 
-        $decoded = $this->requestTransactionsJsonFromAi($snippet, 'extracted_pdf_text');
+        $decoded = $this->requestTransactionsJsonFromAi($snippet, 'extracted_pdf_text', $userId);
 
         return array_values(array_filter(
             array_map(fn ($item) => is_array($item) ? $this->decodedRowToNormalized($item) : null, $decoded),
@@ -354,7 +364,7 @@ class TransactionImportService
     /**
      * @return array<int, mixed>
      */
-    private function requestTransactionsJsonFromAi(string $snippet, string $context): array
+    private function requestTransactionsJsonFromAi(string $snippet, string $context, int $userId): array
     {
         $apiKey = config('services.openai.api_key');
         if (! is_string($apiKey) || $apiKey === '') {
@@ -391,6 +401,13 @@ PROMPT;
 
             throw new RuntimeException(__('transaction.import.messages.ai_failed'));
         }
+
+        app(AiUsageRecorder::class)->recordFromHttpResponse(
+            $userId,
+            AiUsageLog::FEATURE_TRANSACTION_IMPORT,
+            self::MODEL,
+            $response,
+        );
 
         $content = $response->json('choices.0.message.content');
 

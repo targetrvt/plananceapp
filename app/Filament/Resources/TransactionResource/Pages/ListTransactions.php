@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TransactionResource\Pages;
 
+use App\Exceptions\AiAccessDeniedException;
 use App\Filament\Resources\TransactionResource;
 use App\Services\Finance\TransactionImportService;
 use Filament\Actions;
@@ -86,6 +87,12 @@ class ListTransactions extends ListRecords
                             ->title(__('transaction.import.messages.success_title'))
                             ->body(implode("\n\n", $lines))
                             ->success()
+                            ->send();
+                    } catch (AiAccessDeniedException $e) {
+                        Notification::make()
+                            ->title(__('messages.ai_access.denied_title'))
+                            ->body($e->getMessage())
+                            ->warning()
                             ->send();
                     } catch (\Throwable $e) {
                         report($e);

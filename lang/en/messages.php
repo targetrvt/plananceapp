@@ -553,6 +553,14 @@ return [
         'subtitle' => 'Opening your workspace…',
     ],
 
+    'ai_access' => [
+        'denied_title' => 'AI isn’t enabled for this account',
+        'denied_default' => 'AI features aren’t enabled for your account yet. Email :email to request access.',
+        'chat_blocked' => 'Planance AI chat isn’t available on your account. Email :email to request AI access.',
+        'pdf_import_blocked' => 'PDF import uses AI to read statements and isn’t enabled for your account. Email :email to request access.',
+        'dashboard_notice' => 'Premium AI tips aren’t enabled for your account. Email :email to request AI access.',
+    ],
+
     'finance_ai_tips' => [
         'error_title' => 'Could not generate AI tips',
         'error_body' => 'Check your OpenAI API configuration or try again in a moment.',

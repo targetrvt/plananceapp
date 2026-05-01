@@ -69,6 +69,7 @@ return [
 
         'pages' => [
             'Dashboard',
+            'TrafficPulse',
         ],
 
         'widgets' => [
