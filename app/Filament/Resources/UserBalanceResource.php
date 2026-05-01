@@ -14,33 +14,38 @@ class UserBalanceResource extends Resource
 {
     protected static ?string $model = UserBalance::class;
 
+    protected static bool $isGloballySearchable = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
     protected static ?string $navigationGroup = null;
+
     protected static ?string $navigationLabel = null;
+
     protected static ?int $navigationSort = 1;
-    
-    
+
     public static function getNavigationLabel(): string
     {
         return __('user-balance.navigation.label');
     }
-    
+
     public static function getPluralModelLabel(): string
     {
         return __('user-balance.navigation.label');
     }
-    
+
     public static function getModelLabel(): string
     {
         return __('user-balance.navigation.label');
     }
-    
+
     public static function getNavigationBadge(): ?string
     {
         $userBalance = UserBalance::where('user_id', auth()->id())->first();
         if ($userBalance) {
-            return number_format($userBalance->balance, 2) . ' €';
+            return number_format($userBalance->balance, 2).' €';
         }
+
         return '0.00 €';
     }
 
