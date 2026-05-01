@@ -6,6 +6,8 @@ use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
 use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
+use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -400,6 +402,36 @@ class TransactionResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('export_transactions_csv')
+                        ->label(__('transaction.export.bulk_csv_label'))
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->visible(fn (): bool => Filament::getCurrentPanel()?->getId() === 'premium'
+                            && (bool) auth()->user()?->hasPremiumSubscription())
+                        ->action(function (\Illuminate\Support\Collection $records) {
+                            return response()->streamDownload(function () use ($records): void {
+                                $handle = fopen('php://output', 'w');
+                                if ($handle === false) {
+                                    return;
+                                }
+                                fputcsv($handle, ['date', 'type', 'amount_eur', 'category', 'description']);
+
+                                foreach ($records as $record) {
+                                    if (! $record instanceof Transaction) {
+                                        continue;
+                                    }
+                                    fputcsv($handle, [
+                                        Carbon::parse((string) $record->date)->format('Y-m-d'),
+                                        (string) $record->type,
+                                        number_format((float) $record->amount, 2, '.', ''),
+                                        (string) $record->category,
+                                        (string) ($record->description ?? ''),
+                                    ]);
+                                }
+
+                                fclose($handle);
+                            }, 'transactions-'.now()->format('Y-m-d-His').'.csv');
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }

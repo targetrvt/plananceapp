@@ -73,4 +73,26 @@ return [
             'label' => 'Skatīt čeku',
         ],
     ],
+    'import' => [
+        'action_label' => 'Importēt no faila',
+        'modal_heading' => 'Darījumu imports',
+        'modal_description' => 'Augšupielādējiet CSV, Excel tabulu vai izraksta PDF (piem., bankā). CSV/Excel vajag vismaz datumu un summu kolonnas (Debet/Kredits vai Tips uzlabos precizitāti). PDF izmanto teksta izvilkumu un AI, lai veidotu darījumus.',
+        'file_label' => 'Fails',
+        'helper' => 'Atbalstītās kolonnu nosaukumu nozīmes: Date/datums/summa/amount/type/tips, apraksts, debet/debit-kredīta kredīt. Kategorijas atslēgas var būt arī angļu valodā. Mērķa „savings\" iemaksas no faila nepiesaista mērķim drošības dēļ.',
+        'messages' => [
+            'success_title' => 'Imports pabeigts',
+            'failed_title' => 'Imports neizdevās',
+            'summary' => 'Importēti :imported rindiņas; izlaistas :skipped.',
+            'unreadable' => 'Failu neizdevās nolasīt.',
+            'openai_missing' => 'Nav OpenAI API atslēgas—PDF importam tā nepieciešama.',
+            'pdf_empty_text' => 'No šī PDF neizdevās izvilkt tekstu (mēģiniet bankā eksportēt CSV vai citu izrakstu PDF).',
+            'ai_failed' => 'Šobrīd neizdevās ar AI apstrādāt PDF.',
+            'ai_invalid_json' => 'AI atbilde bija nederīga; samaziniet failu vai izmantojiet bankas CSV.',
+            'row_invalid_numbered' => ':n. rinda izlaista (trūkst datuma/summas vai tipa).',
+            'row_save_failed' => ':n. rindu neizdevās saglabāt.',
+        ],
+    ],
+    'export' => [
+        'bulk_csv_label' => 'Eksports CSV',
+    ],
 ];
