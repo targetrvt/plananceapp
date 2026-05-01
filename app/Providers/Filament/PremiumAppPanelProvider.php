@@ -13,6 +13,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
@@ -44,6 +45,7 @@ class PremiumAppPanelProvider extends PanelProvider
             ->id('premium')
             ->path('premium')
             ->login()
+            ->maxContentWidth(MaxWidth::Full)
             ->passwordReset()
             ->registration(null)
             ->emailVerification(EmailVerificationPrompt::class)
