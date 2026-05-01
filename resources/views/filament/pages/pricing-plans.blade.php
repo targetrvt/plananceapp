@@ -206,6 +206,13 @@
                                 <div class="pricing-tier-locked rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-center text-sm text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
                                     {{ __('messages.pricing_page.checkout_not_available_lower_tier') }}
                                 </div>
+                            @elseif ($planKey === 'business')
+                                <button
+                                    type="button"
+                                    disabled
+                                    class="pricing-cta inline-flex w-full cursor-not-allowed items-center justify-center rounded-2xl bg-gray-400 px-4 py-2.5 text-sm font-semibold text-white opacity-80 dark:bg-gray-600">
+                                    {{ __('messages.landing.pricing.business_coming_soon_cta') }}
+                                </button>
                             @else
                                 <a
                                     href="{{ route('stripe.checkout', ['plan' => $planKey]) }}"

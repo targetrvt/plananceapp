@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
+use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\FinancialGoalResource\Pages;
 use App\Models\FinancialGoal;
 use Filament\Forms;
@@ -14,6 +15,7 @@ use Filament\Tables\Table;
 class FinancialGoalResource extends Resource
 {
     use ScopesGlobalSearchToCurrentUser;
+    use ScopesResourceQueriesToAuthenticatedUser;
 
     protected static ?string $model = FinancialGoal::class;
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\UserBalanceResource\Pages;
 use App\Models\UserBalance;
 use Filament\Forms;
@@ -12,6 +13,8 @@ use Filament\Tables\Table;
 
 class UserBalanceResource extends Resource
 {
+    use ScopesResourceQueriesToAuthenticatedUser;
+
     protected static ?string $model = UserBalance::class;
 
     protected static bool $isGloballySearchable = false;

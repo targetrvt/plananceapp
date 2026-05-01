@@ -27,8 +27,10 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
     ->name('stripe.webhook')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::middleware('auth')->post('/app/my-profile/email-noticications', [ProfileNotificationSettingsController::class, 'update'])
+Route::middleware('auth')->post('{filament_panel}/my-profile/email-noticications', [ProfileNotificationSettingsController::class, 'update'])
+    ->whereIn('filament_panel', ['app', 'premium'])
     ->name('profile.email-noticications.update');
 
-Route::middleware('auth')->post('/app/my-profile/deactivate-account', [DeactivateAccountController::class, 'store'])
+Route::middleware('auth')->post('{filament_panel}/my-profile/deactivate-account', [DeactivateAccountController::class, 'store'])
+    ->whereIn('filament_panel', ['app', 'premium'])
     ->name('profile.deactivate');

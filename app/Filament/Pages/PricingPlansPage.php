@@ -2,8 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\PremiumPanelEntryTransition;
 use App\Services\Stripe\StripePricingService;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +30,7 @@ class PricingPlansPage extends Page
     public function mount(): void
     {
         $plan = strtolower((string) request()->query('plan', 'personal'));
-        $allowed = ['personal', 'premium', 'business'];
+        $allowed = ['personal', 'premium'];
         $this->selectedPlan = in_array($plan, $allowed, true) ? $plan : 'personal';
 
         $checkoutSuccess = request()->boolean('checkout_success');
@@ -94,6 +96,22 @@ class PricingPlansPage extends Page
                 ->send();
         }
 
+        if (session()->pull('premium_required_redirect')) {
+            Notification::make()
+                ->warning()
+                ->title((string) __('messages.pricing_page.premium_panel_locked_title'))
+                ->body((string) __('messages.pricing_page.premium_panel_locked_body'))
+                ->send();
+        }
+
+        if (session()->pull('business_plan_coming_soon')) {
+            Notification::make()
+                ->warning()
+                ->title((string) __('messages.pricing_page.business_plan_coming_soon_title'))
+                ->body((string) __('messages.pricing_page.business_plan_coming_soon_body'))
+                ->send();
+        }
+
         if ($checkoutSuccess) {
             Notification::make()
                 ->success()
@@ -107,7 +125,16 @@ class PricingPlansPage extends Page
         }
 
         if ($checkoutSuccess || $checkoutCancelled) {
-            $this->redirect(static::getUrl());
+            if (
+                $checkoutSuccess
+                && Filament::getCurrentPanel()?->getId() === 'app'
+                && auth()->user()?->hasPremiumSubscription()
+            ) {
+                session()->flash(PremiumPanelEntryTransition::SESSION_KEY, true);
+                $this->redirect(Dashboard::getUrl(panel: 'premium'));
+            } else {
+                $this->redirect(static::getUrl());
+            }
         }
     }
 

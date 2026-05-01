@@ -20,12 +20,18 @@ class StripeCheckoutController extends Controller
         $user = Auth::user();
         $plan = strtolower($plan);
 
+        if ($plan === 'business') {
+            $target = $user ? $user->filamentPricingPath() : '/#pricing';
+
+            return redirect()->to($target)->with('business_plan_coming_soon', true);
+        }
+
         if ($user && $this->shouldBlockDowngradeCheckout($user, $plan)) {
-            return redirect('/app/pricing')->with('checkout_blocked_downgrade', true);
+            return redirect($user->filamentPricingPath())->with('checkout_blocked_downgrade', true);
         }
 
         if ($user && $this->shouldBlockDuplicatePlanCheckout($user, $plan)) {
-            return redirect('/app/pricing')->with('checkout_blocked_active_plan', true);
+            return redirect($user->filamentPricingPath())->with('checkout_blocked_active_plan', true);
         }
 
         try {
@@ -52,7 +58,7 @@ class StripeCheckoutController extends Controller
         $user = Auth::user();
 
         if (! $user?->stripe_subscription_id) {
-            return redirect('/app/pricing');
+            return redirect($user?->filamentPricingPath() ?? '/app/pricing');
         }
 
         try {
@@ -63,10 +69,10 @@ class StripeCheckoutController extends Controller
                 'message' => $e->getMessage(),
             ]);
 
-            return redirect('/app/pricing')->with('subscription_resume_error', true);
+            return redirect($user->filamentPricingPath())->with('subscription_resume_error', true);
         }
 
-        return redirect('/app/pricing')->with('subscription_resumed', true);
+        return redirect($user->filamentPricingPath())->with('subscription_resumed', true);
     }
 
     private function shouldBlockDuplicatePlanCheckout(User $user, string $plan): bool

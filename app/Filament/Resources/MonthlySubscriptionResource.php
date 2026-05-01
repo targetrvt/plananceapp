@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\Concerns\ScopesGlobalSearchToCurrentUser;
+use App\Filament\Resources\Concerns\ScopesResourceQueriesToAuthenticatedUser;
 use App\Filament\Resources\MonthlySubscriptionResource\Pages;
 use App\Models\MonthlySubscription;
 use Filament\Forms;
@@ -19,6 +20,7 @@ use Illuminate\Support\Collection;
 class MonthlySubscriptionResource extends Resource
 {
     use ScopesGlobalSearchToCurrentUser;
+    use ScopesResourceQueriesToAuthenticatedUser;
 
     protected static ?string $model = MonthlySubscription::class;
 

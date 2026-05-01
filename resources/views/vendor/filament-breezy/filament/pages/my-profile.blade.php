@@ -12,7 +12,7 @@
             :description="__('profile.email_notifications.section_description')"
         >
             <x-filament::card>
-                <form method="POST" action="{{ route('profile.email-noticications.update') }}" class="space-y-6">
+                <form method="POST" action="{{ route('profile.email-noticications.update', ['filament_panel' => filament()->getCurrentPanel()?->getPath() ?? 'app']) }}" class="space-y-6">
                     @csrf
 
                     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -24,7 +24,7 @@
                             @else
                                 <x-filament::button
                                     tag="a"
-                                    href="{{ url('/app/email-verification/prompt') }}"
+                                    href="{{ filament()->getEmailVerificationPromptUrl() }}"
                                     color="warning"
                                     size="sm"
                                 >
@@ -126,7 +126,7 @@
             :description="__('profile.account_deactivation.section_description')"
         >
             <x-filament::card>
-                <form method="POST" action="{{ route('profile.deactivate') }}" class="space-y-4" x-data="{ password: '' }">
+                <form method="POST" action="{{ route('profile.deactivate', ['filament_panel' => filament()->getCurrentPanel()?->getPath() ?? 'app']) }}" class="space-y-4" x-data="{ password: '' }">
                     @csrf
 
                     <div class="rounded-xl border border-danger-300/70 bg-danger-50 p-4 dark:border-danger-400/50 dark:bg-danger-500/10">
@@ -197,7 +197,7 @@
 
                     <x-filament::button
                         tag="a"
-                        href="{{ url('/app/pricing') }}"
+                        href="{{ \App\Filament\Pages\PricingPlansPage::getUrl() }}"
                         icon="heroicon-o-credit-card"
                     >
                         {{ __('profile.my_plans.change_or_cancel') }}

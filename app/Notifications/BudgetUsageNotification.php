@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Filament\Resources\BudgetResource;
 use App\Models\Budget;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -17,8 +19,7 @@ class BudgetUsageNotification extends Notification
         protected int $threshold,
         protected bool $sendDatabase = true,
         protected bool $sendMail = false
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {
@@ -49,7 +50,15 @@ class BudgetUsageNotification extends Notification
             ->line(__('budget-notification.mail.spent_amount', [
                 'amount' => number_format($this->spent, 2),
             ]))
-            ->action(__('budget-notification.mail.open_budgets'), url('/app/budgets'));
+            ->action(
+                __('budget-notification.mail.open_budgets'),
+                BudgetResource::getUrl(
+                    'index',
+                    [],
+                    true,
+                    ($notifiable instanceof User && $notifiable->hasPremiumSubscription()) ? 'premium' : 'app',
+                ),
+            );
     }
 
     public function toArray(object $notifiable): array

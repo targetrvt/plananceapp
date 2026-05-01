@@ -2,29 +2,33 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\TransactionResource;
 use App\Models\Transaction;
-use Filament\Pages\Page;
-use Filament\Support\Enums\IconPosition;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Hidden;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Support\Enums\IconPosition;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Filament\Actions\ActionGroup;
-use Filament\Notifications\Notification;
 
 class IncomeDashboard extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
     protected static ?string $navigationLabel = null;
+
     protected static ?string $title = null;
+
     protected static ?string $slug = 'income-dashboard';
+
     protected static ?string $navigationGroup = null;
+
     protected static ?int $navigationSort = 3;
 
     public static function getNavigationLabel(): string
@@ -45,11 +49,17 @@ class IncomeDashboard extends Page
     protected static string $view = 'filament.pages.income-dashboard';
 
     public $timeframe = 'month';
+
     public $startDate;
+
     public $endDate;
+
     public $category = 'all';
+
     public $currentMonth;
+
     public $currentYear;
+
     public $dataUpdated = false;
 
     protected $listeners = ['refreshDashboard' => '$refresh'];
@@ -104,6 +114,7 @@ class IncomeDashboard extends Page
             $this->endDate = $date->addDays(6)->format('Y-m-d');
             $this->dataUpdated = true;
             $this->dispatch('refreshCharts');
+
             return;
         }
 
@@ -132,6 +143,7 @@ class IncomeDashboard extends Page
             $this->endDate = $date->addDays(6)->format('Y-m-d');
             $this->dataUpdated = true;
             $this->dispatch('refreshCharts');
+
             return;
         }
 
@@ -219,8 +231,8 @@ class IncomeDashboard extends Page
                     TextInput::make('description')
                         ->label(__('income-dashboard.form.new_income.description.label'))
                         ->maxLength(255)
-                        ->placeholder(__('income-dashboard.form.new_income.description.placeholder'))
-                ])
+                        ->placeholder(__('income-dashboard.form.new_income.description.placeholder')),
+                ]),
         ];
     }
 
@@ -268,12 +280,12 @@ class IncomeDashboard extends Page
                 $this->getQuickIncomeAction(),
                 Action::make('addIncome')
                     ->label(__('income-dashboard.actions.add_income.label'))
-                    ->url(fn (): string => url('/app/transactions/create'))
+                    ->url(fn (): string => TransactionResource::getUrl('create'))
                     ->color('primary')
                     ->icon('heroicon-m-plus-circle'),
             ])->label(__('income-dashboard.actions.add_income.label'))
-              ->color('success')
-              ->icon('heroicon-m-plus-circle'),
+                ->color('success')
+                ->icon('heroicon-m-plus-circle'),
 
             Action::make('filter')
                 ->label(__('income-dashboard.actions.filter.label'))
@@ -330,12 +342,13 @@ class IncomeDashboard extends Page
                                         ->pluck('category');
                                     $options = ['all' => __('messages.dashboard.income.filter.all_categories')];
                                     foreach ($categories as $cat) {
-                                        $options[$cat] = __('messages.categories.income.' . $cat);
+                                        $options[$cat] = __('messages.categories.income.'.$cat);
                                     }
+
                                     return $options;
                                 })
                                 ->default(fn () => $this->category),
-                        ])
+                        ]),
                 ])
                 ->action(function (array $data) {
                     $oldTimeframe = $this->timeframe;
@@ -369,8 +382,8 @@ class IncomeDashboard extends Page
                 ->color('secondary')
                 ->extraAttributes([
                     'class' => 'filter-button',
-                    'x-data' => "{ isFiltered: " . (($this->timeframe !== 'month' || $this->category !== 'all') ? 'true' : 'false') . " }",
-                    'x-bind:class' => "isFiltered ? 'filter-active' : ''"
+                    'x-data' => '{ isFiltered: '.(($this->timeframe !== 'month' || $this->category !== 'all') ? 'true' : 'false').' }',
+                    'x-bind:class' => "isFiltered ? 'filter-active' : ''",
                 ])
                 ->modalWidth('md')
                 ->modalHeading(__('income-dashboard.actions.filter.modal_heading'))
@@ -405,6 +418,7 @@ class IncomeDashboard extends Page
         $startDate = Carbon::parse($this->startDate);
         $endDate = Carbon::parse($this->endDate);
         $days = max(1, $startDate->diffInDays($endDate) + 1);
+
         return $total / $days;
     }
 
@@ -426,10 +440,11 @@ class IncomeDashboard extends Page
 
         return $results->map(function ($item) use ($totalAll) {
             $percentage = $totalAll > 0 ? round(($item->total / $totalAll) * 100, 1) : 0;
+
             return [
                 'category' => $item->category,
                 'total' => $item->total,
-                'percentage' => $percentage
+                'percentage' => $percentage,
             ];
         })->sortByDesc('total')->values();
     }
@@ -454,7 +469,7 @@ class IncomeDashboard extends Page
             $total = $query->sum('amount') ?: 0;
             $months[] = [
                 'month' => $monthStart->format('M'),
-                'total' => round($total, 2)
+                'total' => round($total, 2),
             ];
         }
 
@@ -480,7 +495,7 @@ class IncomeDashboard extends Page
             $total = $query->sum('amount') ?: 0;
             $days[] = [
                 'date' => $date->format('d M'),
-                'total' => round($total, 2)
+                'total' => round($total, 2),
             ];
         }
 
@@ -520,14 +535,17 @@ class IncomeDashboard extends Page
         } elseif ($this->timeframe === 'quarter') {
             $startMonth = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->startOfQuarter();
             $endMonth = $startMonth->copy()->endOfQuarter();
-            return $startMonth->format('M') . ' - ' . $endMonth->format('M Y');
+
+            return $startMonth->format('M').' - '.$endMonth->format('M Y');
         } elseif ($this->timeframe === 'year') {
             return (string) $this->currentYear;
         } elseif ($this->timeframe === 'week' || $this->timeframe === 'custom') {
             $start = Carbon::parse($this->startDate);
             $end = Carbon::parse($this->endDate);
-            return $start->format('M d') . ' - ' . $end->format('M d, Y');
+
+            return $start->format('M d').' - '.$end->format('M d, Y');
         }
+
         return '';
     }
 }

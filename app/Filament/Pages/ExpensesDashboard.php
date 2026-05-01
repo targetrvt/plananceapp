@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\TransactionResource;
 use App\Models\Transaction;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -290,7 +291,7 @@ class ExpensesDashboard extends Page
                 $this->getQuickExpenseAction(),
                 Action::make('addExpense')
                     ->label(__('expenses-dashboard.actions.add_expense.label'))
-                    ->url(fn (): string => url('/app/transactions/create'))
+                    ->url(fn (): string => TransactionResource::getUrl('create'))
                     ->color('primary')
                     ->icon('heroicon-m-plus-circle'),
             ])->label(__('expenses-dashboard.actions.add_expense.label'))

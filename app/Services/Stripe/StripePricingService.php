@@ -85,13 +85,19 @@ class StripePricingService
     public function createCheckoutSessionUrl(?User $user, string $plan): string
     {
         $plan = strtolower($plan);
+
+        if ($plan === 'business') {
+            throw new RuntimeException('Business checkout is not available yet.');
+        }
+
         $planConfig = $this->getPlanConfig($plan);
         $isSubscriptionPlan = in_array($plan, ['premium', 'business'], true);
 
         $baseUrl = rtrim((string) config('app.url', env('APP_URL', 'http://localhost')), '/');
 
-        $successUrl = $baseUrl.'/app/pricing?checkout_success=1&session_id={CHECKOUT_SESSION_ID}';
-        $cancelUrl = $baseUrl.'/app/pricing?checkout_cancelled=1';
+        $pricingPath = $user?->filamentPricingPath() ?? '/app/pricing';
+        $successUrl = $baseUrl.$pricingPath.'?checkout_success=1&session_id={CHECKOUT_SESSION_ID}';
+        $cancelUrl = $baseUrl.$pricingPath.'?checkout_cancelled=1';
 
         $metadata = [
             'plan' => $plan,

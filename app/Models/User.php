@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements HasAvatar, HasLocalePreference, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasPanelShield, HasRoles, Notifiable, TwoFactorAuthenticatable;
@@ -84,5 +87,41 @@ class User extends Authenticatable implements HasAvatar, HasLocalePreference, Mu
 
         // Return a default avatar URL if none is set
         return 'https://ui-avatars.com/api/?name='.urlencode($this->name);
+    }
+
+    /**
+     * Active paid Premium subscription (Stripe).
+     */
+    public function hasPremiumSubscription(): bool
+    {
+        if (strtolower((string) $this->plan) !== 'premium') {
+            return false;
+        }
+
+        if (! is_string($this->stripe_subscription_id) || $this->stripe_subscription_id === '') {
+            return false;
+        }
+
+        $status = strtolower((string) ($this->stripe_status ?? ''));
+
+        return in_array($status, ['active', 'trialing'], true);
+    }
+
+    /**
+     * Filament pricing page path for Stripe return URLs and in-app redirects.
+     */
+    public function filamentPricingPath(): string
+    {
+        return $this->hasPremiumSubscription() ? '/premium/pricing' : '/app/pricing';
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return $this->hasRole(Utils::getSuperAdminName());
+        }
+
+        return $this->hasRole(Utils::getSuperAdminName())
+            || $this->hasRole(Utils::getPanelUserRoleName());
     }
 }

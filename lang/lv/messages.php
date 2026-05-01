@@ -117,6 +117,7 @@ return [
                 ],
             ],
             'get_started' => 'Sākt darbu',
+            'business_coming_soon_cta' => 'Drīzumā',
         ],
         'mobile_app' => [
             'tag' => 'Mobilā lietotne',
@@ -461,6 +462,7 @@ return [
             'gift' => 'Dāvana',
             'refund' => 'Atmaksa',
             'other_income' => 'Citi ienākumi',
+            'savings' => 'Izņemšana no mērķa',
         ],
         'expense' => [
             'food' => 'Ēdiens un ēdināšana',
@@ -540,6 +542,15 @@ return [
         'cancel_subscription_confirm' => 'Izslēgt automātisko atjaunošanu? Jums saglabāsies piekļuve līdz :date, pēc tam maksa netiks veikta.',
         'subscription_cancel_scheduled' => 'Automātiskā atjaunošana ir izslēgta. Piekļuve paliek līdz lapā norādītajam datumam.',
         'subscription_cancel_failed' => 'Neizdevās atjaunināt abonementu. Lūdzu, mēģiniet vēlreiz vai sazinieties ar atbalstu.',
+        'premium_panel_locked_title' => 'Premium darba vieta',
+        'premium_panel_locked_body' => 'Šai zonai nepieciešams aktīvs Premium abonements. Izvēlieties Premium zemāk vai atjaunojiet abonementu.',
+        'business_plan_coming_soon_title' => 'Biznesa plāns drīzumā',
+        'business_plan_coming_soon_body' => 'Biznesa plāns vēl nav pieejams pirkšanai.',
+    ],
+
+    'premium_panel_entry' => [
+        'title' => 'Laipni lūdzam Premium',
+        'subtitle' => 'Atveram Premium darba zonu…',
     ],
 
     'actions' => [

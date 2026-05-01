@@ -41,9 +41,9 @@
         ])
     }}
 >
-    <div class="overflow-x-clip">
+    <div class="overflow-visible">
         <header
-            class="fi-sidebar-header flex h-16 items-center bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm"
+            class="fi-sidebar-header flex h-16 min-w-0 items-center gap-x-2 bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm"
         >
             <div
                 @if (filament()->isSidebarCollapsibleOnDesktop())
@@ -52,15 +52,24 @@
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                 @endif
+                class="inline-flex shrink-0 items-center pe-1"
             >
                 @if ($homeUrl = filament()->getHomeUrl())
-                    <a {{ \Filament\Support\generate_href_html($homeUrl) }}>
+                    <a {{ \Filament\Support\generate_href_html($homeUrl) }} class="inline-flex shrink-0">
                         <x-filament-panels::logo />
                     </a>
                 @else
-                    <x-filament-panels::logo />
+                    <span class="inline-flex shrink-0">
+                        <x-filament-panels::logo />
+                    </span>
                 @endif
             </div>
+
+            @if (filament()->auth()->check() && ! filament()->hasTopNavigation())
+                <div class="flex shrink-0 items-center max-lg:hidden">
+                    @include('filament.components.active-plan-badge')
+                </div>
+            @endif
 
             @if (filament()->isSidebarCollapsibleOnDesktop())
                 <x-filament::icon-button
