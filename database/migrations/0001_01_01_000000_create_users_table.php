@@ -22,6 +22,8 @@ return new class extends Migration
 
             // App-level pricing (Stripe demo subscription)
             $table->string('plan', 30)->default('personal');
+            $table->boolean('premium_granted_by_admin')->default(false);
+            $table->boolean('ai_access')->default(false);
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
             $table->string('stripe_status', 50)->nullable();
