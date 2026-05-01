@@ -8,9 +8,6 @@ use App\Http\Controllers\Stripe\StripeWebhookController;
 use App\Http\Controllers\TransactionReceiptController;
 use Illuminate\Support\Facades\Route;
 
-// Forge and other monitors hit /up; a tiny plain response avoids the framework health view stack.
-Route::get('/up', fn () => response('OK', 200, ['Content-Type' => 'text/plain']));
-
 // Home page (landing page)
 Route::get('/', function () {
     return view('landing'); // This will use the landing.blade.php view
