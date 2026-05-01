@@ -515,7 +515,7 @@ return [
     'pricing_page' => [
         'choose_plan' => 'Izvēlieties plānu',
         'plan_free' => 'Bezmaksas',
-        'price_free_display' => 'BEZMAKSAS',
+        'price_free_display' => 'FREE',
         'current_plan' => 'Pašreizējais plāns',
         'current_plan_badge' => 'Pašreizējais plāns',
         'popular' => 'Populārākais',
