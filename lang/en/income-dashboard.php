@@ -60,6 +60,13 @@ return [
         'filters_applied' => 'Filters applied successfully',
         'filters_reset' => 'Filters reset to defaults',
     ],
+    'ai_tips' => [
+        'card_title' => 'AI insights for this period',
+        'card_description' => 'Uses this period’s income (with your category filter) plus all expenses in the same dates. Not financial advice.',
+        'generate' => 'Generate income tips',
+        'generating' => 'Generating…',
+        'empty_hint' => 'Tips appear here after you generate them. You can change the period or category and run again.',
+    ],
     'infolist' => [
         'date' => [
             'label' => 'Date',

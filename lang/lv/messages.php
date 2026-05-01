@@ -553,6 +553,11 @@ return [
         'subtitle' => 'Atveram Premium darba zonu…',
     ],
 
+    'finance_ai_tips' => [
+        'error_title' => 'Neizdevās ģenerēt AI padomus',
+        'error_body' => 'Pārbaudiet OpenAI API konfigurāciju vai mēģiniet vēlreiz pēc brīža.',
+    ],
+
     'actions' => [
         'create' => 'Izveidot',
         'edit' => 'Rediģēt',

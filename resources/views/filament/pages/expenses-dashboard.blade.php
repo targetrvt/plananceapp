@@ -127,7 +127,7 @@
             @endif
         </div>
     </div>
-        
+
         <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="stat-card stat-primary bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="stat-content flex justify-between items-start">
@@ -394,10 +394,49 @@
                 </div>
                 
                 <div class="trans-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                    <div class="trans-header mb-4">
-                        <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.tips.title') }}</h3>
+                    <div class="trans-header mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div class="min-w-0">
+                            <h3 class="trans-title text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.dashboard.expenses.tips.title') }}</h3>
+                            @if ($this->canShowPremiumFinanceAiTips())
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('expenses-dashboard.ai_tips.card_description') }}</p>
+                            @endif
+                        </div>
+                        @if ($this->canShowPremiumFinanceAiTips())
+                            <button
+                                type="button"
+                                wire:click="generatePremiumSavingsAiTips"
+                                wire:loading.attr="disabled"
+                                wire:target="generatePremiumSavingsAiTips"
+                                class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            >
+                                <x-heroicon-o-bolt class="h-4 w-4" />
+                                <span wire:loading.remove wire:target="generatePremiumSavingsAiTips">{{ __('expenses-dashboard.ai_tips.generate') }}</span>
+                                <span wire:loading wire:target="generatePremiumSavingsAiTips">{{ __('expenses-dashboard.ai_tips.generating') }}</span>
+                            </button>
+                        @endif
                     </div>
-                    
+
+                    @if ($this->canShowPremiumFinanceAiTips())
+                        <div class="tip-item bg-violet-50 dark:bg-violet-900/20 rounded-lg p-4 mb-4 border border-violet-100/80 dark:border-violet-800/50">
+                            @if ($premiumFinanceAiTipsLoading)
+                                <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('expenses-dashboard.ai_tips.generating') }}</p>
+                            @elseif (filled($premiumFinanceAiTipsContent))
+                                <div class="flex gap-3">
+                                    <div class="tip-icon bg-violet-100 dark:bg-violet-800/80 p-2 rounded-full shrink-0">
+                                        <x-heroicon-o-bolt class="h-5 w-5 text-violet-600 dark:text-violet-300" />
+                                    </div>
+                                    <div class="tip-content min-w-0">
+                                        <h4 class="tip-title text-sm font-medium text-gray-900 dark:text-white mb-1">{{ __('expenses-dashboard.ai_tips.card_title') }}</h4>
+                                        <div class="tip-desc whitespace-pre-wrap text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{{ $premiumFinanceAiTipsContent }}</div>
+                                    </div>
+                                </div>
+                            @else
+                                <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('expenses-dashboard.ai_tips.empty_hint') }}</p>
+                            @endif
+                        </div>
+                    @endif
+
+                    @if ($this->shouldShowDefaultFinanceTips())
                     <div class="tips-list space-y-4">
                         <div class="tip-item bg-primary-50 dark:bg-primary-900/30 rounded-lg p-4">
                             <div class="flex">
@@ -447,6 +486,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

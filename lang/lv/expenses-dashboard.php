@@ -60,6 +60,13 @@ return [
         'filters_applied' => 'Filtri veiksmīgi piemēroti',
         'filters_reset' => 'Filtri atiestatīti uz noklusējumiem',
     ],
+    'ai_tips' => [
+        'card_title' => 'Šī perioda AI idejas',
+        'card_description' => 'Izmanto šī perioda izdevumus (ar jūsu kategorijas filtru) un visus ienākumus tajos pašos datumos. Nav finanšu konsultācija.',
+        'generate' => 'Ģenerēt uzkrājumu padomus',
+        'generating' => 'Ģenerē…',
+        'empty_hint' => 'Pēc ģenerēšanas padomi parādīsies šeit. Mainiet periodu vai kategoriju un mēģiniet vēlreiz.',
+    ],
     'infolist' => [
         'date' => [
             'label' => 'Datums',
@@ -75,4 +82,3 @@ return [
         ],
     ],
 ];
-
